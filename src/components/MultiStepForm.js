@@ -118,12 +118,12 @@ const MultiStepForm = ({submitHandler}) => {
     console.log("Handle upload is called");
     setIsVideoRecorded(true);
   
-    const videoBuffer = new Buffer.from(videoBlob);
+    // const videoBuffer = new Buffer.from(videoBlob);
     
     const videoParams = {
         Bucket: S3_BUCKET_NAME,
         Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}-${globalUniversity}-question-${questionNumber}-video-resume.mp4`,
-        Body: videoBuffer,
+        Body: videoBlob,
         ContentType: 'video/mp4',
         ACL: 'public-read'
     };
@@ -378,6 +378,8 @@ const RenderStepContent = () => {
                             Let's go pro
                         </button>
                       {/* </div> */}
+                      {/* Uncomment to go directly to video step */}
+                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
                     </Form>
                   )}
                 </Formik>
@@ -615,90 +617,6 @@ const RenderStepContent = () => {
                 </button>
             </Form>
       </Formik>    
-        //   <>
-        //               <Formik
-        //         initialValues={{
-        //         email: ""
-        //     }}
-        //     //     validationSchema={Yup.object({
-        //     //     email: Yup
-        //     //         .string()
-        //     //         .email()
-        //     //         .required()
-        //     // })}
-        //     onSubmit={() => setStep(5)}
-        //     onKeyPress={() => handleKeyPress(5)}
-        //     ></Formik>
-        //     <Form>
-        //     <h2>Tell us about yourself</h2>
-        //     <p>
-        //       The info below helps us match your profile with hiring companies. Don't worry, you can make changes later.
-        //     </p>
-        //       <div>
-        //         <label htmlFor="firstName">* First Name</label>
-        //         <Field type="text" id="firstName" name="firstName" style={{ width: '95%' }} />
-        //         <ErrorMessage name="firstName" component="div" className="error" />
-        //       </div>
-        //       <div>
-        //         <label htmlFor="lastName">* Last Name</label>
-        //         <Field type="text" id="lastName" name="lastName" style={{ width: '95%' }} />
-        //         <ErrorMessage name="lastName" component="div" className="error" />
-        //       </div>
-        //       <div>
-        //         <label htmlFor="major">* Major</label>
-        //         <Field type="text" id="major" name="major" style={{ width: '95%' }} />
-        //         <ErrorMessage name="major" component="div" className="error" />
-        //       </div>
-        //       <div>
-        //         <label htmlFor="graduationMonth">* Graduation Month</label>
-        //         <Field as="select" id="graduationMonth" name="graduationMonth" style={{ width: '95%' }}>
-        //           <option value="">Select an option</option>
-        //           {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-        //             <option key={month} value={month}>
-        //               {new Date(0, month - 1).toLocaleString('en-US', { month: 'long' })}
-        //             </option>
-        //           ))}
-        //         </Field>
-        //         <ErrorMessage name="graduationMonth" component="div" className="error" />
-        //       </div>
-        //       <div>
-        //         <label htmlFor="graduationYear">* Graduation Year</label>
-        //         <Field type="number" id="graduationYear" name="graduationYear" min="2022" max="2040" style={{ width: '95%' }} />
-        //         <ErrorMessage name="graduationYear" component="div" className="error" />
-        //       </div>
-        //       <div>
-        //         <label htmlFor="linkedInProfile">LinkedIn Profile</label>
-        //         <Field type="text" id="linkedInProfile" name="linkedInProfile" style={{ width: '95%' }} />
-        //         <ErrorMessage name="linkedInProfile" component="div" className="error" />
-        //       </div>
-        //       <div>
-        //         <label htmlFor="resume">Attach Resume</label>
-        //         <Field type="file" id="resume" name="resume" accept=".pdf" />
-        //         <ErrorMessage name="resume" component="div" className="error" />
-        //         {/* Attach resume upload image */}
-        //         {/* <label htmlFor="resume2"><img 
-        //             src={resumeAttachImage} 
-        //             alt="Attach Resume"
-        //             style={{
-        //               maxWidth: "20%",
-        //               maxHeight: "100%",
-        //               width: "auto",
-        //               height: "auto"
-        //             }}
-        //         /></label> */}
-        //         <Field type="file" id="resume2" name="resume2" accept=".pdf" />
-        //         <ErrorMessage name="resume2" component="div" className="error" />
-        //       </div>
-        //       <button type="button" onClick={() => setStep(3)}>Previous</button>
-        //       <button 
-        //         type="button" 
-        //         onClick={() => setStep(5)}
-        //         style={buttonStyles}
-        //       >
-        //         Next
-        //       </button>
-        //     </Form>
-        //   </>
         );
       case 5:
         return (
@@ -744,7 +662,7 @@ const RenderStepContent = () => {
             // })}
 
             // need to make sure students record video before proceeding to next step
-            onSubmit={() => setStep(7)}
+            // onSubmit={() => setStep(7)}
             onKeyPress={() => handleKeyPress(7)}
             ></Formik>
             <Form>
@@ -764,9 +682,9 @@ const RenderStepContent = () => {
             <VideoRecorder
               key={1} 
               isOnInitially
-              timeLimit="60000"
+              timeLimit={60000}
               showReplayControls
-              onRecordingComplete{...(videoBlob) => {
+              onRecordingComplete={(videoBlob) => {
                 // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
                 setVideo1Recorded(true);
                 globalVideo1 = videoBlob;
@@ -781,7 +699,7 @@ const RenderStepContent = () => {
             <p className="video-info">Unlimited retries</p>
             <button type="button" onClick={() => setStep(5)}>Previous</button>
             <button 
-              type="button" 
+              type="submit" 
               onClick={() => {
                 if (isVideo1Recorded) {
                     console.log("Video 1 was recorded")
@@ -831,16 +749,16 @@ const RenderStepContent = () => {
             <VideoRecorder 
               key={2}
               isOnInitially
-              timeLimit="60000"
+              timeLimit={60000}
               showReplayControls
-              onRecordingComplete{...(videoBlob) => {
+              onRecordingComplete={(videoBlob) => {
                 // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
                 setVideo2Recorded(true);
                 globalVideo2 = videoBlob;
-                console.log("Saved video 1: " + globalVideo2);
+                console.log("Saved video 2: " + globalVideo2);
 
                 // then handle upload 
-                handleUpload(videoBlob, 1)
+                handleUpload(videoBlob, 2)
                 }}
             />
             <div className="video-frame"></div>
@@ -850,15 +768,15 @@ const RenderStepContent = () => {
             <button 
               type="button" 
               onClick={() => {
-                if (isVideo1Recorded) {
+                if (isVideo2Recorded) {
                     console.log("Video 1 was recorded")
-                    setStep(7);
+                    setStep(8);
                 } else {
                     alert('Please finish video recording to proceed and get Drafted!');
                 }
               }}
               style={buttonStyles}
-              disabled={!isVideo1Recorded}
+              disabled={!isVideo2Recorded}
             >
               Next question
             </button>
@@ -902,16 +820,16 @@ const RenderStepContent = () => {
             <VideoRecorder
               key={3} 
               isOnInitially
-              timeLimit="60000"
+              timeLimit={60000}
               showReplayControls
-              onRecordingComplete{...(videoBlob) => {
+              onRecordingComplete={(videoBlob) => {
                 // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
                 setVideo3Recorded(true);
                 globalVideo3 = videoBlob;
-                console.log("Saved video 1: " + globalVideo1);
+                console.log("Saved video 3: " + globalVideo1);
 
                 // then handle upload 
-                handleUpload(videoBlob, 1)
+                handleUpload(videoBlob, 3)
                 }}
             />
             <div className="video-frame"></div>
@@ -922,15 +840,15 @@ const RenderStepContent = () => {
             <button
               type="button"
               onClick={() => {
-                if (isVideo1Recorded) {
-                    console.log("Video 1 was recorded")
-                    setStep(7);
+                if (isVideo3Recorded) {
+                    console.log("Video 3 was recorded")
+                    setStep(9);
                 } else {
                     alert('Please finish video recording to proceed and get Drafted!');
                 }
               }}
               style={buttonStyles}
-              disabled={!isVideo1Recorded}
+              disabled={!isVideo3Recorded}
             >
               Submit
             </button>
