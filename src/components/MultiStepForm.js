@@ -116,13 +116,15 @@ const MultiStepForm = ({submitHandler}) => {
   const handleUpload = (videoBlob, questionNumber) => {
     // video upload
     console.log("Handle upload is called");
-    setIsVideoRecorded(true);
+    // setIsVideoRecorded(true);
+
+  
   
     // const videoBuffer = new Buffer.from(videoBlob);
     
     const videoParams = {
         Bucket: S3_BUCKET_NAME,
-        Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}-${globalUniversity}-question-${questionNumber}-video-resume.mp4`,
+        Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}/question-${questionNumber}-video-resume.mp4`,
         Body: videoBlob,
         ContentType: 'video/mp4',
         ACL: 'public-read'
@@ -135,17 +137,47 @@ const MultiStepForm = ({submitHandler}) => {
         console.log(data);           // successful response
         console.log("Video " + questionNumber + " was uploaded successfully at " + data.Location);
         if (questionNumber == 1) {
-            globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Location;
+            setVideo1Recorded(true);
+            globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
         } else if (questionNumber == 2) {
-            globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Location;
+            setVideo2Recorded(true);
+            globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
         } else {
+            setVideo3Recorded(true);
             globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Location;
         }
       }
     });
+
+
+
+    if (questionNumber === 1) {
+      globalVideo1 = (videoBlob);
+    } else if (questionNumber === 2) {
+      globalVideo2 = (videoBlob);
+    } else if (questionNumber === 3) {
+      globalVideo3 = (videoBlob);
+    }
   
     console.log("Video params updated");
 
+  };
+
+  const handleNext = (step) => {
+    if (step === 6 && !isVideo1Recorded) {
+      alert('Please finish video recording to proceed and get Drafted!');
+      return;
+    }
+    if (step === 7 && !isVideo2Recorded) {
+      alert('Please finish video recording to proceed and get Drafted!');
+      return;
+    }
+    if (step === 8 && !isVideo3Recorded) {
+      alert('Please finish video recording to proceed and get Drafted!');
+      return;
+    }
+
+    setStep((prevStep) => prevStep + 1);
   };
 
   const handleTextUpload = () => {
@@ -166,7 +198,7 @@ const MultiStepForm = ({submitHandler}) => {
         // Handle submission of form data
         const params = {
             Bucket: S3_BUCKET_NAME,
-            Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}-information.json`,
+            Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}/information.json`,
             Body: formDataJsonString,
             ContentType: 'application/json',
             ACL: 'public-read'
@@ -227,7 +259,7 @@ const MultiStepForm = ({submitHandler}) => {
               console.log("Case 5")
               isValid = step5ValidationSchema.isValidSync(values);
               break;
-            case 6:
+            gl
                 console.log("Case 6")
             case 7:
                 console.log("Case 7")
@@ -296,7 +328,7 @@ const MultiStepForm = ({submitHandler}) => {
    let globalVideo1Link = "";
    let globalVideo2Link = "";
    let globalVideo3Link = "";
-   
+  
 
 
 const RenderStepContent = () => {
@@ -379,7 +411,7 @@ const RenderStepContent = () => {
                         </button>
                       {/* </div> */}
                       {/* Uncomment to go directly to video step */}
-                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
+                      <button type="button" onClick={setStep(6)}>Debug Video</button>
                     </Form>
                   )}
                 </Formik>
@@ -465,9 +497,9 @@ const RenderStepContent = () => {
                 </p>
                 <button type="button" onClick={() => {
                     if (draftedUniversity !== "") {
-                        setStep(1);
+                        setStep(4);
                     } else {
-                        setStep(2);
+                        setStep(4);
                     }
                 }}
                 >
@@ -505,7 +537,7 @@ const RenderStepContent = () => {
                             globalGraduationYear = values.graduationYear;
 
                             // check for linkedin
-                            if (values.linkedInProfileURL != "") {
+                            if (values.linkedInProfileURL !== "") {
                                 globalLinkedInProfileURL = values.linkedInProfileURL;
                                 console.log("Saved LinkedIn URL: ", globalLinkedInProfileURL);
                             }
@@ -651,18 +683,6 @@ const RenderStepContent = () => {
         return (
           <>
             <Formik
-            //     initialValues={{
-            //     email: ""
-            // }}
-            //     validationSchema={Yup.object({
-            //     email: Yup
-            //         .string()
-            //         .email()
-            //         .required()
-            // })}
-
-            // need to make sure students record video before proceeding to next step
-            // onSubmit={() => setStep(7)}
             onKeyPress={() => handleKeyPress(7)}
             ></Formik>
             <Form>
@@ -685,13 +705,13 @@ const RenderStepContent = () => {
               timeLimit={60000}
               showReplayControls
               onRecordingComplete={(videoBlob) => {
-                // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
-                setVideo1Recorded(true);
-                globalVideo1 = videoBlob;
-                console.log("Saved video 1: " + globalVideo1);
+                  // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
+                  setVideo1Recorded(true);
+                  globalVideo1 = videoBlob;
+                  console.log("Saved video 1: " + globalVideo1);
 
-                // then handle upload 
-                handleUpload(videoBlob, 1)
+                  // then handle upload 
+                  handleUpload(videoBlob, 1)
                 }}
             />
             <div className="video-frame"></div>
@@ -699,18 +719,21 @@ const RenderStepContent = () => {
             <p className="video-info">Unlimited retries</p>
             <button type="button" onClick={() => setStep(5)}>Previous</button>
             <button 
-              type="submit" 
+              type="button" 
               onClick={() => {
-                if (isVideo1Recorded) {
+                if (isVideo1Recorded && globalVideo1Link !== "") {
                     console.log("Video 1 was recorded")
                     setStep(7);
-                } else {
+                }
+                else if (isVideo1Recorded && globalVideo1Link === "") {
+                    alert('Uploading video resume! Give us a sec.');
+                  } else {
                     alert('Please finish video recording to proceed and get Drafted!');
                 }
               }}
               style={buttonStyles}
               disabled={!isVideo1Recorded}
-            >
+              >
               Next question
             </button>
             </Form>
@@ -720,17 +743,6 @@ const RenderStepContent = () => {
         return (
           <>
             <Formik
-                initialValues={{
-                email: ""
-            }}
-            //     validationSchema={Yup.object({
-            //     email: Yup
-            //         .string()
-            //         .email()
-            //         .required()
-            // })}
-            onSubmit={() => setStep(8)}
-            onKeyPress={() => handleKeyPress(8)}
             ></Formik>
             <Form>
             <h2>Question 2 of 3</h2>
@@ -768,16 +780,19 @@ const RenderStepContent = () => {
             <button 
               type="button" 
               onClick={() => {
-                if (isVideo2Recorded) {
-                    console.log("Video 1 was recorded")
+                if (isVideo2Recorded && globalVideo2Link !== "") {
+                    console.log("Video 2 was recorded")
                     setStep(8);
+                }
+                    else if (isVideo2Recorded && globalVideo2Link === "") {
+                      alert('Uploading video resume! Give us a sec.');
                 } else {
                     alert('Please finish video recording to proceed and get Drafted!');
                 }
               }}
               style={buttonStyles}
               disabled={!isVideo2Recorded}
-            >
+              >
               Next question
             </button>
             </Form>
@@ -787,21 +802,6 @@ const RenderStepContent = () => {
         return (
           <>
             <Formik
-                initialValues={{
-                email: ""
-            }}
-            //     validationSchema={Yup.object({
-            //     email: Yup
-            //         .string()
-            //         .email()
-            //         .required()
-            // })}
-            onSubmit={() => {
-                // upload student information JSON
-
-                setStep(9);
-            }}
-            onKeyPress={() => handleKeyPress(9)}
             ></Formik>
             <Form>
             <h2>Question 3 of 3</h2>
@@ -840,16 +840,20 @@ const RenderStepContent = () => {
             <button
               type="button"
               onClick={() => {
-                if (isVideo3Recorded) {
+                if (isVideo3Recorded && globalVideo3Link !== "") {
                     console.log("Video 3 was recorded")
                     setStep(9);
+                }
+                    else if (isVideo1Recorded && globalVideo1Link === "") {
+                      alert('Uploading video resume! Give us a sec.');
                 } else {
                     alert('Please finish video recording to proceed and get Drafted!');
                 }
+                handleTextUpload();
               }}
               style={buttonStyles}
               disabled={!isVideo3Recorded}
-            >
+              >
               Submit
             </button>
             </Form>
