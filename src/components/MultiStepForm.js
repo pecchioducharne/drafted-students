@@ -1,12 +1,63 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import axios from 'axios';
 
 // import resumeAttachImage from './logo.svg';
 import VideoRecorder from 'react-video-recorder/lib/video-recorder';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
 import * as Yup from 'yup';
 import AWS from 'aws-sdk';
+import Levenshtein from 'fast-levenshtein';
 
 const S3_BUCKET_NAME = 'uploads-video-resumes';
+const COLLEGE_API_KEY = 'EgIiqDEdQRrdJtuN6oXP5Zd7t18Dvs30VuLhIEX9';
+
+const findUniversities = (inputValue) => {
+  if (!inputValue || inputValue.length < 2) {
+    return Promise.resolve([]);
+  }
+
+  return axios
+    .get(`https://api.data.gov/ed/collegescorecard/v1/schools.json?school.name=${inputValue}&api_key=${COLLEGE_API_KEY}`)
+    .then((response) => {
+      const universities = response.data.results.map((university) => ({
+        value: university.id,
+        label: university.school.name
+      }));
+
+      // Sort the universities by the closeness of the match.
+      universities.sort((a, b) => {
+        // Calculate the distance of each school name from the input value.
+        const distanceA = Levenshtein.get(a.label.toLowerCase(), inputValue.toLowerCase());
+        const distanceB = Levenshtein.get(b.label.toLowerCase(), inputValue.toLowerCase());
+
+        // Sort by ascending distance (closer matches come first).
+        return distanceA - distanceB;
+      });
+
+      return universities;
+    })
+    .catch((error) => {
+      console.error("Error during fetching universities", error);
+      return [];
+    });
+};
+
+
+
+const MySelect = ({ field, form }) => {
+  return (
+    <AsyncSelect
+      name={field.name}
+      value={field.value}
+      onChange={(option) => form.setFieldValue(field.name, option)}
+      loadOptions={findUniversities}
+    />
+  );
+};
+
+
 
 AWS
     .config
@@ -421,8 +472,13 @@ const RenderStepContent = () => {
             return (
               <>
                 <Formik
-                  initialValues={{ university: "" }}
-                  validationSchema={Yup.object({ university: Yup.string().required("Please enter university") })}
+                  initialValues={{ university: null }}
+                  validationSchema={Yup.object({
+                    university: Yup.object().shape({
+                      label: Yup.string().required('Please select your school'),
+                      value: Yup.string().required('Please select your school'),
+                    }),
+                  })}                  
                   onSubmit={(values) => {
                     if (values.university !== "") {
                         globalUniversity = values.university;
@@ -431,7 +487,30 @@ const RenderStepContent = () => {
                     }
                   }}
                 >
-                  {formik => (
+                  {({ setFieldValue, values, errors, touched }) => (
+                  <Form>
+                  <h2>Find your school</h2>
+                  <p>Select your university below. This will help more employers targeting your school find you.</p>
+                  <div>
+                    <label htmlFor="university">University</label>
+                    <Field
+                      name="university"
+                      component={MySelect}
+                      onChange={setFieldValue}
+                      value={values.university}
+                    />
+                    {touched.university && errors.university ? (
+                      <div className="error">{errors.university}</div>
+                    ) : null}
+                  </div>
+                  <br></br>
+                  <button type="button" onClick={() => setStep(1)}>Previous</button>
+                  <button type="submit" style={buttonStyles} disabled={!values.university}>
+                    Continue to the next step
+                  </button>
+                </Form>
+                  )}
+                  {/* {formik => (
                     <Form>
                       <h2>Find your school</h2>
                       <p>Select your university below. This will help more employers targeting your school find you.</p>
@@ -454,7 +533,7 @@ const RenderStepContent = () => {
                         Continue to the next step
                       </button>
                     </Form>
-                  )}
+                  )} */}
                 </Formik>
               </>
             );          
@@ -497,13 +576,12 @@ const RenderStepContent = () => {
                 </p>
                 <button type="button" onClick={() => {
                     if (draftedUniversity !== "") {
-                        setStep(4);
+                        setStep(1);
                     } else {
-                        setStep(4);
+                        setStep(2);
                     }
                 }}
-                >
-                    Previous</button>
+                >Previous</button>
                 <button type="submit" style={buttonStyles}>Create Account</button>
                 </Form>
             </Formik>
@@ -683,7 +761,7 @@ const RenderStepContent = () => {
         return (
           <>
             <Formik
-            onKeyPress={() => handleKeyPress(7)}
+            // onKeyPress={() => handleKeyPress(7)}
             ></Formik>
             <Form>
             <h2>Question 1 of 3</h2>
@@ -711,7 +789,12 @@ const RenderStepContent = () => {
                   console.log("Saved video 1: " + globalVideo1);
 
                   // then handle upload 
-                  handleUpload(videoBlob, 1)
+                  handleUpload(videoBlob, 1);
+
+                  setTimeout(() => {
+                    setVideo1Recorded(true); // Enabling the state after 5 seconds
+                    // handleUpload(videoBlob, 1); // Triggering the upload after 5 seconds
+                  }, 5000);
                 }}
             />
             <div className="video-frame"></div>
@@ -727,7 +810,7 @@ const RenderStepContent = () => {
                 }
                 else if (isVideo1Recorded && globalVideo1Link === "") {
                     alert('Uploading video resume! Give us a sec.');
-                  } else {
+                } else {
                     alert('Please finish video recording to proceed and get Drafted!');
                 }
               }}
@@ -770,7 +853,13 @@ const RenderStepContent = () => {
                 console.log("Saved video 2: " + globalVideo2);
 
                 // then handle upload 
-                handleUpload(videoBlob, 2)
+                handleUpload(videoBlob, 2);
+
+
+                setTimeout(() => {
+                  setVideo1Recorded(true); // Enabling the state after 5 seconds
+                  // handleUpload(videoBlob, 1); // Triggering the upload after 5 seconds
+                }, 5000);
                 }}
             />
             <div className="video-frame"></div>
@@ -829,7 +918,13 @@ const RenderStepContent = () => {
                 console.log("Saved video 3: " + globalVideo1);
 
                 // then handle upload 
-                handleUpload(videoBlob, 3)
+                handleUpload(videoBlob, 3);
+
+
+                setTimeout(() => {
+                  setVideo1Recorded(true); // Enabling the state after 5 seconds
+                  // handleUpload(videoBlob, 1); // Triggering the upload after 5 seconds
+                }, 5000);
                 }}
             />
             <div className="video-frame"></div>
