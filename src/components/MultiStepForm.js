@@ -800,7 +800,11 @@ const RenderStepContent = () => {
             <div className="video-frame"></div>
             <p className="video-info">Video Response: 1 min time limit</p>
             <p className="video-info">Unlimited retries</p>
-            <button type="button" onClick={() => setStep(5)}>Previous</button>
+            <button type="button" onClick={() => {
+              setVideo2Recorded(false);
+              globalVideo2Link = "";
+              setStep(5);
+            }}>Previous</button>
             <button 
               type="button" 
               onClick={() => {
