@@ -59,6 +59,33 @@ select {
   transition: border-color 0.3s ease;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form-container {
+  width: 800px; /* Adjust the width as per your preference */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-weight: 200;
+  font-family: 'Helvetica', sans-serif;
+}
+
+.video-container {
+  width: 800px; /* Adjust the width as per your preference */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-weight: 200;
+  font-family: 'Helvetica', sans-serif;
+}
+
 input[type='file'] {
   display: none;
 }
