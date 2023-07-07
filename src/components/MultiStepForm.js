@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 
@@ -164,71 +164,96 @@ const MultiStepForm = ({submitHandler}) => {
 //   });
 
 
-  const handleUpload = (videoBlob, questionNumber) => {
-    // video upload
-    console.log("Handle upload is called");
-    // setIsVideoRecorded(true);
+const handleUpload = useCallback((videoBlob, questionNumber) => {
+  // video upload
+  console.log("Handle upload is called");
 
-  
-  
-    // const videoBuffer = new Buffer.from(videoBlob);
-    
-    const videoParams = {
-        Bucket: S3_BUCKET_NAME,
-        Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}/question-${questionNumber}-video-resume.mp4`,
-        Body: videoBlob,
-        ContentType: 'video/mp4',
-        ACL: 'public-read'
-    };
-    
+  const videoParams = {
+    Bucket: S3_BUCKET_NAME,
+    Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/question-${questionNumber}-video-resume.mp4`,
+    Body: videoBlob,
+    ContentType: 'video/mp4',
+    ACL: 'public-read'
+  };
+
+  return new Promise((resolve, reject) => {
     s3.putObject(videoParams, function(err, data) {
       if (err) {
         console.log(err, err.stack); // an error occurred
+        reject(err);
       } else {
         console.log(data);           // successful response
         console.log("Video " + questionNumber + " was uploaded successfully at " + data.Location);
-        if (questionNumber == 1) {
+        if (questionNumber === 1) {
             setVideo1Recorded(true);
+            globalVideo1 = videoBlob;
             globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
-        } else if (questionNumber == 2) {
+        } else if (questionNumber === 2) {
             setVideo2Recorded(true);
+            globalVideo2 = videoBlob;
             globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
-        } else {
+        } else if (questionNumber === 3) { // last step
             setVideo3Recorded(true);
-            globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Location;
+            globalVideo3 = videoBlob;
+            globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
         }
+        resolve(data);
       }
     });
+  });
+}, [setVideo1Recorded, setVideo2Recorded, setVideo3Recorded]);
 
 
-
-    if (questionNumber === 1) {
-      globalVideo1 = (videoBlob);
-    } else if (questionNumber === 2) {
-      globalVideo2 = (videoBlob);
-    } else if (questionNumber === 3) {
-      globalVideo3 = (videoBlob);
-    }
-  
-    console.log("Video params updated");
-
-  };
-
-  const handleNext = (step) => {
+  const handleNextVideoStep = async (step, videoBlob) => {
     if (step === 6 && !isVideo1Recorded) {
       alert('Please finish video recording to proceed and get Drafted!');
       return;
     }
-    if (step === 7 && !isVideo2Recorded) {
+    else if (step === 7 && !isVideo2Recorded) {
       alert('Please finish video recording to proceed and get Drafted!');
       return;
     }
-    if (step === 8 && !isVideo3Recorded) {
+   else if (step === 8 && !isVideo3Recorded) {
       alert('Please finish video recording to proceed and get Drafted!');
       return;
+    }
+    // success cases
+
+    // question 1
+    if (step === 6 && isVideo1Recorded && globalVideo1Link !== "") {
+      console.log("Video 1 was recorded");
+      setStep(7);
+    } else if (step === 6 && isVideo1Recorded && globalVideo1Link === "") {
+      alert("Uploading video resume! Give us a sec...");
+      await handleUpload(videoBlob, 1);
+      setStep(7);
+    } else {
+      alert("Please finish video recording to proceed and get Drafted!");
     }
 
-    setStep((prevStep) => prevStep + 1);
+    // question 2
+    if (step === 7 && isVideo2Recorded && globalVideo2Link !== "") {
+      console.log("Video 2 was recorded");
+      setStep(8);
+    } else if (step === 7 && isVideo2Recorded && globalVideo2Link === "") {
+      alert("Uploading video resume! Give us a sec...");
+      await handleUpload(videoBlob, 2);
+      setStep(8);
+    } else {
+      alert("Please finish video recording to proceed and get Drafted!");
+    }
+
+    // question 3
+    if (step === 8 && isVideo3Recorded && globalVideo3Link !== "") {
+      console.log("Video 3 was recorded");
+      setStep(9);
+    } else if (step === 8 && isVideo3Recorded && globalVideo3Link === "") {
+      alert("Uploading video resume! Give us a sec...");
+      await handleUpload(videoBlob, 3);
+      setStep(9);
+    } else {
+      alert("Please finish video recording to proceed and get Drafted!");
+    }
   };
 
   const handleTextUpload = () => {
@@ -249,7 +274,7 @@ const MultiStepForm = ({submitHandler}) => {
         // Handle submission of form data
         const params = {
             Bucket: S3_BUCKET_NAME,
-            Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}/information.json`,
+            Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}-information.json`,
             Body: formDataJsonString,
             ContentType: 'application/json',
             ACL: 'public-read'
@@ -481,7 +506,7 @@ const RenderStepContent = () => {
                   })}                  
                   onSubmit={(values) => {
                     if (values.university !== "") {
-                        globalUniversity = values.university;
+                        globalUniversity = values.university.label;
                         console.log("Saved university: ", globalUniversity);
                         setStep(3);
                     }
@@ -732,15 +757,6 @@ const RenderStepContent = () => {
         return (
           <>
             <Formik
-            //     initialValues={{
-            //     email: ""
-            // }}
-            //     validationSchema={Yup.object({
-            //     email: Yup
-            //         .string()
-            //         .email()
-            //         .required()
-            // })}
             onSubmit={() => setStep(6)}
             onKeyPress={() => handleKeyPress(6)}
             ></Formik>
@@ -761,8 +777,27 @@ const RenderStepContent = () => {
         return (
           <>
             <Formik
-            // onKeyPress={() => handleKeyPress(7)}
-            ></Formik>
+              onSubmit={async (values, { setSubmitting }) => {
+                if (isVideo1Recorded) {
+                  try {
+                    if (globalVideo1Link === "") {
+                      // Upload the video and proceed to the next step only after the upload is successful
+                      await handleUpload(globalVideo1, 1);
+                    }
+
+                    setStep(7);
+                    setSubmitting(false);
+                  } catch (error) {
+                    console.error("Video upload failed:", error);
+                    alert('There was an issue uploading the video, please try again.');
+                    setSubmitting(false);
+                  }
+                } else {
+                  alert('Please finish video recording to proceed and get Drafted!');
+                  setSubmitting(false);
+                }
+              }}
+            >
             <Form>
             <h2>Question 1 of 3</h2>
             <h3>Tell us about yourself!</h3>
@@ -783,19 +818,14 @@ const RenderStepContent = () => {
               timeLimit={60000}
               showReplayControls
               onRecordingComplete={(videoBlob) => {
-                  // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
-                  setVideo1Recorded(true);
-                  globalVideo1 = videoBlob;
-                  console.log("Saved video 1: " + globalVideo1);
-
-                  // then handle upload 
-                  handleUpload(videoBlob, 1);
-
-                  setTimeout(() => {
-                    setVideo1Recorded(true); // Enabling the state after 5 seconds
-                    // handleUpload(videoBlob, 1); // Triggering the upload after 5 seconds
-                  }, 5000);
-                }}
+                // Set the global video blob
+                globalVideo1 = (videoBlob);
+  
+                console.log("Saved video 1: " + globalVideo1);
+  
+                // Set the video as recorded
+                setVideo1Recorded(true);
+              }}
             />
             <div className="video-frame"></div>
             <p className="video-info">Video Response: 1 min time limit</p>
@@ -806,31 +836,41 @@ const RenderStepContent = () => {
               setStep(5);
             }}>Previous</button>
             <button 
-              type="button" 
-              onClick={() => {
-                if (isVideo1Recorded && globalVideo1Link !== "") {
-                    console.log("Video 1 was recorded")
-                    setStep(7);
-                }
-                else if (isVideo1Recorded && globalVideo1Link === "") {
-                    alert('Uploading video resume! Give us a sec.');
-                } else {
-                    alert('Please finish video recording to proceed and get Drafted!');
-                }
-              }}
+              type="submit" 
               style={buttonStyles}
               disabled={!isVideo1Recorded}
               >
               Next question
             </button>
             </Form>
+            </Formik>
           </>
         );
       case 7:
         return (
           <>
             <Formik
-            ></Formik>
+              onSubmit={async (values, { setSubmitting }) => {
+                if (isVideo2Recorded) {
+                  try {
+                    if (globalVideo2Link === "") {
+                      // Upload the video and proceed to the next step only after the upload is successful
+                      await handleUpload(globalVideo2, 2);
+                    }
+
+                    setStep(8);
+                    setSubmitting(false);
+                  } catch (error) {
+                    console.error("Video upload failed:", error);
+                    alert('There was an issue uploading the video, please try again.');
+                    setSubmitting(false);
+                  }
+                } else {
+                  alert('Please finish video recording to proceed and get Drafted!');
+                  setSubmitting(false);
+                }
+              }}
+            >
             <Form>
             <h2>Question 2 of 3</h2>
             <h3>What makes you stand out amongst other candidates?</h3>
@@ -851,51 +891,55 @@ const RenderStepContent = () => {
               timeLimit={60000}
               showReplayControls
               onRecordingComplete={(videoBlob) => {
-                // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
-                setVideo2Recorded(true);
-                globalVideo2 = videoBlob;
+                // Set the global video blob
+                globalVideo2 = (videoBlob);
+  
                 console.log("Saved video 2: " + globalVideo2);
-
-                // then handle upload 
-                handleUpload(videoBlob, 2);
-
-
-                setTimeout(() => {
-                  setVideo1Recorded(true); // Enabling the state after 5 seconds
-                  // handleUpload(videoBlob, 1); // Triggering the upload after 5 seconds
-                }, 5000);
-                }}
+  
+                // Set the video as recorded
+                setVideo2Recorded(true);
+              }}
             />
             <div className="video-frame"></div>
             <p className="video-info">Video Response: 1 min time limit</p>
             <p className="video-info">Unlimited retries</p>
             <button type="button" onClick={() => setStep(6)}>Previous</button>
             <button 
-              type="button" 
-              onClick={() => {
-                if (isVideo2Recorded && globalVideo2Link !== "") {
-                    console.log("Video 2 was recorded")
-                    setStep(8);
-                }
-                    else if (isVideo2Recorded && globalVideo2Link === "") {
-                      alert('Uploading video resume! Give us a sec.');
-                } else {
-                    alert('Please finish video recording to proceed and get Drafted!');
-                }
-              }}
+              type="submit" 
               style={buttonStyles}
               disabled={!isVideo2Recorded}
               >
               Next question
             </button>
             </Form>
+            </Formik>
           </>
         );
       case 8:
         return (
           <>
             <Formik
-            ></Formik>
+              onSubmit={async (values, { setSubmitting }) => {
+                if (isVideo3Recorded) {
+                  try {
+                    if (globalVideo3Link === "") {
+                      // Upload the video and proceed to the next step only after the upload is successful
+                      await handleUpload(globalVideo3, 3);
+                      await handleTextUpload();
+                    }
+                    setStep(9);
+                    setSubmitting(false);
+                  } catch (error) {
+                    console.error("Video upload failed:", error);
+                    alert('There was an issue uploading the video, please try again.');
+                    setSubmitting(false);
+                  }
+                } else {
+                  alert('Please finish video recording to proceed and get Drafted!');
+                  setSubmitting(false);
+                }
+              }}
+            >
             <Form>
             <h2>Question 3 of 3</h2>
             <h3>Tell us about a time when you overcame a challenge</h3>
@@ -916,20 +960,14 @@ const RenderStepContent = () => {
               timeLimit={60000}
               showReplayControls
               onRecordingComplete={(videoBlob) => {
-                // need to save video. maybe handle upload first, generate link, then save link to globalVideo1 (S3 ARN) ?
+                // Set the global video blob
+                globalVideo3 = (videoBlob);
+  
+                console.log("Saved video 3: " + globalVideo3);
+  
+                // Set the video as recorded
                 setVideo3Recorded(true);
-                globalVideo3 = videoBlob;
-                console.log("Saved video 3: " + globalVideo1);
-
-                // then handle upload 
-                handleUpload(videoBlob, 3);
-
-
-                setTimeout(() => {
-                  setVideo1Recorded(true); // Enabling the state after 5 seconds
-                  // handleUpload(videoBlob, 1); // Triggering the upload after 5 seconds
-                }, 5000);
-                }}
+              }}
             />
             <div className="video-frame"></div>
             <p className="video-info">Video Response: 1 min time limit</p>
@@ -937,25 +975,14 @@ const RenderStepContent = () => {
             {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
             <button type="button" onClick={() => setStep(7)}>Previous</button>
             <button
-              type="button"
-              onClick={() => {
-                if (isVideo3Recorded && globalVideo3Link !== "") {
-                    console.log("Video 3 was recorded")
-                    setStep(9);
-                }
-                    else if (isVideo1Recorded && globalVideo1Link === "") {
-                      alert('Uploading video resume! Give us a sec.');
-                } else {
-                    alert('Please finish video recording to proceed and get Drafted!');
-                }
-                handleTextUpload();
-              }}
+              type="submit"
               style={buttonStyles}
               disabled={!isVideo3Recorded}
               >
               Submit
             </button>
             </Form>
+            </Formik>
           </>
         );
       case 9:
@@ -1007,5 +1034,12 @@ const RenderStepContent = () => {
     </div>
   );
 };
+
+setTimeout(() => {
+  const alertContainer = document.querySelector('.alert');
+  if (alertContainer) {
+    alertContainer.style.display = 'none';
+  }
+}, 3000);
 
 export default MultiStepForm;
