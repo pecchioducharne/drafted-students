@@ -786,7 +786,7 @@ case 6:
                     key={1}
                     isOnInitially
                     timeLimit={60000}
-                    //showReplayControls
+                    showReplayControls
                     onRecordingComplete={(videoBlob) => {
                       console.log('isMounted:', isMounted.current);
                       console.log('Video blob:', videoBlob);
@@ -795,6 +795,7 @@ case 6:
                         setFieldValue("video1", videoBlob);
                         console.log("setting video recorded")
                         setVideo1Recorded(true);
+                        console.log("setting video recorded")
                       }
                     }}
                   />
