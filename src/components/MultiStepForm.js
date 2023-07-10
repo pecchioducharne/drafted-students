@@ -86,7 +86,7 @@ var s3 = new AWS.S3({
 
 
 const MultiStepForm = ({submitHandler}) => {
-  const [/*step*/, setStep] = useState(1);
+  const [step, setStep] = useState(1);
   const [/*formSubmitted*/, setFormSubmitted] = useState(false);
   const [/*isVideoRecorded*/, setIsVideoRecorded] = useState(false);
   const [values, /*setValues*/] = useState({});
@@ -728,22 +728,13 @@ case 6:
           <div style={{ flex: 1, marginLeft: "10px" }}>
             <Formik
               initialValues={{ video1: null }}
-              // onSubmit={async (values, { setSubmitting }) => {
-              //   if (isVideo1Recorded && globalVideo1Link !== "") {
-              //     setStep(7);
-              //   } else if (isVideo1Recorded && globalVideo1Link === "") {
-              //     alert("Uploading video... Sit tight!");
-              //   }
-              //   setSubmitting(false);
-              // }}
               onSubmit={async (values, { setSubmitting }) => {
                 if (isVideo1Recorded) {
+                  console.log("video 1 recorded");
                   try {
                     console.log('values.video1:', values.video1);
                     await handleUpload(values.video1, 1).catch((error) => console.error('Error in handleUpload:', error));
-                    setTimeout(() => {
-                      setStep(7);
-                    }, 2000);
+                    setStep(7);
                     // setStep(7);
                   } catch (error) {
                     console.error("Video upload failed:", error);
@@ -763,39 +754,21 @@ case 6:
                   style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}
                   onSubmit={handleSubmit}
                 >
-                  {/* <VideoRecorder
-                    key={1}
-                    isOnInitially
-                    timeLimit={60000}
-                    showReplayControls
-                    onRecordingComplete={async (videoBlob) => {
-                      // Check if the current step is still 6
-                      if (step === 6) {
-                        // Set the global video blob
-                        setFieldValue("video1", videoBlob);
-                        try {
-                          await handleUpload(videoBlob, 1);
-                        } catch (error) {
-                          console.error("Video upload failed:", error);
-                          //alert('There was an issue uploading the video, please try again.');
-                        }
-                      }
-                    }}
-                  /> */}
                   <VideoRecorder
                     key={1}
                     isOnInitially
                     timeLimit={60000}
                     showReplayControls
+                    replayVideoAutoplayAndLoopOff
                     onRecordingComplete={(videoBlob) => {
                       console.log('isMounted:', isMounted.current);
                       console.log('Video blob:', videoBlob);
                       if (isMounted.current) {
                         console.log("Setting field value");
                         setFieldValue("video1", videoBlob);
-                        console.log("setting video recorded")
+                        console.log("Setting video recorded")
                         setVideo1Recorded(true);
-                        console.log("setting video recorded")
+                        console.log("Set video recorded")
                       }
                     }}
                   />
@@ -862,9 +835,7 @@ case 6:
                             try {
                               console.log('values.video2:', values.video2);
                               await handleUpload(values.video2, 2).catch((error) => console.error('Error in handleUpload:', error));
-                              setTimeout(() => {
-                                setStep(8);
-                              }, 2000);
+                              setStep(8);
                             } catch (error) {
                               console.error("Video upload failed:", error);
                               // optionally show error to user here
@@ -887,6 +858,7 @@ case 6:
                               isOnInitially
                               timeLimit={60000}
                               showReplayControls
+                              replayVideoAutoplayAndLoopOff
                               onRecordingComplete={(videoBlob) => {
                                 console.log('isMounted:', isMounted.current);
                                 console.log('Video blob:', videoBlob);
@@ -952,9 +924,7 @@ case 6:
                               try {
                                 console.log('values.video3:', values.video3);
                                 await handleUpload(values.video3, 3).catch((error) => console.error('Error in handleUpload:', error));
-                                setTimeout(() => {
-                                  setStep(9);
-                                }, 2000);
+                                setStep(9);
                               } catch (error) {
                                 console.error("Video upload failed:", error);
                                 // optionally show error to user here
@@ -977,6 +947,7 @@ case 6:
                                 isOnInitially
                                 timeLimit={60000}
                                 showReplayControls
+                                replayVideoAutoplayAndLoopOff
                                 onRecordingComplete={(videoBlob) => {
                                   console.log('isMounted:', isMounted.current);
                                   console.log('Video blob:', videoBlob);
