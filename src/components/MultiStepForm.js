@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import axios from 'axios';
 
@@ -11,7 +11,7 @@ import AWS from 'aws-sdk';
 import Levenshtein from 'fast-levenshtein';
 
 const S3_BUCKET_NAME = 'uploads-video-resumes';
-const COLLEGE_API_KEY = 'EgIiqDEdQRrdJtuN6oXP5Zd7t18Dvs30VuLhIEX9';
+const COLLEGE_API_KEY = 'HVwaXJVdWqpqjayHBi6OMRGk5CDGybJtu8SN8M57';
 
 const findUniversities = (inputValue) => {
   if (!inputValue || inputValue.length < 2) {
@@ -112,97 +112,87 @@ const MultiStepForm = ({submitHandler}) => {
     linkedInProfileURL: '',
     resume: '',
   };
-//   const formik = useFormik({
-//     initialValues,
-//     onSubmit: submitHandler,
-//     enableReinitialize: true,
-//   })
 
-//   const validationSchema = Yup.object().shape({
-//     email: Yup.string().email('Invalid email address').required('Email is required'),
-//     university: Yup.string().required('University is required'),
-//     password: Yup.string().required('Password is required'),
-//     confirmPassword: Yup.string()
-//       .oneOf([Yup.ref('password'), null], 'Passwords must match')
-//       .required('Confirm Password is required'),
-//     firstName: Yup.string().required('First Name is required'),
-//     lastName: Yup.string().required('Last Name is required'),
-//     major: Yup.string().required('Major is required'),
-//     graduationMonth: Yup.string().required('Graduation Month is required'),
-//     graduationYear: Yup.number().required('Graduation Year is required'),
-//   });
+  const handleUpload = useCallback((videoBlob, questionNumber) => {
+    // video upload
+    console.log("Handle upload is called");
+  
+    const videoParams = {
+      Bucket: S3_BUCKET_NAME,
+      Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/question-${questionNumber}-video-resume.mp4`,
+      Body: videoBlob,
+      ContentType: 'video/mp4',
+      ACL: 'public-read'
+    };
+  
+    return new Promise((resolve, reject) => {
+      s3.putObject(videoParams, function(err, data) {
+        if (err) {
+          console.log("Error during upload: ", err);
+          console.log(err, err.stack); // an error occurred
+          reject(err);
+        } else {
+          console.log(data);           // successful response
+          console.log("Video " + questionNumber + " was uploaded successfully at " + data.Location);
+          // You no longer need to set the video recorded states here
+          // as they are being set right after the recording is complete
+          if (questionNumber === 1) {
+              globalVideo1 = videoBlob;
+              globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
+          } else if (questionNumber === 2) {
+              globalVideo2 = videoBlob;
+              globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
+          } else if (questionNumber === 3) {
+              globalVideo3 = videoBlob;
+              globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
+          }
+          resolve(data);
+        }
+      });
+    });
+  }, []);
   
 
 
-//   const step1ValidationSchema = Yup.object().shape({
-//     email: Yup.string().email('Invalid email').required('Email is required'),
+// const handleUpload = useCallback((videoBlob, questionNumber) => {
+//   // video upload
+//   console.log("Handle upload is called");
+
+//   const videoParams = {
+//     Bucket: S3_BUCKET_NAME,
+//     Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/question-${questionNumber}-video-resume.mp4`,
+//     Body: videoBlob,
+//     ContentType: 'video/mp4',
+//     ACL: 'public-read'
+//   };
+
+//   return new Promise((resolve, reject) => {
+//     s3.putObject(videoParams, function(err, data) {
+//       if (err) {
+//         console.log(err, err.stack); // an error occurred
+//         reject(err);
+//       } else {
+//         console.log(data);           // successful response
+//         console.log("Video " + questionNumber + " was uploaded successfully at " + data.Location);
+//         // alert("Video " + questionNumber + " was uploaded successfully!")
+//         if (questionNumber === 1) {
+//             setVideo1Recorded(true);
+//             globalVideo1 = videoBlob;
+//             globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
+//         } else if (questionNumber === 2) {
+//             setVideo2Recorded(true);
+//             globalVideo2 = videoBlob;
+//             globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
+//         } else if (questionNumber === 3) { // last step
+//             setVideo3Recorded(true);
+//             globalVideo3 = videoBlob;
+//             globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
+//         }
+//         resolve(data);
+//       }
+//     });
 //   });
-
-//   const step2ValidationSchema = Yup.object().shape({
-//     university: Yup.string().required('University is required'),
-//   });
-
-//   const step3ValidationSchema = Yup.object().shape({
-//     password: Yup.string().required('Password is required'),
-//     confirmPassword: Yup.string()
-//       .oneOf([Yup.ref('password'), null], 'Passwords must match')
-//       .required('Confirm Password is required'),
-//   });
-
-//   const step4ValidationSchema = Yup.object().shape({
-//     firstName: Yup.string().required('First Name is required'),
-//     lastName: Yup.string().required('Last Name is required'),
-//     major: Yup.string().required('Major is required'),
-//     graduationMonth: Yup.string().required('Graduation Month is required'),
-//     graduationYear: Yup.number()
-//       .required('Graduation Year is required')
-//       .min(2022, 'Graduation Year must be at least 2022')
-//       .max(2040, 'Graduation Year cannot exceed 2040'),
-//   });
-
-//   const step5ValidationSchema = Yup.object().shape({
-//   });
-
-
-const handleUpload = useCallback((videoBlob, questionNumber) => {
-  // video upload
-  console.log("Handle upload is called");
-
-  const videoParams = {
-    Bucket: S3_BUCKET_NAME,
-    Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/question-${questionNumber}-video-resume.mp4`,
-    Body: videoBlob,
-    ContentType: 'video/mp4',
-    ACL: 'public-read'
-  };
-
-  return new Promise((resolve, reject) => {
-    s3.putObject(videoParams, function(err, data) {
-      if (err) {
-        console.log(err, err.stack); // an error occurred
-        reject(err);
-      } else {
-        console.log(data);           // successful response
-        console.log("Video " + questionNumber + " was uploaded successfully at " + data.Location);
-        if (questionNumber === 1) {
-            setVideo1Recorded(true);
-            globalVideo1 = videoBlob;
-            globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
-        } else if (questionNumber === 2) {
-            setVideo2Recorded(true);
-            globalVideo2 = videoBlob;
-            globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
-        } else if (questionNumber === 3) { // last step
-            setVideo3Recorded(true);
-            globalVideo3 = videoBlob;
-            globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
-        }
-        resolve(data);
-      }
-    });
-  });
-}, [setVideo1Recorded, setVideo2Recorded, setVideo3Recorded]);
-
+// }, [setVideo1Recorded, setVideo2Recorded, setVideo3Recorded]);
 
   const handleNextVideoStep = async (step, videoBlob) => {
     if (step === 6 && !isVideo1Recorded) {
@@ -274,7 +264,7 @@ const handleUpload = useCallback((videoBlob, questionNumber) => {
         // Handle submission of form data
         const params = {
             Bucket: S3_BUCKET_NAME,
-            Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}/information.json`,
+            Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/information.json`,
             Body: formDataJsonString,
             ContentType: 'application/json',
             ACL: 'public-read'
@@ -307,60 +297,6 @@ const handleUpload = useCallback((videoBlob, questionNumber) => {
     border: 'none',
     cursor: 'pointer'
   };
-
-  /* Not needed as of now, using setStep directly
-    const handleNextStep = (values) => {
-        const isValid = isFormComplete(values, step);
-        let isValid = false;
-
-        switch (step) {
-            case 1:
-              console.log("Case 1")
-              console.log(values)
-              isValid = step1ValidationSchema.isValidSync(values);
-              break;
-            case 2:
-              console.log("Case 2")
-              isValid = step2ValidationSchema.isValidSync(values);
-              break;
-            case 3:
-              console.log("Case 3")
-              isValid = step3ValidationSchema.isValidSync(values);
-              break;
-            case 4:
-              console.log("Case 4")
-              isValid = step4ValidationSchema.isValidSync(values);
-              break;
-            case 5:
-              console.log("Case 5")
-              isValid = step5ValidationSchema.isValidSync(values);
-              break;
-            gl
-                console.log("Case 6")
-            case 7:
-                console.log("Case 7")
-            case 8:
-                console.log("Case 8")
-              isValid = isVideoRecorded;
-              break;
-            default:
-              return true;
-          }
-
-        if (!isValid) {
-            console.log("Doesn't detect input")
-            setErrorMessage('Please enter required forms to continue');
-            return;
-        }
-        
-        setErrorMessage('');
-        setStep((prevStep) => prevStep + 1);
-    };
-  
-    const handlePreviousStep = () => {
-        setStep((prevStep) => prevStep - 1);
-    };
-*/
 
   const handleKeyPress = (event, nextStep) => {
         if (event.key === 'Enter') {
@@ -410,6 +346,15 @@ const handleUpload = useCallback((videoBlob, questionNumber) => {
 const RenderStepContent = () => {
     // const { step } = formik.values;
     const [step, setStep] = React.useState(1);
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+      isMounted.current = true;
+  
+      return () => {
+        isMounted.current = false;
+      };
+    }, []);
   
     switch (step) {
         case 1:
@@ -487,7 +432,7 @@ const RenderStepContent = () => {
                         </button>
                       {/* </div> */}
                       {/* Uncomment to go directly to video step */}
-                      <button type="button" onClick={setStep(6)}>Debug Video</button>
+                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
                     </Form>
                   )}
                 </Formik>
@@ -535,30 +480,6 @@ const RenderStepContent = () => {
                   </button>
                 </Form>
                   )}
-                  {/* {formik => (
-                    <Form>
-                      <h2>Find your school</h2>
-                      <p>Select your university below. This will help more employers targeting your school find you.</p>
-                      <div>
-                        <label htmlFor="university">University</label>
-                        <Field as="select" id="university" name="university" style={{ width: '95%' }}>
-                          <option value="">Select an option</option>
-                          <option value="Florida International University">Florida International University</option>
-                          <option value="University of Miami">University of Miami</option>
-                          <option value="Miami-Dade College">Miami-Dade College</option>
-                          <option value="Lynn University">Lynn University</option>
-                        </Field>
-                        {formik.touched.university && formik.errors.university ? (
-                          <div className="error">Please select your school</div>
-                        ) : null}
-                      </div>
-                      <br></br>
-                      <button type="button" onClick={() => setStep(1)}>Previous</button>
-                      <button type="submit" style={buttonStyles}>
-                        Continue to the next step
-                      </button>
-                    </Form>
-                  )} */}
                 </Formik>
               </>
             );          
@@ -726,6 +647,7 @@ const RenderStepContent = () => {
                 </div>
                 <div>
                 <br></br>
+                {/* TODO: Add resume attach */}
                 {/* <label htmlFor="resume">Attach Resume</label>
                 <Field type="file" id="resume" name="resume" accept=".pdf" />
                 <ErrorMessage name="resume" component="div" className="error" /> */}
@@ -773,91 +695,128 @@ const RenderStepContent = () => {
             </Form>
           </>
         );
-        case 6:
-          return (
-            <>
-              <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", marginTop: "-50px" }}>
-                <div style={{ display: "flex", width: "800px" }}>
-                  <div style={{ flex: 1, marginRight: "10px" }}>
-                    <Formik
-                      onSubmit={async (values, { setSubmitting }) => {
-                        // Submit logic for the text form
-                      }}
-                    >
-                      <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
-                        <h2>Question 1 of 3</h2>
-                        <h3>Tell us about yourself!</h3>
-                        <p>
-                          Pro tips:
-                          <br />
-                          <ul>
-                            <li>
-                              This is the typical "walk me through your resume" question. Talk about what you majored in and why. What internships or experiences you've had, and what have you learned from them? What skills will you bring to the hiring company?
-                            </li>
-                            <li>Show why you're the best candidate to get an opportunity, in terms of degree, internships, and experience as well as soft skills which truly set you apart. Talk about what you are passionate about, and what you hope to explore in your first role.</li>
-                            <li>Demonstrate that you can communicate clearly and effectively, present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!</li>
-                          </ul>
-                        </p>
-                        <div style={{ marginBottom: "20px" }}>
-                        </div>
-                      </Form>
-                    </Formik>
-                  </div>
-                  <div style={{ flex: 1, marginLeft: "10px" }}>
-                    <Formik
-                      initialValues={{ video1: null }}
-                      onSubmit={async (values, { setSubmitting }) => {
-                        if (values.video1) {
-                          try {
-                            if (globalVideo1Link === "") {
-                              // Upload the video and proceed to the next step only after the upload is successful
-                              await handleUpload(values.video1, 1);
-                            }
-                            setStep(7);
-                            setSubmitting(false);
-                          } catch (error) {
-                            console.error("Video upload failed:", error);
-                            alert('There was an issue uploading the video, please try again.');
-                            setSubmitting(false);
-                          }
-                        } else {
-                          alert('Please finish video recording to proceed and get Drafted!');
-                          setSubmitting(false);
-                        }
-                      }}
-                    >
-                      {({ setFieldValue }) => (
-                        <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
-                          <VideoRecorder
-                            key={1}
-                            isOnInitially
-                            timeLimit={60000}
-                            showReplayControls
-                            onRecordingComplete={(videoBlob) => {
-                              // Set the global video blob
-                              setFieldValue("video1", videoBlob);
-                              setVideo1Recorded(true);
-                            }}
-                          />
-                          <div className="video-frame"></div>
-                          <p className="video-info">Video Response: 1 min time limit</p>
-                          <p className="video-info">Unlimited retries</p>
-                          <button type="button" onClick={() => setStep(5)}>Previous</button>
-                          <button
-                            type="submit"
-                            style={buttonStyles}
-                            disabled={!isVideo1Recorded}
-                          >
-                            Next question
-                          </button>
-                        </Form>
-                      )}
-                    </Formik>
-                  </div>
+case 6:
+  return (
+    <>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", marginTop: "-50px" }}>
+        <div style={{ display: "flex", width: "800px" }}>
+          <div style={{ flex: 1, marginRight: "10px" }}>
+            <Formik
+              onSubmit={async (values, { setSubmitting }) => {
+                // Submit logic for the text form
+              }}
+            >
+              <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
+                <h2>Question 1 of 3</h2>
+                <h3>Tell us about yourself!</h3>
+                <p>
+                  Pro tips:
+                  <br />
+                  <ul>
+                    <li>
+                      This is the typical "walk me through your resume" question. Talk about what you majored in and why. What internships or experiences you've had, and what have you learned from them? What skills will you bring to the hiring company?
+                    </li>
+                    <li>Show why you're the best candidate to get an opportunity, in terms of degree, internships, and experience as well as soft skills which truly set you apart. Talk about what you are passionate about, and what you hope to explore in your first role.</li>
+                    <li>Demonstrate that you can communicate clearly and effectively, present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!</li>
+                  </ul>
+                </p>
+                <div style={{ marginBottom: "20px" }}>
                 </div>
-              </div>
-            </>
-          );
+              </Form>
+            </Formik>
+          </div>
+          <div style={{ flex: 1, marginLeft: "10px" }}>
+            <Formik
+              initialValues={{ video1: null }}
+              // onSubmit={async (values, { setSubmitting }) => {
+              //   if (isVideo1Recorded && globalVideo1Link !== "") {
+              //     setStep(7);
+              //   } else if (isVideo1Recorded && globalVideo1Link === "") {
+              //     alert("Uploading video... Sit tight!");
+              //   }
+              //   setSubmitting(false);
+              // }}
+              onSubmit={async (values, { setSubmitting }) => {
+                if (isVideo1Recorded) {
+                  try {
+                    console.log('values.video1:', values.video1);
+                    await handleUpload(values.video1, 1).catch((error) => console.error('Error in handleUpload:', error));
+                    setTimeout(() => {
+                      setStep(7);
+                    }, 2000);
+                    // setStep(7);
+                  } catch (error) {
+                    console.error("Video upload failed:", error);
+                    // optionally show error to user here
+                  } finally {
+                    setSubmitting(false);
+                  }
+                } else {
+                  alert("Please record a video before proceeding!");
+                  setSubmitting(false);
+                }
+              }}
+              
+            >
+              {({ setFieldValue, handleSubmit }) => (
+                <Form
+                  style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}
+                  onSubmit={handleSubmit}
+                >
+                  {/* <VideoRecorder
+                    key={1}
+                    isOnInitially
+                    timeLimit={60000}
+                    showReplayControls
+                    onRecordingComplete={async (videoBlob) => {
+                      // Check if the current step is still 6
+                      if (step === 6) {
+                        // Set the global video blob
+                        setFieldValue("video1", videoBlob);
+                        try {
+                          await handleUpload(videoBlob, 1);
+                        } catch (error) {
+                          console.error("Video upload failed:", error);
+                          //alert('There was an issue uploading the video, please try again.');
+                        }
+                      }
+                    }}
+                  /> */}
+                  <VideoRecorder
+                    key={1}
+                    isOnInitially
+                    timeLimit={60000}
+                    //showReplayControls
+                    onRecordingComplete={(videoBlob) => {
+                      console.log('isMounted:', isMounted.current);
+                      console.log('Video blob:', videoBlob);
+                      if (isMounted.current) {
+                        console.log("Setting field value");
+                        setFieldValue("video1", videoBlob);
+                        console.log("setting video recorded")
+                        setVideo1Recorded(true);
+                      }
+                    }}
+                  />
+                  <div className="video-frame"></div>
+                  <p className="video-info">Video Response: 1 min time limit</p>
+                  <p className="video-info">Unlimited retries</p>
+                  <button type="button" onClick={() => setStep(5)}>Previous</button>
+                  <button
+                    type="submit"
+                    style={buttonStyles}
+                    disabled={!isVideo1Recorded}
+                  >
+                    Next question
+                  </button>
+                </Form>
+              )}
+            </Formik>
+          </div>
+        </div>
+      </div>
+    </>
+  );
           case 7:
             return (
               <>
@@ -876,19 +835,21 @@ const RenderStepContent = () => {
                             Pro tips:
                             <br />
                             <ul>
-                                <li>
-                                Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.                </li>
-                                <li>
-                                Focus on your education, skills, and experiences that make you unique! Tell employers how your unique skills will help the company succeed.                  </li>
-                                <li>
-                                Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.                   </li>
-                                <li>
+                              <li>
+                                Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.
+                              </li>
+                              <li>
+                                Focus on your education, skills, and experiences that make you unique! Tell employers how your unique skills will help the company succeed.
+                              </li>
+                              <li>
+                                Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.
+                              </li>
+                              <li>
                                 Avoid generic phrases like "I'm a hard worker".
-                                </li>
+                              </li>
                             </ul>
-                            </p>
-                          <div style={{ marginBottom: "20px" }}>
-                          </div>
+                          </p>
+                          <div style={{ marginBottom: "20px" }}></div>
                         </Form>
                       </Formik>
                     </div>
@@ -896,36 +857,42 @@ const RenderStepContent = () => {
                       <Formik
                         initialValues={{ video2: null }}
                         onSubmit={async (values, { setSubmitting }) => {
-                          if (values.video2) {
+                          if (isVideo2Recorded) {
                             try {
-                              if (globalVideo2Link === "") {
-                                // Upload the video and proceed to the next step only after the upload is successful
-                                await handleUpload(values.video2, 2);
-                              }
-                              setStep(8);
-                              setSubmitting(false);
+                              console.log('values.video2:', values.video2);
+                              await handleUpload(values.video2, 2).catch((error) => console.error('Error in handleUpload:', error));
+                              setTimeout(() => {
+                                setStep(8);
+                              }, 2000);
                             } catch (error) {
                               console.error("Video upload failed:", error);
-                              alert('There was an issue uploading the video, please try again.');
+                              // optionally show error to user here
+                            } finally {
                               setSubmitting(false);
                             }
                           } else {
-                            alert('Please finish video recording to proceed and get Drafted!');
+                            alert("Please record a video before proceeding!");
                             setSubmitting(false);
                           }
                         }}
                       >
-                        {({ setFieldValue }) => (
-                          <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
+                        {({ setFieldValue, handleSubmit }) => (
+                          <Form
+                            style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}
+                            onSubmit={handleSubmit}
+                          >
                             <VideoRecorder
                               key={2}
                               isOnInitially
                               timeLimit={60000}
                               showReplayControls
                               onRecordingComplete={(videoBlob) => {
-                                // Set the global video blob
-                                setFieldValue("video2", videoBlob);
-                                setVideo2Recorded(true);
+                                console.log('isMounted:', isMounted.current);
+                                console.log('Video blob:', videoBlob);
+                                if (isMounted.current) {
+                                  setFieldValue("video2", videoBlob);
+                                  setVideo2Recorded(true);
+                                }
                               }}
                             />
                             <div className="video-frame"></div>
@@ -946,7 +913,7 @@ const RenderStepContent = () => {
                   </div>
                 </div>
               </>
-            );        
+            );
             case 8:
               return (
                 <>
@@ -969,7 +936,6 @@ const RenderStepContent = () => {
                                   This is like your "highlight reel" moment. Show off!                </li>
                                   <li>Pick one specific challenge in your studies, personal life, or work/internships. Tell a story with a positive outcome and/or positive lesson learned that you can contribute to the workplace.</li>
                                   <li>Emphasize key "soft skills". Examples of soft skills include creativity, leadership, resilience, adaptability, quick decision-making, etc.</li>
-                                  <li></li>
                               </ul>
                               </p>
                             <div style={{ marginBottom: "20px" }}>
@@ -981,36 +947,43 @@ const RenderStepContent = () => {
                         <Formik
                           initialValues={{ video3: null }}
                           onSubmit={async (values, { setSubmitting }) => {
-                            if (values.video3) {
+                            if (isVideo3Recorded) {
                               try {
-                                if (globalVideo3Link === "") {
-                                  // Upload the video and proceed to the next step only after the upload is successful
-                                  await handleUpload(values.video3, 3);
-                                }
-                                setStep(9);
-                                setSubmitting(false);
+                                console.log('values.video3:', values.video3);
+                                await handleUpload(values.video3, 3).catch((error) => console.error('Error in handleUpload:', error));
+                                setTimeout(() => {
+                                  setStep(9);
+                                }, 2000);
                               } catch (error) {
                                 console.error("Video upload failed:", error);
-                                alert('There was an issue uploading the video, please try again.');
+                                // optionally show error to user here
+                              } finally {
                                 setSubmitting(false);
                               }
                             } else {
-                              alert('Please finish video recording to proceed and get Drafted!');
+                              alert("Please record a video before proceeding!");
                               setSubmitting(false);
                             }
                           }}
-                        >
-                          {({ setFieldValue }) => (
-                            <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
+                          >
+                          {({ setFieldValue, handleSubmit }) => (
+                            <Form 
+                              style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}
+                              onSubmit={handleSubmit}
+                            >
                               <VideoRecorder
                                 key={3}
                                 isOnInitially
                                 timeLimit={60000}
                                 showReplayControls
                                 onRecordingComplete={(videoBlob) => {
-                                  // Set the global video blob
-                                  setFieldValue("video3", videoBlob);
-                                  setVideo3Recorded(true);
+                                  console.log('isMounted:', isMounted.current);
+                                  console.log('Video blob:', videoBlob);
+                                  if (isMounted.current) {
+                                    setFieldValue("video3", videoBlob);
+                                    setVideo3Recorded(true);
+                                  }
+                                  console.log('Current step after recording: ', step);
                                 }}
                               />
                               <div className="video-frame"></div>
@@ -1032,35 +1005,35 @@ const RenderStepContent = () => {
                   </div>
                 </>
               );
-      case 9:
-        return (
-          <>
-          <Form>
-          <h2>🥳</h2>
-            <h2>Congratulations, your profile is complete!</h2>
-            <p>
-              Keep an eye on your inbox as hiring companies and recruiters begin reaching out to you. Eventually, you will
-              be able to access your Drafted profile to see more information like video views, companies viewing your video
-              resume, and more.
-            </p>
-            <p>In the meantime, check out our blog site for helpful interview tips, recommendations, and know-hows to land your next full-time job!</p>
-            <a href="https://www.joindrafted.com/drafted-blog" target="_blank" rel="noopener noreferrer">
-            <button type="button" onClick={() => setStep(8)}>Previous</button>
-              <button 
-                style={buttonStyles} 
-                onClick={() => {
-                  window.location.href = 'https://www.joindrafted.com/drafted-blog';
-                }}
-              >
-                Drafted Blog
-              </button>
-            </a>
-          </Form>
-
-          </>
-        );
-      default:
-        return null;
+              case 9:
+                return (
+                  <>
+                  <Form>
+                    <h2>🥳</h2>
+                    <h2>Congratulations, your profile is complete!</h2>
+                    <p>
+                      Keep an eye on your inbox as hiring companies and recruiters begin reaching out to you. Eventually, you will
+                      be able to access your Drafted profile to see more information like video views, companies viewing your video
+                      resume, and more.
+                    </p>
+                    <p>In the meantime, check out our blog site for helpful interview tips, recommendations, and know-hows to land your next full-time job!</p>
+                    
+                    <button type="button" onClick={() => setStep(8)}>Previous</button>
+                    <a href="https://www.joindrafted.com/drafted-blog" target="_blank" rel="noopener noreferrer">
+                      <button 
+                        style={buttonStyles} 
+                        onClick={() => {
+                          window.location.href = 'https://www.joindrafted.com/drafted-blog';
+                        }}
+                      >
+                        Drafted Blog
+                      </button>
+                    </a>
+                  </Form>
+                  </>
+                );
+              default:
+                return null;              
     }
   };
   
