@@ -10,7 +10,7 @@ import * as Yup from 'yup';
 import AWS from 'aws-sdk';
 import Levenshtein from 'fast-levenshtein';
 import usfTampaGif from './usf-tampa.gif';
-
+import loadingGif from './loader.gif';
 
 const S3_BUCKET_NAME = 'uploads-video-resumes';
 const COLLEGE_API_KEY = 'HVwaXJVdWqpqjayHBi6OMRGk5CDGybJtu8SN8M57';
@@ -342,9 +342,19 @@ const MultiStepForm = ({submitHandler}) => {
   //  let globalVideo1Link = "";
   //  let globalVideo2Link = "";
   //  let globalVideo3Link = "";
+
+  const [isLoading, setIsLoading] = useState(false);
+
   
 const RenderStepContent = ({step, setStep /* other props as necessary... */}) => {
     const isMounted = useRef(false);
+
+    const [showProTips, setShowProTips] = useState(false);
+
+    const toggleProTips = () => {
+      setShowProTips(!showProTips);
+    };
+  
 
     useEffect(() => {
       isMounted.current = true;
@@ -497,7 +507,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         </button>
                       </div>
                       {/* Uncomment to go directly to video step */}
-                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
+                      <button type="button" onClick={setStep(6)}>Debug Video</button>
                     </Form>
                   )}
                 </Formik>
@@ -781,7 +791,8 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
           </>
         );
 case 6:
-          const isMobile = window.innerWidth <= 768;
+  const isMobile = window.innerWidth <= 768;
+
 
   const mobileForm = (
     <Formik
@@ -790,6 +801,7 @@ case 6:
         if (values.video1) {
           console.log("video 1 recorded");
           try {
+            setIsLoading(true);
             console.log('values.video1:', values.video1);
             await handleUpload(values.video1, 1);
             setStep(7);
@@ -797,6 +809,7 @@ case 6:
             console.error("Video upload failed:", error);
             // Optionally show error to user here
           } finally {
+            setIsLoading(false);
             setSubmitting(false);
           }
         } else {
@@ -811,17 +824,21 @@ case 6:
           onSubmit={handleSubmit}
         >
           <h2>Question 1 of 3</h2>
-          <h3>Tell us your</h3>
+          <h3>Tell us your story</h3>
           <p>
-          Pro tips:
-                  <br />
-                  <ul>
-                    <li>
-                      This is the typical "walk me through your resume" question. Talk about what you majored in and why. What internships or experiences you've had, and what have you learned from them? What skills will you bring to the hiring company?
-                    </li>
-                    <li>Show why you're the best candidate to get an opportunity, in terms of degree, internships, and experience as well as soft skills which truly set you apart. Talk about what you are passionate about, and what you hope to explore in your first role.</li>
-                    <li>Demonstrate that you can communicate clearly and effectively, present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!</li>
-                  </ul>          </p>
+          <span onClick={toggleProTips} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+          Click for pro tips
+        </span>
+        {showProTips && (
+          <ul>
+            <li>
+              This is the typical "walk me through your resume" question. Talk about what you majored in and why. What internships or experiences you've had, and what have you learned from them? What skills will you bring to the hiring company?
+            </li>
+            <li>Show why you're the best candidate to get an opportunity, in terms of degree, internships, and experience as well as soft skills which truly set you apart. Talk about what you are passionate about, and what you hope to explore in your first role.</li>
+            <li>Demonstrate that you can communicate clearly and effectively, present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!</li>
+          </ul>
+        )}
+      </p>
           <VideoRecorder
             key={1}
             isOnInitially
@@ -839,9 +856,13 @@ case 6:
           <button
             type="submit"
             style={buttonStyles}
+            disabled={isLoading}
           >
-            Next question
-          </button>
+              Submit and Next
+           </button>
+           {isLoading && (
+              <img src={loadingGif} alt="Loading..." style={{ width: '24px', height: '24px', marginLeft: '10px' }} />
+            )}
         </Form>
       )}
     </Formik>
@@ -860,7 +881,7 @@ case 6:
             >
               <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
                 <h2>Question 1 of 3</h2>
-                <h3>Tell us about yourself!</h3>
+                <h3>Tell us your story</h3>
                 <p>
                   Pro tips:
                   <br />
@@ -884,6 +905,7 @@ case 6:
                 if (values.video1) {
                   console.log("video 1 recorded");
                   try {
+                    setIsLoading(true);
                     console.log('values.video1:', values.video1);
                     await handleUpload(values.video1, 1);
                     setStep(7);
@@ -891,6 +913,7 @@ case 6:
                     console.error("Video upload failed:", error);
                     // Optionally show error to user here
                   } finally {
+                    setIsLoading(false);
                     setSubmitting(false);
                   }
                 } else {
@@ -922,8 +945,11 @@ case 6:
                     type="submit"
                     style={buttonStyles}
                   >
-                    Next question
+                    Submit and Next
                   </button>
+                  {isLoading && (
+              <img src={loadingGif} alt="Loading..." style={{ width: '24px', height: '24px', marginLeft: '10px' }} />
+            )}
                 </Form>
               )}
             </Formik>
@@ -945,6 +971,7 @@ case 6:
         if (values.video2) {
           console.log("video 2 recorded");
           try {
+            setIsLoading(true);
             console.log('values.video2:', values.video2);
             await handleUpload(values.video2, 2);
             setStep(8);
@@ -952,6 +979,7 @@ case 6:
             console.error("Video upload failed:", error);
             // Optionally show error to user here
           } finally {
+            setIsLoading(false);
             setSubmitting(false);
           }
         } else {
@@ -968,7 +996,7 @@ case 6:
                   <h2>Question 2 of 3</h2>
                   <h3>What makes you stand out amongst other candidates?</h3>
                   <p>
-                    Pro tips:
+                    {/* Pro tips:
                     <br />
                     <ul>
                       <li>
@@ -985,6 +1013,28 @@ case 6:
                       </li>
                     </ul>
                   </p>
+
+                  <p> */}
+          <span onClick={toggleProTips} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+          Click for pro tips
+        </span>
+        {showProTips && (
+          <ul>
+                      <li>
+                        Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.
+                      </li>
+                      <li>
+                        Focus on your education, skills, and experiences that make you unique! Tell employers how your unique skills will help the company succeed.
+                      </li>
+                      <li>
+                        Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.
+                      </li>
+                      <li>
+                        Avoid generic phrases like "I'm a hard worker".
+                      </li>          </ul>
+        )}
+      </p>
+
                   <VideoRecorder
                       key={2}
                       isOnInitially
@@ -1003,8 +1053,11 @@ case 6:
             type="submit"
             style={buttonStyles}
           >
-            Next question
+            Submit and Nex
           </button>
+          {isLoading && (
+              <img src={loadingGif} alt="Loading..." style={{ width: '24px', height: '24px', marginLeft: '10px' }} />
+            )}
         </Form>
       )}
     </Formik>
@@ -1053,6 +1106,7 @@ case 6:
                   if (values.video2) {
                     console.log("video 2 recorded");
                     try {
+                      setIsLoading(true);
                       console.log('values.video2:', values.video2);
                       await handleUpload(values.video2, 2);
                       setStep(8);
@@ -1060,6 +1114,7 @@ case 6:
                       console.error("Video upload failed:", error);
                       // Optionally show error to user here
                     } finally {
+                      setIsLoading(false);
                       setSubmitting(false);
                     }
                   } else {
@@ -1091,8 +1146,11 @@ case 6:
                       type="submit"
                       style={buttonStyles}
                     >
-                      Next question
+                      Submit and Next
                     </button>
+                    {isLoading && (
+              <img src={loadingGif} alt="Loading..." style={{ width: '24px', height: '24px', marginLeft: '10px' }} />
+            )}
                   </Form>
                 )}
               </Formik>
@@ -1114,6 +1172,7 @@ case 6:
           if (values.video3) {
             console.log("video 3 recorded");
             try {
+              setIsLoading(true);
               console.log('values.video3:', values.video3);
               await handleUpload(values.video3, 3);
               await handleTextUpload();
@@ -1122,6 +1181,7 @@ case 6:
               console.error("Video upload failed:", error);
               // Optionally show error to user here
             } finally {
+              setIsLoading(false);
               setSubmitting(false);
             }
           } else {
@@ -1137,7 +1197,7 @@ case 6:
             >
                     <h2>Question 3 of 3</h2>
                     <h3>What makes you stand out amongst other candidates?</h3>
-                    <p>
+                    {/* <p>
                       Pro tips:
                       <br />
                       <ul>
@@ -1154,7 +1214,29 @@ case 6:
                           Avoid generic phrases like "I'm a hard worker".
                         </li>
                       </ul>
-                    </p>
+                    </p> */}
+<p>
+                    <span onClick={toggleProTips} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
+          Click for pro tips
+        </span>
+        {showProTips && (
+          <ul>
+                        <li>
+                          Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.
+                        </li>
+                        <li>
+                          Focus on your education, skills, and experiences that make you unique! Tell employers how your unique skills will help the company succeed.
+                        </li>
+                        <li>
+                          Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.
+                        </li>
+                        <li>
+                          Avoid generic phrases like "I'm a hard worker".
+                        </li>       
+                      </ul>
+        )}
+      </p>
+                    
                     <VideoRecorder
                         key={3}
                         isOnInitially
@@ -1173,8 +1255,11 @@ case 6:
               type="submit"
               style={buttonStyles}
             >
-              Next question
+              Submit and Next
             </button>
+            {isLoading && (
+              <img src={loadingGif} alt="Loading..." style={{ width: '24px', height: '24px', marginLeft: '10px' }} />
+            )}
           </Form>
         )}
       </Formik>
@@ -1220,6 +1305,7 @@ case 6:
                     if (values.video3) {
                       console.log("video 3 recorded");
                       try {
+                        setIsLoading(true);
                         console.log('values.video3:', values.video3);
                         await handleUpload(values.video3, 3);
                         await handleTextUpload();
@@ -1228,6 +1314,7 @@ case 6:
                         console.error("Video upload failed:", error);
                         // Optionally show error to user here
                       } finally {
+                        setIsLoading(false);
                         setSubmitting(false);
                       }
                     } else {
@@ -1262,6 +1349,9 @@ case 6:
                       >
                         Submit
                       </button>
+                      {isLoading && (
+              <img src={loadingGif} alt="Loading..." style={{ width: '24px', height: '24px', marginLeft: '10px' }} />
+            )}
                     </Form>
                   )}
                 </Formik>
