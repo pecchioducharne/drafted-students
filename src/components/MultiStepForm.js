@@ -516,7 +516,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         </button>
                       </div>
                       {/* Uncomment to go directly to video step */}
-                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
+                      <button type="button" onClick={setStep(6)}>Debug Video</button>
                     </Form>
                   )}
                 </Formik>
@@ -846,6 +846,7 @@ case 6:
             <li>Demonstrate that you can communicate clearly and effectively, present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!</li>
           </ul>
         )}
+        <p><a href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Question 1 Explained (Video)</a></p>
       </p>
           <VideoRecorder
             key={1}
@@ -912,6 +913,7 @@ case 6:
                     </li>
                   </ul>
                 </p>
+                <p><a href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Question 1 Explained (Video)</a></p>
                 <div style={{ marginBottom: "20px" }}>
                 </div>
               </Form>
@@ -1053,7 +1055,7 @@ case 6:
                       </li>          </ul>
         )}
       </p>
-
+      <p><a href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Question 2 Explained (Video)</a></p>
                   <VideoRecorder
                       key={2}
                       isOnInitially
@@ -1118,6 +1120,7 @@ case 6:
                       </li>
                     </ul>
                   </p>
+                  <p><a href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Question 2 Explained (Video)</a></p>
                   <div style={{ marginBottom: "20px" }}></div>
                 </Form>
               </Formik>
@@ -1259,7 +1262,7 @@ case 6:
                       </ul>
         )}
       </p>
-                    
+      <p><a href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Question 3 Explained (Video)</a></p>
                     <VideoRecorder
                         key={3}
                         isOnInitially
@@ -1323,6 +1326,7 @@ case 6:
                         </li>
                       </ul>
                     </p>
+                    <p><a href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Question 3 Explained (Video)</a></p>
                     <div style={{ marginBottom: "20px" }}>
                     </div>
                   </Form>
