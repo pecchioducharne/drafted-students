@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1401.0",
     "axios": "^1.4.0",
     "fast-levenshtein": "^3.0.0",
@@ -10,7 +11,7 @@
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "react-select": "^5.7.3",
     "react-video-recorder": "^3.19.4",
     "styled-components": "^4.1.1",

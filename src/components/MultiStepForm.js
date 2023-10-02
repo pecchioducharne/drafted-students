@@ -291,6 +291,15 @@ const MultiStepForm = ({submitHandler}) => {
     cursor: 'pointer',
   };
 
+  const previousButtonStyles = {
+    borderRadius: '8px',
+    backgroundColor: '#e5e5e5',
+    color: 'black',
+    padding: '10px 20px',
+    border: 'none',
+    cursor: 'pointer',
+  };
+
   const letsGoProButtonStyle = {
     borderRadius: '8px',
     backgroundColor: '#207a56',
@@ -507,15 +516,13 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         </button>
                       </div>
                       {/* Uncomment to go directly to video step */}
-                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
+                      <button type="button" onClick={setStep(6)}>Debug Video</button>
                     </Form>
                   )}
                 </Formik>
               </>
             );                  
           case 2:
-
-
             return (
               <>
                 <Formik
@@ -551,7 +558,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                       <div className="error">{errors.university}</div>
                     ) : null}
                   </div>
-                  <button type="button" onClick={() => setStep(1)}>Previous</button>
+                  <button type="button" onClick={() => setStep(1)} style={previousButtonStyles}>Previous</button>
                   <br></br>
                   <button type="submit" style={buttonStyles} disabled={!values.university}>
                     Continue to the next step
@@ -608,7 +615,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         setStep(2);
                     }
                 }}
-                >Previous</button>
+                style={previousButtonStyles}>Previous</button>
                 <button type="submit" style={buttonStyles}>Create Account</button>
                 </Form>
             </Formik>
@@ -760,7 +767,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                 <Field type="file" id="resume2" name="resume2" accept=".pdf" />
                 <ErrorMessage name="resume2" component="div" className="error" /> */}
                 </div>
-                <button type="button" onClick={() => setStep(3)}>Previous</button>
+                <button type="button" onClick={() => setStep(3)} style={previousButtonStyles}>Previous</button>
                 <button 
                     type="submit" 
                     style={buttonStyles}
@@ -783,7 +790,8 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
             <p>With just one video resume you'll gain exposure to over 1,000 companies.</p>
             <p>We'll ask just 3 questions, and you'll have up to 1 minute to answer each question.</p>
             <p>Don't worry, you can restart until you're happy with it!</p>
-            <button type="button" onClick={() => setStep(4)}>Previous</button>
+            <p>To see all the questions in advance, click on <a href="https://drive.google.com/file/d/17bePlA6Yyl_R9RJmIuIfjO0g78ZB1n8F/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Drafted Video Resume</a></p>
+            <button type="button" onClick={() => setStep(4)} style={previousButtonStyles}>Previous</button>
             <button type="button" onClick={() => setStep(6)} style={buttonStyles}>
               Continue
             </button>
@@ -852,7 +860,7 @@ case 6:
           <div className="video-frame"></div>
           <p className="video-info">Video Response: 1 min time limit</p>
           <p className="video-info">Unlimited retries</p>
-          <button type="button" onClick={() => setStep(5)}>Previous</button>
+          <button type="button" onClick={() => setStep(5)}style={previousButtonStyles}>Previous</button>
           <button
             type="submit"
             style={buttonStyles}
@@ -883,14 +891,25 @@ case 6:
                 <h2>Question 1 of 3</h2>
                 <h3>Tell us your story</h3>
                 <p>
-                  Pro tips:
-                  <br />
                   <ul>
                     <li>
-                      This is the typical "walk me through your resume" question. Talk about what you majored in and why. What internships or experiences you've had, and what have you learned from them? What skills will you bring to the hiring company?
+                      <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                        This is the typical "walk me through your resume" question.
+                      </span>{" "}
+                       Talk about what you majored in and why. What internships or experiences you've had, and what have you learned from them? What skills will you bring to the hiring company?
                     </li>
-                    <li>Show why you're the best candidate to get an opportunity, in terms of degree, internships, and experience as well as soft skills which truly set you apart. Talk about what you are passionate about, and what you hope to explore in your first role.</li>
-                    <li>Demonstrate that you can communicate clearly and effectively, present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!</li>
+                    <li>
+                      <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                        Show why you're the best candidate to get an opportunity, 
+                      </span>{" "}
+                       in terms of degree, internships, and experience as well as soft skills which truly set you apart. Talk about what you are passionate about, and what you hope to explore in your first role.
+                    </li>
+                    <li>
+                      <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                        Demonstrate that you can communicate clearly and effectively, 
+                      </span>{" "}
+                       present yourself professionally, and most importantly have fun and show your enthusiasm to go pro and put that degree to work!
+                    </li>
                   </ul>
                 </p>
                 <div style={{ marginBottom: "20px" }}>
@@ -940,7 +959,7 @@ case 6:
                   <div className="video-frame"></div>
                   <p className="video-info">Video Response: 1 min time limit</p>
                   <p className="video-info">Unlimited retries</p>
-                  <button type="button" onClick={() => setStep(5)}>Previous</button>
+                  <button type="button" onClick={() => setStep(5)} style={previousButtonStyles}>Previous</button>
                   <button
                     type="submit"
                     style={buttonStyles}
@@ -1048,7 +1067,7 @@ case 6:
           <div className="video-frame"></div>
           <p className="video-info">Video Response: 1 min time limit</p>
           <p className="video-info">Unlimited retries</p>
-          <button type="button" onClick={() => setStep(6)}>Previous</button>
+          <button type="button" onClick={() => setStep(6)} style={previousButtonStyles}>Previous</button>
           <button
             type="submit"
             style={buttonStyles}
@@ -1075,23 +1094,27 @@ case 6:
                 }}
               >
                 <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
-                  <h2>Question 2 of 3</h2>
+                <h2>Question 2 of 3</h2>
                   <h3>What makes you stand out amongst other candidates?</h3>
                   <p>
-                    Pro tips:
-                    <br />
                     <ul>
                       <li>
-                        Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.
+                        <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                          Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.
+                        </span>{" "}
+                        Focus on your unique skills and experiences, and explain why these make you the ideal candidate.
                       </li>
                       <li>
-                        Focus on your education, skills, and experiences that make you unique! Tell employers how your unique skills will help the company succeed.
+                        <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                          Focus on your education, skills, and experiences that make you unique! 
+                        </span>{" "}
+                        Tell employers how your unique skills will help the company succeed.
                       </li>
                       <li>
-                        Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.
-                      </li>
-                      <li>
-                        Avoid generic phrases like "I'm a hard worker".
+                        <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                          Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.
+                        </span>{" "}
+                        Use specific examples to demonstrate your skills and achievements, and relate them back to the requirements of the job.
                       </li>
                     </ul>
                   </p>
@@ -1141,7 +1164,7 @@ case 6:
                     <div className="video-frame"></div>
                     <p className="video-info">Video Response: 1 min time limit</p>
                     <p className="video-info">Unlimited retries</p>
-                    <button type="button" onClick={() => setStep(6)}>Previous</button>
+                    <button type="button" onClick={() => setStep(6)} style={previousButtonStyles}>Previous</button>
                     <button
                       type="submit"
                       style={buttonStyles}
@@ -1250,7 +1273,7 @@ case 6:
             <div className="video-frame"></div>
             <p className="video-info">Video Response: 1 min time limit</p>
             <p className="video-info">Unlimited retries</p>
-            <button type="button" onClick={() => setStep(6)}>Previous</button>
+            <button type="button" onClick={() => setStep(6)} style={previousButtonStyles}>Previous</button>
             <button
               type="submit"
               style={buttonStyles}
@@ -1276,20 +1299,27 @@ case 6:
                   }}
                 >
                   <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
-                    <h2>Question 3 of 3</h2>
+                  <h2>Question 3 of 3</h2>
                     <h3>Tell us about a time when you overcame a challenge</h3>
                     <p>
-                      Pro tips:
-                      <br />
                       <ul>
                         <li>
-                          This is like your "highlight reel" moment. Show off!
+                          <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                            This is like your "highlight reel" moment. Show off!
+                          </span>{" "}
+                          Share specific examples where you exhibited problem-solving skills and the ability to overcome obstacles. 
                         </li>
                         <li>
-                          Pick one specific challenge in your studies, personal life, or work/internships. Tell a story with a positive outcome and/or positive lesson learned that you can contribute to the workplace.
+                          <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                            Pick one specific challenge in your studies, personal life, or work/internships.
+                          </span>{" "}
+                          Tell a story with a positive outcome and/or positive lesson learned that you can contribute to the workplace.
                         </li>
                         <li>
-                          Emphasize key "soft skills". Examples of soft skills include creativity, leadership, resilience, adaptability, quick decision-making, etc.
+                          <span style={{ fontWeight: 'bold', color: '#53AD7A' }}>
+                            Emphasize key "soft skills".
+                          </span>{" "}
+                          Examples of soft skills include creativity, leadership, resilience, adaptability, quick decision-making, etc. Relate these to the specific challenge and outcome you are discussing.
                         </li>
                       </ul>
                     </p>
@@ -1341,7 +1371,7 @@ case 6:
                       <div className="video-frame"></div>
                       <p className="video-info">Video Response: 1 min time limit</p>
                       <p className="video-info">Unlimited retries</p>
-                      <button type="button" onClick={() => setStep(7)}>Previous</button>
+                      <button type="button" onClick={() => setStep(7)} style={previousButtonStyles}>Previous</button>
                       <button
                         type="submit"
                         style={buttonStyles}
@@ -1376,7 +1406,7 @@ case 6:
                     </p>
                     <p>In the meantime, check out our blog site for helpful interview tips, recommendations, and know-hows to land your next full-time job!</p>
                     
-                    <button type="button" onClick={() => setStep(8)}>Previous</button>
+                    <button type="button" onClick={() => setStep(8)} style={previousButtonStyles}>Previous</button>
                     <a href="https://www.joindrafted.com/drafted-blog" target="_blank" rel="noopener noreferrer">
                       <button 
                         style={buttonStyles} 
