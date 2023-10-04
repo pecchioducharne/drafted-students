@@ -715,34 +715,33 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                 </div>
                 <br></br>
                 <div>
-                <label htmlFor="graduationMonth">* Graduation Month</label>
-                <Field as="select" id="graduationMonth" name="graduationMonth" style={{ width: '95%' }}>
-                    <option value="">What month do you expect to graduate?</option>
-                    {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                    <option key={month} value={month}>
-                        {new Date(0, month - 1).toLocaleString('en-US', { month: 'long' })}
-                    </option>
-                    ))}
-                </Field>
-                <ErrorMessage name="graduationMonth" component="div" className="error" />
+                    <label htmlFor="graduationYear">* Graduation Year</label>
+                    <Field as="select" id="graduationYear" name="graduationYear" style={{ width: '95%' }}>
+                        <option value="">Select a year</option>
+                        {[...Array(6)].map((_, i) => 
+                            <option key={i} value={2022 + i}>{2022 + i}</option>
+                        )}
+                    </Field>
+                    <ErrorMessage name="graduationYear" component="div" className="error" />
+                    <br></br>
+                </div>
                 <br></br>
+                <div>
+                    <label htmlFor="graduationMonth">* Graduation Month</label>
+                    <Field as="select" id="graduationMonth" name="graduationMonth" style={{ width: '95%' }}>
+                        <option value="">What month do you expect to graduate?</option>
+                        {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
+                            <option key={month} value={month}>
+                                {new Date(0, month - 1).toLocaleString('en-US', { month: 'long' })}
+                            </option>
+                        ))}
+                    </Field>
+                    <ErrorMessage name="graduationMonth" component="div" className="error" />
+                    <br></br>
                 </div>
                 <div>
-                <br></br>
-                <label htmlFor="graduationYear">* Graduation Year</label>
-                {/* <Field type="number" id="graduationYear" name="graduationYear" min="2022" max="2040" style={{ width: '95%' }} /> */}
-                <Field as="select" id="graduationYear" name="graduationYear" style={{ width: '95%' }}>
-                <option value="">Select a year</option>
-                {[...Array(6)].map((_, i) => 
-                    <option key={i} value={2022 + i}>{2022 + i}</option>
-                )}
-                </Field>
-                <ErrorMessage name="graduationYear" component="div" className="error" />
-                <br></br>
-                </div>
-                <div>
-                <br></br>
-                <label htmlFor="linkedInProfile">LinkedIn Profile</label>
+                    <br></br>
+                    <label htmlFor="linkedInProfile">LinkedIn Profile</label>
                 <Field type="text" id="linkedInProfileURL" name="linkedInProfileURL" style={{ width: '95%' }} />
                 <ErrorMessage name="linkedInProfileURL" component="div" className="error" />
                 <br></br>
