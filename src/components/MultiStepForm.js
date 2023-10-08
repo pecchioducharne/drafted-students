@@ -477,7 +477,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                 >
                   {formik => (
                     <Form>
-                      <h2>Let's find your next job</h2>
+                      <h2>🎯 Let's find your next job</h2>
                       <h3>Join Drafted's community of job seekers</h3>
                       <p>The best place for college students, recent graduates, and early career professionals to find jobs and internships.</p>
                       <div>
@@ -516,7 +516,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         </button>
                       </div>
                       {/* Uncomment to go directly to video step */}
-                      {/* <button type="button" onClick={setStep(6)}>Debug Video</button> */}
+                      {/* <button type="button" onClick={setStep(5)}>Debug Video</button> */}
                     </Form>
                   )}
                 </Formik>
@@ -543,27 +543,30 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                   }}
                 >
                   {({ setFieldValue, values, errors, touched }) => (
-                  <Form>
-                  <h2>Find your school</h2>
-                  <p>Select your university below. This will help more employers targeting your school find you.</p>
-                  <div>
-                    <label htmlFor="university">University</label>
-                    <Field
-                      name="university"
-                      component={MySelect}
-                      onChange={setFieldValue}
-                      value={values.university}
-                    />
-                    {touched.university && errors.university ? (
-                      <div className="error">{errors.university}</div>
-                    ) : null}
-                  </div>
-                  <button type="button" onClick={() => setStep(1)} style={previousButtonStyles}>Previous</button>
-                  <br></br>
-                  <button type="submit" style={buttonStyles} disabled={!values.university}>
-                    Continue to the next step
-                  </button>
-                </Form>
+                    <Form>
+                      <h2>🎓 Find your school</h2>
+                      <p>Select your university below. This will help more employers targeting your school find you.</p>
+                      <div>
+                        <label htmlFor="university">Search your university</label>
+                        <Field
+                          name="university"
+                          component={MySelect}
+                          onChange={setFieldValue}
+                          value={values.university}
+                          placeholder='Search your university...'
+                        />
+                        {touched.university && errors.university ? (
+                          <div className="error">{errors.university}</div>
+                        ) : null}
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+                        <button type="button" onClick={() => setStep(1)} style={previousButtonStyles}>Previous</button>
+                        <button type="submit" style={buttonStyles} disabled={!values.university}>
+                          Continue to the next step
+                        </button>
+                      </div>
+                    </Form>
                   )}
                 </Formik>
               </>
@@ -591,7 +594,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                 }}
                 >
                 <Form>
-                <h2>Create your password</h2>
+                <h2>🔑 Create your password</h2>
                 <div>
                 <label htmlFor="password">Password</label>
                 <Field type="password" id="password" name="password" style={{ width: '95%' }} />
@@ -689,8 +692,8 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
             }}
             >
             <Form>
-                <h2>Tell us about yourself</h2>
-                {name && <p>Hi, {name}!</p>}
+                <h2>🪪 Tell us about yourself</h2>
+                {name && <p>🙋🏽 Hi, {name}!</p>}
                 <div>
                 <label htmlFor="firstName">* First Name</label>
                 <Field 
@@ -776,27 +779,53 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
             </Form>
       </Formik>    
         );
-      case 5:
-        return (
-          <>
-            <Formik
-            onSubmit={() => setStep(6)}
-            onKeyPress={() => handleKeyPress(6)}
-            ></Formik>
-            <Form>
-            <h2>Let's record your video resume</h2>
-            <h3>The video resume is how Drafted changes the way you get hired.</h3>
-            <p>With just one video resume you'll gain exposure to over 1,000 companies.</p>
-            <p>We'll ask just 3 questions, and you'll have up to 1 minute to answer each question.</p>
-            <p>Don't worry, you can restart until you're happy with it!</p>
-            <p>To see all the questions in advance, click on <a href="https://drive.google.com/file/d/17bePlA6Yyl_R9RJmIuIfjO0g78ZB1n8F/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Drafted Video Resume</a></p>
-            <button type="button" onClick={() => setStep(4)} style={previousButtonStyles}>Previous</button>
-            <button type="button" onClick={() => setStep(6)} style={buttonStyles}>
-              Continue
-            </button>
-            </Form>
-          </>
-        );
+        case 5:
+          return (
+            <>
+              <Formik
+                initialValues={{ file: null }}
+                onSubmit={() => setStep(6)}
+                onKeyPress={() => handleKeyPress(6)}
+              >
+                {({ values, setFieldValue }) => (
+                  <Form>
+                    <h2>✨ Let's record your video resume</h2>
+                    <h3>The video resume is how Drafted changes the way you get hired.</h3>
+                    <p>With just one video resume you'll gain exposure to over 1,000 companies.</p>
+                    <p>We'll ask just 3 questions, and you'll have up to 1 minute to answer each question.</p>
+                    <p>Don't worry, you can restart until you're happy with it!</p>
+                    <p>To see all the questions in advance, click on <a href="https://drive.google.com/file/d/17bePlA6Yyl_R9RJmIuIfjO0g78ZB1n8F/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Drafted Video Resume</a></p>
+                    {/* <div>
+                      <label htmlFor="file">Upload Your Video Resume:</label>
+                      <input
+                        id="file"
+                        name="file"
+                        type="file"
+                        accept="video/*"  // Accepts only video files
+                        onChange={(event) => {
+                          setFieldValue("file", event.currentTarget.files[0]);
+                        }}
+                      />
+                      {values.file && <span>{values.file.name}</span>}
+                    </div> */}
+        
+                    <button type="button" onClick={() => setStep(4)} style={previousButtonStyles}>Previous</button>
+                    <button type="button" onClick={() => {
+                      // Check if a file has been uploaded
+                      if (values.file) {
+                        setStep(9);
+                      } else {
+                        setStep(6);
+                      }
+                    }} style={buttonStyles}>
+                      Continue
+                    </button>
+                  </Form>
+                )}
+              </Formik>
+            </>
+          );
+        
 case 6:
   const isMobile = window.innerWidth <= 768;
 
@@ -831,7 +860,7 @@ case 6:
           onSubmit={handleSubmit}
         >
           <h2>Question 1 of 3</h2>
-          <h3>Tell us your story</h3>
+          <h3>🗺️ Tell us your story</h3>
           <p>
           <span onClick={toggleProTips} style={{ cursor: 'pointer', fontWeight: 'bold' }}>
           Click for pro tips
@@ -889,7 +918,7 @@ case 6:
             >
               <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
                 <h2>Question 1 of 3</h2>
-                <h3>Tell us your story</h3>
+                <h3>🗺️ Tell us your story</h3>
                 <p>
                   <ul>
                     <li>
@@ -1014,7 +1043,7 @@ case 6:
           onSubmit={handleSubmit}
         >
                   <h2>Question 2 of 3</h2>
-                  <h3>What makes you stand out amongst other candidates?</h3>
+                  <h3>🪄 What makes you stand out amongst other candidates?</h3>
                   <p>
                     {/* Pro tips:
                     <br />
@@ -1096,7 +1125,7 @@ case 6:
               >
                 <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
                 <h2>Question 2 of 3</h2>
-                  <h3>What makes you stand out amongst other candidates?</h3>
+                  <h3>🪄 What makes you stand out amongst other candidates?</h3>
                   <p>
                     <ul>
                       <li>
@@ -1221,7 +1250,7 @@ case 6:
             onSubmit={handleSubmit}
             >
                     <h2>Question 3 of 3</h2>
-                    <h3>What makes you stand out amongst other candidates?</h3>
+                    <h3>🧗 Tell us about a time when you overcame a challenge</h3>
                     {/* <p>
                       Pro tips:
                       <br />
@@ -1247,17 +1276,14 @@ case 6:
         {showProTips && (
           <ul>
                         <li>
-                          Don’t be modest — this is the time to be confident about your strengths and really sell yourself to employers.
+                        This is like your "highlight reel" moment. Show off! Share specific examples where you exhibited problem-solving skills and the ability to overcome obstacles.
                         </li>
                         <li>
-                          Focus on your education, skills, and experiences that make you unique! Tell employers how your unique skills will help the company succeed.
+                        Pick one specific challenge in your studies, personal life, or work/internships. Tell a story with a positive outcome and/or positive lesson learned that you can contribute to the workplace.
                         </li>
                         <li>
-                          Employers ask this to identify reasons why hiring you is better than hiring a similarly qualified candidate.
-                        </li>
-                        <li>
-                          Avoid generic phrases like "I'm a hard worker".
-                        </li>       
+                        Emphasize key "soft skills". Examples of soft skills include creativity, leadership, resilience, adaptability, quick decision-making, etc. Relate these to the specific challenge and outcome you are discussing.
+                        </li>     
                       </ul>
         )}
       </p>
@@ -1302,7 +1328,7 @@ case 6:
                 >
                   <Form style={{ backgroundColor: "white", borderRadius: "8px", padding: "20px" }}>
                   <h2>Question 3 of 3</h2>
-                    <h3>Tell us about a time when you overcame a challenge</h3>
+                    <h3>🧗 Tell us about a time when you overcame a challenge</h3>
                     <p>
                       <ul>
                         <li>
