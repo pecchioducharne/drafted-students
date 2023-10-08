@@ -517,7 +517,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         </button>
                       </div>
                       {/* Uncomment to go directly to video step */}
-                      <button type="button" onClick={setStep(5)}>Debug Video</button>
+                      {/* <button type="button" onClick={setStep(5)}>Debug Video</button> */}
                     </Form>
                   )}
                 </Formik>
