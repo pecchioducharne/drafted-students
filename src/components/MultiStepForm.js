@@ -285,6 +285,7 @@ const MultiStepForm = ({submitHandler}) => {
   const buttonStyles = {
     borderRadius: '8px',
     backgroundColor: '#207a56',
+    textDecoration: 'none',
     color: 'white',
     padding: '10px 20px',
     border: 'none',
@@ -516,7 +517,7 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
                         </button>
                       </div>
                       {/* Uncomment to go directly to video step */}
-                      {/* <button type="button" onClick={setStep(5)}>Debug Video</button> */}
+                      <button type="button" onClick={setStep(5)}>Debug Video</button>
                     </Form>
                   )}
                 </Formik>
@@ -780,51 +781,68 @@ const RenderStepContent = ({step, setStep /* other props as necessary... */}) =>
       </Formik>    
         );
         case 5:
-          return (
-            <>
-              <Formik
-                initialValues={{ file: null }}
-                onSubmit={() => setStep(6)}
-                onKeyPress={() => handleKeyPress(6)}
-              >
-                {({ values, setFieldValue }) => (
-                  <Form>
-                    <h2>✨ Let's record your video resume</h2>
-                    <h3>The video resume is how Drafted changes the way you get hired.</h3>
-                    <p>With just one video resume you'll gain exposure to over 1,000 companies.</p>
-                    <p>We'll ask just 3 questions, and you'll have up to 1 minute to answer each question.</p>
-                    <p>Don't worry, you can restart until you're happy with it!</p>
-                    <p>To see all the questions in advance, click on <a href="https://drive.google.com/file/d/17bePlA6Yyl_R9RJmIuIfjO0g78ZB1n8F/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Drafted Video Resume</a></p>
-                    {/* <div>
-                      <label htmlFor="file">Upload Your Video Resume:</label>
-                      <input
-                        id="file"
-                        name="file"
-                        type="file"
-                        accept="video/*"  // Accepts only video files
-                        onChange={(event) => {
-                          setFieldValue("file", event.currentTarget.files[0]);
-                        }}
-                      />
-                      {values.file && <span>{values.file.name}</span>}
-                    </div> */}
-        
-                    <button type="button" onClick={() => setStep(4)} style={previousButtonStyles}>Previous</button>
-                    <button type="button" onClick={() => {
-                      // Check if a file has been uploaded
-                      if (values.file) {
-                        setStep(9);
-                      } else {
-                        setStep(6);
-                      }
-                    }} style={buttonStyles}>
-                      Continue
-                    </button>
-                  </Form>
-                )}
-              </Formik>
-            </>
-          );
+return (
+  <>
+    <Formik
+      initialValues={{ file: null }}
+      onSubmit={() => setStep(6)}
+      onKeyPress={() => handleKeyPress(6)}
+    >
+      {({ values, setFieldValue }) => (
+        <Form>
+          <h2>✨ Let's record your video resume</h2>
+          <h3>The video resume is how Drafted changes the way you get hired.</h3>
+          <p>With just one video resume you'll gain exposure to over 1,000 companies.</p>
+          <p>We'll ask just 3 questions, and you'll have up to 1 minute to answer each question.</p>
+          <p>Don't worry, you can restart until you're happy with it!</p>
+          <p>To see all the questions in advance, click on <a href="https://drive.google.com/file/d/17bePlA6Yyl_R9RJmIuIfjO0g78ZB1n8F/view?usp=sharing" target="_blank" rel="noopener noreferrer" style={{ color: '#53AD7A', fontWeight: 'bold' }}>Drafted Video Resume</a></p>
+          <div>
+            <h3>Send email</h3>
+            <p>Send an email to <strong>appdrafted@gmail.com</strong> with all of your information from the previous step, <strong>attaching your video resume</strong></p>
+            <a
+              href={`mailto:appdrafted@gmail.com?subject=Ready to get Drafted&body=Hi!  I am ready to get Drafted. Here's my info:%0D%0A%0D%0AEmail:%0D%0AName:%0D%0AMajor:%0D%0AGraduation Year:%0D%0AGraduation Month:%0D%0ALinkedIn Profile:%0D%0A%0D%0APlease make sure to attach video resume (try and keep it under 5 minutes).`}
+              onClick={() => setStep(9)}
+              style={buttonStyles}
+            >
+              Send Email With Video Resume
+            </a>
+          </div>
+          <br></br>
+          {/* <div>
+            <h3>Answer all questions in one video</h3>
+            <p>Try and keep total video duration under 5 minutes</p>
+            <label htmlFor="file" style={buttonStyles}>Upload Video Resume</label>                   
+            <input
+              id="file"
+              name="file"
+              type="file"
+              accept="video/*"  // Accepts only video files
+              onChange={(event) => {
+                setFieldValue("file", event.currentTarget.files[0]);
+              }}
+            />
+            {values.file && <span>{values.file.name}</span>}
+          </div>
+          <br></br> */}
+          <h3>Record question by question</h3>
+          <p>Continue onboarding, answer 3 questions 1 minute each</p>
+          <button type="button" onClick={() => setStep(4)} style={previousButtonStyles}>Previous</button>
+          <button type="button" onClick={() => {
+            // Check if a file has been uploaded
+            if (values.file) {
+              setStep(9);
+            } else {
+              setStep(6);
+            }
+          }} style={buttonStyles}>
+            Continue
+          </button>
+        </Form>
+      )}
+    </Formik>
+  </>
+);
+
         
 case 6:
   const isMobile = window.innerWidth <= 768;
