@@ -1043,6 +1043,15 @@ const MultiStepForm = ({ submitHandler }) => {
                           </li>
                         </ul>
                       )}
+                      <br></br>
+                      <a
+                        href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "black", fontWeight: "bold", textDecoration: "none" }}
+                      >
+                        (Click to watch video: Question 1 Explained)
+                      </a>
                       <h4>
                         🪄 2: What makes you stand out amongst other candidates?
                       </h4>
@@ -1074,6 +1083,15 @@ const MultiStepForm = ({ submitHandler }) => {
                           </li>{" "}
                         </ul>
                       )}
+                      <br></br>
+                      <a
+                        href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "black", fontWeight: "bold", textDecoration: "none" }}
+                      >
+                        (Click to watch video: Question 2 Explained)
+                      </a>
                       <h4>
                         🧗 3: Tell us about a time when you overcame a challenge
                       </h4>
@@ -1106,6 +1124,15 @@ const MultiStepForm = ({ submitHandler }) => {
                           </li>
                         </ul>
                       )}
+                      <br></br>
+                      <a
+                        href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "black", fontWeight: "bold", textDecoration: "none" }}
+                      >
+                      (Click to watch video:  Question 3 Explained)
+                      </a>
                     </p>
                   )}
                   {/* <div>
