@@ -554,7 +554,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                   </div>
                   {/* Uncomment to go directly to video step */}
-                  <button type="button" onClick={setStep(5)}>
+                  {/* <button type="button" onClick={setStep(5)}> */}
                     Debug Video
                   </button>
                 </Form>
