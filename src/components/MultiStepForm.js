@@ -554,9 +554,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                   </div>
                   {/* Uncomment to go directly to video step */}
-                  {/* <button type="button" onClick={setStep(5)}> */}
+                  {/* <button type="button" onClick={setStep(5)}>
                     Debug Video
-                  </button>
+                  </button> */}
                 </Form>
               )}
             </Formik>
@@ -729,9 +729,9 @@ const MultiStepForm = ({ submitHandler }) => {
               firstName: Yup.string().required("First Name is required"),
               lastName: Yup.string().required("Last Name is required"),
               major: Yup.string().required("Major is required"),
-              graduationMonth: Yup.number().required(
-                "Graduation Month is required"
-              ),
+              // graduationMonth: Yup.number().required(
+              //   "Graduation Month is required"
+              // ),
               graduationYear: Yup.number().required(
                 "Graduation Year is required"
               ),
@@ -893,7 +893,7 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <br></br>
               <div>
-                <label htmlFor="graduationMonth">* Graduation Month</label>
+                <label htmlFor="graduationMonth">Graduation Month</label>
                 <Field
                   as="select"
                   id="graduationMonth"
