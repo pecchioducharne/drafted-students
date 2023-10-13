@@ -144,14 +144,25 @@ const MultiStepForm = ({ submitHandler }) => {
     resume: "",
   };
 
-  const handleUpload = (videoBlob, questionNumber) => {
+  const handleUpload = (videoBlobOrFile, questionNumber) => {
     // video upload
     console.log("Handle upload is called");
 
+    let filename;
+
+    if (questionNumber === "combined") {
+      filename = `${globalFirstName}-${globalLastName}-combined-video-resume.mp4`;
+    } else {
+      filename = `${globalFirstName}-${globalLastName}-video-resume-${questionNumber}.mp4`;
+    }
+
     const videoParams = {
       Bucket: S3_BUCKET_NAME,
-      Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}-video-resume-${questionNumber}.mp4`,
-      Body: videoBlob,
+      Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${filename}`,
+      Body:
+        videoBlobOrFile instanceof Blob
+          ? videoBlobOrFile
+          : new Blob([videoBlobOrFile], { type: "video/mp4" }),
       ContentType: "video/mp4",
       ACL: "public-read",
     };
@@ -173,25 +184,25 @@ const MultiStepForm = ({ submitHandler }) => {
           // You no longer need to set the video recorded states here
           // as they are being set right after the recording is complete
           if (questionNumber === 1) {
-            // globalVideo1 = videoBlob;
-            setGlobalVideo1(videoBlob);
+            // globalVideo1 = videoBlobOrFile;
+            setGlobalVideo1(videoBlobOrFile);
             setGlobalVideo1Link(
               "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key
             );
             // globalVideo1Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;
           } else if (questionNumber === 2) {
             /*
-              globalVideo2 = videoBlob;
+              globalVideo2 = videoBlobOrFile;
               globalVideo2Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;*/
-            setGlobalVideo2(videoBlob);
+            setGlobalVideo2(videoBlobOrFile);
             setGlobalVideo2Link(
               "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key
             );
           } else if (questionNumber === 3) {
             /*
-              globalVideo3 = videoBlob;
+              globalVideo3 = videoBlobOrFile;
               globalVideo3Link = "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key;*/
-            setGlobalVideo3(videoBlob);
+            setGlobalVideo3(videoBlobOrFile);
             setGlobalVideo3Link(
               "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key
             );
@@ -202,7 +213,7 @@ const MultiStepForm = ({ submitHandler }) => {
     });
   };
 
-  const handleNextVideoStep = async (step, videoBlob) => {
+  const handleNextVideoStep = async (step, videoBlobOrFile) => {
     if (step === 6 && !isVideo1Recorded) {
       alert("Please finish video recording to proceed and get Drafted!");
       return;
@@ -221,7 +232,7 @@ const MultiStepForm = ({ submitHandler }) => {
       setStep(7);
     } else if (step === 6 && isVideo1Recorded && globalVideo1Link === "") {
       alert("Uploading video resume! Give us a sec...");
-      await handleUpload(videoBlob, 1);
+      await handleUpload(videoBlobOrFile, 1);
       setStep(7);
     } else {
       alert("Please finish video recording to proceed and get Drafted!");
@@ -233,7 +244,7 @@ const MultiStepForm = ({ submitHandler }) => {
       setStep(8);
     } else if (step === 7 && isVideo2Recorded && globalVideo2Link === "") {
       alert("Uploading video resume! Give us a sec...");
-      await handleUpload(videoBlob, 2);
+      await handleUpload(videoBlobOrFile, 2);
       setStep(8);
     } else {
       alert("Please finish video recording to proceed and get Drafted!");
@@ -245,7 +256,7 @@ const MultiStepForm = ({ submitHandler }) => {
       setStep(9);
     } else if (step === 8 && isVideo3Recorded && globalVideo3Link === "") {
       alert("Uploading video resume! Give us a sec...");
-      await handleUpload(videoBlob, 3);
+      await handleUpload(videoBlobOrFile, 3);
       setStep(9);
     } else {
       alert("Please finish video recording to proceed and get Drafted!");
@@ -878,9 +889,9 @@ const MultiStepForm = ({ submitHandler }) => {
                   style={{ width: "95%" }}
                 >
                   <option value="">Select a year</option>
-                  {[...Array(6)].map((_, i) => (
-                    <option key={i} value={2022 + i}>
-                      {2022 + i}
+                  {[...Array(8)].map((_, i) => (
+                    <option key={i} value={2020 + i}>
+                      {2020 + i}
                     </option>
                   ))}
                 </Field>
@@ -1048,7 +1059,11 @@ const MultiStepForm = ({ submitHandler }) => {
                         href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: "black", fontWeight: "bold", textDecoration: "none" }}
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
                       >
                         (Click to watch video: Question 1 Explained)
                       </a>
@@ -1088,7 +1103,11 @@ const MultiStepForm = ({ submitHandler }) => {
                         href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: "black", fontWeight: "bold", textDecoration: "none" }}
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
                       >
                         (Click to watch video: Question 2 Explained)
                       </a>
@@ -1129,28 +1148,47 @@ const MultiStepForm = ({ submitHandler }) => {
                         href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV"
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: "black", fontWeight: "bold", textDecoration: "none" }}
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
                       >
-                      (Click to watch video:  Question 3 Explained)
+                        (Click to watch video: Question 3 Explained)
                       </a>
                     </p>
                   )}
-                  {/* <div>
-            <h3>Answer all questions in one video</h3>
-            <p>Try and keep total video duration under 5 minutes</p>
-            <label htmlFor="file" style={buttonStyles}>Upload Video Resume</label>                   
-            <input
-              id="file"
-              name="file"
-              type="file"
-              accept="video/*"  // Accepts only video files
-              onChange={(event) => {
-                setFieldValue("file", event.currentTarget.files[0]);
-              }}
-            />
-            {values.file && <span>{values.file.name}</span>}
-          </div>
-          <br></br> */}
+                  <div>
+                    <h3>Answer all questions in one video</h3>
+                    <p>Try and keep total video duration under 5 minutes</p>
+                    <label htmlFor="file" style={buttonStyles}>
+                      Upload Video Resume
+                    </label>
+                    <input
+                      id="file"
+                      name="file"
+                      type="file"
+                      accept="video/*" // Accepts only video files
+                      onChange={async (event) => {
+                        const file = event.currentTarget.files[0];
+                        if (file) {
+                          setIsLoading(true); // Start loading stage
+                          setFieldValue("file", file.name); // Store the filename in Formik's state
+                          try {
+                            await handleUpload(file, "combined");
+                            // If upload is successful, move to the desired step
+                            setStep(9);
+                          } catch (err) {
+                            console.error("Error uploading video: ", err);
+                          } finally {
+                            setIsLoading(false); // End loading stage
+                          }
+                        }
+                      }}
+                    />
+                    {values.file && <span>{values.file}</span>}
+                  </div>
+                  <br />
                   {/* <h3>or</h3> */}
                   <h3>Record question by question</h3>
                   <p>Continue onboarding, answer 3 questions 1 minute each</p>
@@ -1165,9 +1203,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     type="button"
                     onClick={() => {
                       // Check if a file has been uploaded
-                      if (values.file) {
-                        setStep(9);
-                      } else {
+                      if (!values.file) {
                         setStep(6);
                       }
                     }}
@@ -1175,6 +1211,17 @@ const MultiStepForm = ({ submitHandler }) => {
                   >
                     🎥 Continue to record
                   </button>
+                  {isLoading && (
+                    <img
+                      src={loadingGif}
+                      alt="Loading..."
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        marginLeft: "10px",
+                      }}
+                    />
+                  )}
                 </Form>
               )}
             </Formik>
@@ -1268,9 +1315,9 @@ const MultiStepForm = ({ submitHandler }) => {
                   isOnInitially
                   timeLimit={60000}
                   showReplayControls
-                  onRecordingComplete={(videoBlob) => {
-                    console.log("Video blob:", videoBlob);
-                    setFieldValue("video1", videoBlob);
+                  onRecordingComplete={(videoBlobOrFile) => {
+                    console.log("Video blob:", videoBlobOrFile);
+                    setFieldValue("video1", videoBlobOrFile);
                   }}
                 />
                 <div className="video-frame"></div>
@@ -1421,9 +1468,9 @@ const MultiStepForm = ({ submitHandler }) => {
                           isOnInitially
                           timeLimit={60000}
                           showReplayControls
-                          onRecordingComplete={(videoBlob) => {
-                            console.log("Video blob:", videoBlob);
-                            setFieldValue("video1", videoBlob);
+                          onRecordingComplete={(videoBlobOrFile) => {
+                            console.log("Video blob:", videoBlobOrFile);
+                            setFieldValue("video1", videoBlobOrFile);
                           }}
                         />
                         <div className="video-frame"></div>
@@ -1563,9 +1610,9 @@ const MultiStepForm = ({ submitHandler }) => {
                   isOnInitially
                   timeLimit={60000}
                   showReplayControls
-                  onRecordingComplete={(videoBlob) => {
-                    console.log("Video blob:", videoBlob);
-                    setFieldValue("video2", videoBlob);
+                  onRecordingComplete={(videoBlobOrFile) => {
+                    console.log("Video blob:", videoBlobOrFile);
+                    setFieldValue("video2", videoBlobOrFile);
                   }}
                 />
                 <div className="video-frame"></div>
@@ -1579,7 +1626,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   Previous
                 </button>
                 <button type="submit" style={buttonStyles}>
-                  Submit and Nex
+                  Submit and Next
                 </button>
                 {isLoading && (
                   <img
@@ -1715,9 +1762,9 @@ const MultiStepForm = ({ submitHandler }) => {
                           isOnInitially
                           timeLimit={60000}
                           showReplayControls
-                          onRecordingComplete={(videoBlob) => {
-                            console.log("Video blob:", videoBlob);
-                            setFieldValue("video2", videoBlob);
+                          onRecordingComplete={(videoBlobOrFile) => {
+                            console.log("Video blob:", videoBlobOrFile);
+                            setFieldValue("video2", videoBlobOrFile);
                           }}
                         />
                         <div className="video-frame"></div>
@@ -1861,9 +1908,9 @@ const MultiStepForm = ({ submitHandler }) => {
                   isOnInitially
                   timeLimit={60000}
                   showReplayControls
-                  onRecordingComplete={(videoBlob) => {
-                    console.log("Video blob:", videoBlob);
-                    setFieldValue("video3", videoBlob);
+                  onRecordingComplete={(videoBlobOrFile) => {
+                    console.log("Video blob:", videoBlobOrFile);
+                    setFieldValue("video3", videoBlobOrFile);
                   }}
                 />
                 <div className="video-frame"></div>
@@ -2014,9 +2061,9 @@ const MultiStepForm = ({ submitHandler }) => {
                           isOnInitially
                           timeLimit={60000}
                           showReplayControls
-                          onRecordingComplete={(videoBlob) => {
-                            console.log("Video blob:", videoBlob);
-                            setFieldValue("video3", videoBlob);
+                          onRecordingComplete={(videoBlobOrFile) => {
+                            console.log("Video blob:", videoBlobOrFile);
+                            setFieldValue("video3", videoBlobOrFile);
                           }}
                         />
                         <div className="video-frame"></div>
