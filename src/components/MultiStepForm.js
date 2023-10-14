@@ -753,7 +753,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 values.firstName !== "" &&
                 values.lastName !== "" &&
                 values.major !== "" &&
-                values.graduationMonth !== "" &&
+                // values.graduationMonth !== "" &&
                 values.graduationYear !== ""
               ) {
                 // globalFirstName = values.firstName;
@@ -763,7 +763,9 @@ const MultiStepForm = ({ submitHandler }) => {
                 // globalMajor = values.major;
                 setGlobalMajor(values.major);
                 // globalGraduationMonth = months[values.graduationMonth];
-                setGlobalGraduationMonth(months[values.graduationMonth]);
+                if (values.graduationMonth) {
+                  setGlobalGraduationMonth(months[values.graduationMonth]);
+                }
                 // globalGraduationYear = values.graduationYear;
                 setGlobalGraduationYear(values.graduationYear);
 
@@ -912,7 +914,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   style={{ width: "95%" }}
                 >
                   <option value="">
-                    What month do you expect to graduate?
+                    Not selected
                   </option>
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
                     <option key={month} value={month}>
