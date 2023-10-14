@@ -1178,6 +1178,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           setFieldValue("file", file.name); // Store the filename in Formik's state
                           try {
                             await handleUpload(file, "combined");
+                            await handleTextUpload();
                             // If upload is successful, move to the desired step
                             setStep(9);
                           } catch (err) {
