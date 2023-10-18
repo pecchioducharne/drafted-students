@@ -11,6 +11,7 @@ import AWS from "aws-sdk";
 import Levenshtein from "fast-levenshtein";
 import usfTampaGif from "./usf-tampa.gif";
 import loadingGif from "./loader.gif";
+import { Persist } from "formik-persist";
 
 const S3_BUCKET_NAME = "uploads-video-resumes";
 const COLLEGE_API_KEY = "HVwaXJVdWqpqjayHBi6OMRGk5CDGybJtu8SN8M57";
@@ -95,6 +96,9 @@ const MultiStepForm = ({ submitHandler }) => {
   const [, /*formSubmitted*/ setFormSubmitted] = useState(false);
   const [, /*isVideoRecorded*/ setIsVideoRecorded] = useState(false);
   const [values /*setValues*/] = useState({});
+  const [selectedResume, setSelectedResume] = useState(null);
+  const [resumeUploading, setResumeUploading] = useState(false);
+  const [resumeUploaded, setResumeUploaded] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showText, setShowText] = useState(false);
   const [
@@ -213,6 +217,43 @@ const MultiStepForm = ({ submitHandler }) => {
     });
   };
 
+  const handleResumeUpload = (resumeFile) => {
+    console.log("handleResumeUpload called");
+
+    try {
+      setResumeUploading(true);
+
+      const filename = `${globalFirstName}-${globalLastName}-resume.${resumeFile.name
+        .split(".")
+        .pop()}`; // Get the file extension from the uploaded file
+
+      const resumeParams = {
+        Bucket: S3_BUCKET_NAME,
+        Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${filename}`,
+        Body: resumeFile,
+        ContentType: resumeFile.type,
+        ACL: "public-read",
+      };
+
+      s3.putObject(resumeParams, function (err, data) {
+        if (err) {
+          console.log("Error during resume upload: ", err);
+          console.log(err, err.stack);
+        } else {
+          console.log(data);
+          console.log("Resume was uploaded successfully at " + data.Location);
+        }
+      });
+
+      setResumeUploaded(true);
+    } catch (error) {
+      console.error("Resume upload failed:", error);
+      // Optionally show error to user here
+    } finally {
+      setResumeUploading(false);
+    }
+  };
+
   const handleNextVideoStep = async (step, videoBlobOrFile) => {
     if (step === 6 && !isVideo1Recorded) {
       alert("Please finish video recording to proceed and get Drafted!");
@@ -262,6 +303,11 @@ const MultiStepForm = ({ submitHandler }) => {
       alert("Please finish video recording to proceed and get Drafted!");
     }
   };
+
+  function setAndPersistStep(newStep) {
+    setStep(newStep);
+    localStorage.setItem("formCurrentStep", newStep);
+  }
 
   const handleTextUpload = () => {
     console.log("handleTextUpload called with the fields:");
@@ -457,6 +503,14 @@ const MultiStepForm = ({ submitHandler }) => {
       console.log("Saved video 3 link: ", globalVideo3Link);
     }, [globalVideo3Link]);
 
+    useEffect(() => {
+      const persistedStep = localStorage.getItem("formCurrentStep");
+
+      if (persistedStep) {
+        setStep(Number(persistedStep));
+      }
+    }, []);
+
     switch (step) {
       case 1:
         return (
@@ -565,9 +619,10 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                   </div>
                   {/* Uncomment to go directly to video step */}
-                  {/* <button type="button" onClick={setStep(5)}>
+                  {/* <button type="button" onClick={setStep(4)}>
                     Debug Video
                   </button> */}
+                  <Persist name="persistStep1" />
                 </Form>
               )}
             </Formik>
@@ -636,6 +691,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       Continue to the next step
                     </button>
                   </div>
+                  <Persist name="persistStep2" />
                 </Form>
               )}
             </Formik>
@@ -723,6 +779,7 @@ const MultiStepForm = ({ submitHandler }) => {
               <button type="submit" style={buttonStyles}>
                 Create Account
               </button>
+              <Persist name="persistStep3" />
             </Form>
           </Formik>
         );
@@ -735,19 +792,18 @@ const MultiStepForm = ({ submitHandler }) => {
               major: "",
               graduationMonth: "",
               graduationYear: "",
+              resume: null,
             }}
+            // Required fields go here
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
               lastName: Yup.string().required("Last Name is required"),
               major: Yup.string().required("Major is required"),
-              // graduationMonth: Yup.number().required(
-              //   "Graduation Month is required"
-              // ),
               graduationYear: Yup.number().required(
                 "Graduation Year is required"
               ),
             })}
-            onSubmit={(values) => {
+            onSubmit={async (values) => {
               setName(values.firstName);
               if (
                 values.firstName !== "" &&
@@ -774,6 +830,11 @@ const MultiStepForm = ({ submitHandler }) => {
                   // globalLinkedInProfileURL = values.linkedInProfileURL;
                   setGlobalLinkedInProfileURL(values.linkedInProfileURL);
                   console.log("Saved LinkedIn URL: ", globalLinkedInProfileURL);
+                }
+
+                // Upload the resume here, if it was selected
+                if (selectedResume) {
+                  await handleResumeUpload(selectedResume);
                 }
 
                 /// Saving them
@@ -831,7 +892,6 @@ const MultiStepForm = ({ submitHandler }) => {
                       "."
                   );
                 }
-
                 setStep(5);
               } else {
                 setFormSubmitted(false);
@@ -842,11 +902,12 @@ const MultiStepForm = ({ submitHandler }) => {
               <h2>🪪 Tell us about yourself</h2>
               {name && <p>🙋🏽 Hi, {name}!</p>}
               <div>
-                <label htmlFor="firstName">* First Name</label>
+                <label htmlFor="firstName">First Name * </label>
                 <Field
                   type="text"
                   id="firstName"
                   name="firstName"
+                  placeholder="What's your name?"
                   style={{ width: "95%" }}
                 />
                 <ErrorMessage
@@ -857,11 +918,12 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <br></br>
               <div>
-                <label htmlFor="lastName">* Last Name</label>
+                <label htmlFor="lastName">Last Name *</label>
                 <Field
                   type="text"
                   id="lastName"
                   name="lastName"
+                  placeholder="What's your last name?"
                   style={{ width: "95%" }}
                 />
                 <ErrorMessage
@@ -872,11 +934,12 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <br></br>
               <div>
-                <label htmlFor="major">* Major</label>
+                <label htmlFor="major">Major *</label>
                 <Field
                   type="text"
                   id="major"
                   name="major"
+                  placeholder="What's your major?"
                   style={{ width: "95%" }}
                 />
                 <ErrorMessage name="major" component="div" className="error" />
@@ -906,16 +969,16 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <br></br>
               <div>
-                <label htmlFor="graduationMonth">Graduation Month</label>
+                <label htmlFor="graduationMonth">
+                  Graduation Month (Optional)
+                </label>
                 <Field
                   as="select"
                   id="graduationMonth"
                   name="graduationMonth"
                   style={{ width: "95%" }}
                 >
-                  <option value="">
-                    Not selected
-                  </option>
+                  <option value="">Select a month</option>
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
                     <option key={month} value={month}>
                       {new Date(0, month - 1).toLocaleString("en-US", {
@@ -933,11 +996,14 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <div>
                 <br></br>
-                <label htmlFor="linkedInProfile">LinkedIn Profile</label>
+                <label htmlFor="linkedInProfile">
+                  LinkedIn Profile (Optional)
+                </label>
                 <Field
                   type="text"
                   id="linkedInProfileURL"
                   name="linkedInProfileURL"
+                  placeholder="You can paste your LinkedIn URL here"
                   style={{ width: "95%" }}
                 />
                 <ErrorMessage
@@ -949,24 +1015,45 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <div>
                 <br></br>
-                {/* TODO: Add resume attach */}
-                {/* <label htmlFor="resume">Attach Resume</label>
-                <Field type="file" id="resume" name="resume" accept=".pdf" />
-                <ErrorMessage name="resume" component="div" className="error" /> */}
-                {/* TODO: Attach resume upload image */}
-                {/* <label htmlFor="resume2"><img 
-                    src={resumeAttachImage} 
-                    alt="Attach Resume"
+                <label htmlFor="globalResume">Resume (Optional)</label>
+                <button
+                  type="button"
+                  onClick={() => document.getElementById("resume").click()}
+                  style={buttonStyles}
+                  disabled={selectedResume || resumeUploaded}
+                >
+                  {resumeUploaded
+                    ? "Resume Uploaded"
+                    : selectedResume
+                    ? "Resume Selected"
+                    : "Upload Resume"}
+                </button>
+                <Field
+                  type="file"
+                  id="resume"
+                  name="resume"
+                  accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  style={{ display: "none" }} // hide the default file input
+                  onChange={async (event) => {
+                    setSelectedResume(event.currentTarget.files[0]);
+                    setGlobalResume("resume", event.currentTarget.files[0]);
+                  }}
+                />
+                <ErrorMessage name="resume" component="div" className="error" />
+                {resumeUploading && (
+                  <img
+                    src={loadingGif}
+                    alt="Loading..."
                     style={{
-                        maxWidth: "20%",
-                        maxHeight: "100%",
-                        width: "auto",
-                        height: "auto"
+                      width: "24px",
+                      height: "24px",
+                      marginLeft: "10px",
                     }}
-                /></label>
-                <Field type="file" id="resume2" name="resume2" accept=".pdf" />
-                <ErrorMessage name="resume2" component="div" className="error" /> */}
+                  />
+                )}
               </div>
+
+              <br></br>
               <button
                 type="button"
                 onClick={() => setStep(3)}
@@ -977,6 +1064,8 @@ const MultiStepForm = ({ submitHandler }) => {
               <button type="submit" style={buttonStyles}>
                 Next
               </button>
+              <p>* Required fields</p>
+              <Persist name="persistStep4" />
             </Form>
           </Formik>
         );
@@ -1225,6 +1314,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       }}
                     />
                   )}
+                  <Persist name="persistStep5" />
                 </Form>
               )}
             </Formik>
@@ -1347,6 +1437,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   />
                 )}
+                <Persist name="persistStep6" />
               </Form>
             )}
           </Formik>
@@ -1430,6 +1521,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         </a>
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
+                      <Persist name="persistStep6" />
                     </Form>
                   </Formik>
                 </div>
@@ -1502,6 +1594,7 @@ const MultiStepForm = ({ submitHandler }) => {
                             }}
                           />
                         )}
+                        <Persist name="persistStep6" />
                       </Form>
                     )}
                   </Formik>
@@ -1642,6 +1735,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   />
                 )}
+                <Persist name="persistStep7" />
               </Form>
             )}
           </Formik>
@@ -1724,6 +1818,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         </a>
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
+                      <Persist name="persistStep7" />
                     </Form>
                   </Formik>
                 </div>
@@ -1796,6 +1891,7 @@ const MultiStepForm = ({ submitHandler }) => {
                             }}
                           />
                         )}
+                        <Persist name="persistStep7" />
                       </Form>
                     )}
                   </Formik>
@@ -1819,6 +1915,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   setIsLoading(true);
                   console.log("values.video3:", values.video3);
                   await handleUpload(values.video3, 3);
+                  // if (globalResume != null) { await handleResumeUpload(globalResume); }
                   await handleTextUpload();
                   setStep(9);
                 } catch (error) {
@@ -1940,6 +2037,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   />
                 )}
+                <Persist name="persistStep8" />
               </Form>
             )}
           </Formik>
@@ -2022,6 +2120,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         </a>
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
+                      <Persist name="persistStep8" />
                     </Form>
                   </Formik>
                 </div>
@@ -2150,6 +2249,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   Drafted Blog
                 </button>
               </a>
+              <Persist name="persistStep9" />
             </Form>
           </>
         );
