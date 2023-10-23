@@ -1,8 +1,11 @@
-import React, { useCallback, useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import axios from "axios";
 
-// import resumeAttachImage from './logo.svg';
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-unused-vars */
+
+
 import VideoRecorder from "react-video-recorder/lib/video-recorder";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
@@ -667,9 +670,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                   </div>
                   {/* Uncomment to go directly to video step */}
-                  <button type="button" onClick={setStep(6)}>
+                  {/* <button type="button" onClick={setStep(6)}>
                     Debug Video
-                  </button>
+                  </button> */}
                   <Persist name="persistStep1" />
                 </Form>
               )}
