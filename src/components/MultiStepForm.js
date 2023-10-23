@@ -428,6 +428,54 @@ const MultiStepForm = ({ submitHandler }) => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  function YouTubeEmbedQuestion1() {
+    return (
+      <div className="youtube-container">
+        <iframe
+          width="350"
+          height="315"
+          src="https://www.youtube.com/embed/T9Dym8dDLzM?autoplay=1&controls=1&modestbranding=1&rel=0"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    );
+  }
+
+  function YouTubeEmbedQuestion2() {
+    return (
+      <div className="youtube-container">
+        <iframe
+          width="350"
+          height="315"
+          src="https://www.youtube.com/embed/IshJHdFFtcg?si=dOJl_w_f62enHHSN?autoplay=1&controls=0&modestbranding=1&rel=0"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    );
+  }
+
+  function YouTubeEmbedQuestion3() {
+    return (
+      <div className="youtube-container">
+        <iframe
+          width="350"
+          height="315"
+          src="https://www.youtube.com/embed/W1vP__7BAEY?si=nktGyavw_DQlWOP7?autoplay=1&controls=0&modestbranding=1&rel=0"
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+        ></iframe>
+      </div>
+    );
+  }
+
   const RenderStepContent = ({
     step,
     setStep /* other props as necessary... */,
@@ -619,9 +667,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                   </div>
                   {/* Uncomment to go directly to video step */}
-                  {/* <button type="button" onClick={setStep(4)}>
+                  <button type="button" onClick={setStep(6)}>
                     Debug Video
-                  </button> */}
+                  </button>
                   <Persist name="persistStep1" />
                 </Form>
               )}
@@ -1399,8 +1447,9 @@ const MultiStepForm = ({ submitHandler }) => {
                       rel="noopener noreferrer"
                       style={{ color: "#53AD7A", fontWeight: "bold" }}
                     >
-                      Question 1 Explained (Video)
+                      Question 1 Explained
                     </a>
+                    <YouTubeEmbedQuestion1 />
                   </p>
                 </p>
                 <VideoRecorder
@@ -1517,8 +1566,9 @@ const MultiStepForm = ({ submitHandler }) => {
                           rel="noopener noreferrer"
                           style={{ color: "#53AD7A", fontWeight: "bold" }}
                         >
-                          Question 1 Explained (Video)
+                          Question 1 Explained
                         </a>
+                        <YouTubeEmbedQuestion1 />
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
                       <Persist name="persistStep6" />
@@ -1698,8 +1748,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     rel="noopener noreferrer"
                     style={{ color: "#53AD7A", fontWeight: "bold" }}
                   >
-                    Question 2 Explained (Video)
+                    Question 2 Explained
                   </a>
+                  <YouTubeEmbedQuestion2 />
                 </p>
                 <VideoRecorder
                   key={2}
@@ -1814,8 +1865,9 @@ const MultiStepForm = ({ submitHandler }) => {
                           rel="noopener noreferrer"
                           style={{ color: "#53AD7A", fontWeight: "bold" }}
                         >
-                          Question 2 Explained (Video)
+                          Question 2 Explained
                         </a>
+                        <YouTubeEmbedQuestion2 />
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
                       <Persist name="persistStep7" />
@@ -2002,6 +2054,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   >
                     Question 3 Explained (Video)
                   </a>
+                  <YouTubeEmbedQuestion3 />
                 </p>
                 <VideoRecorder
                   key={3}
@@ -2118,6 +2171,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         >
                           Question 3 Explained (Video)
                         </a>
+                        <YouTubeEmbedQuestion3 />
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
                       <Persist name="persistStep8" />
