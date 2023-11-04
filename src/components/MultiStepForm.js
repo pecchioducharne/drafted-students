@@ -1473,6 +1473,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     <YouTubeEmbedQuestion1 />
                   </p>
                 </p>
+                <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
                 <VideoRecorder
                   key={1}
                   isOnInitially
@@ -1483,6 +1484,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     setFieldValue("video1", videoBlobOrFile);
                   }}
                 />
+                </div>
                 <div className="video-frame"></div>
                 <p className="video-info">Video Response: 1 min time limit</p>
                 <p className="video-info">Unlimited retries</p>
@@ -1631,6 +1633,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         }}
                         onSubmit={handleSubmit}
                       >
+                        <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
                         <VideoRecorder
                           key={1}
                           isOnInitially
@@ -1641,6 +1644,7 @@ const MultiStepForm = ({ submitHandler }) => {
                             setFieldValue("video1", videoBlobOrFile);
                           }}
                         />
+                        </div>
                         <div className="video-frame"></div>
                         <p className="video-info">
                           Video Response: 1 min time limit
@@ -1777,6 +1781,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   <br></br>
                   <YouTubeEmbedQuestion2 />
                 </p>
+                <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
                 <VideoRecorder
                   key={2}
                   isOnInitially
@@ -1787,6 +1792,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     setFieldValue("video2", videoBlobOrFile);
                   }}
                 />
+                </div>
                 <div className="video-frame"></div>
                 <p className="video-info">Video Response: 1 min time limit</p>
                 <p className="video-info">Unlimited retries</p>
@@ -1934,6 +1940,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         }}
                         onSubmit={handleSubmit}
                       >
+                        <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
                         <VideoRecorder
                           key={2}
                           isOnInitially
@@ -1944,6 +1951,7 @@ const MultiStepForm = ({ submitHandler }) => {
                             setFieldValue("video2", videoBlobOrFile);
                           }}
                         />
+                        </div>
                         <div className="video-frame"></div>
                         <p className="video-info">
                           Video Response: 1 min time limit
@@ -2085,6 +2093,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   <br></br>
                   <YouTubeEmbedQuestion3 />
                 </p>
+                <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
                 <VideoRecorder
                   key={3}
                   isOnInitially
@@ -2095,6 +2104,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     setFieldValue("video3", videoBlobOrFile);
                   }}
                 />
+                </div>
                 <div className="video-frame"></div>
                 <p className="video-info">Video Response: 1 min time limit</p>
                 <p className="video-info">Unlimited retries</p>
@@ -2243,6 +2253,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         }}
                         onSubmit={handleSubmit}
                       >
+                       <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
                         <VideoRecorder
                           key={3}
                           isOnInitially
@@ -2253,6 +2264,7 @@ const MultiStepForm = ({ submitHandler }) => {
                             setFieldValue("video3", videoBlobOrFile);
                           }}
                         />
+                        </div>
                         <div className="video-frame"></div>
                         <p className="video-info">
                           Video Response: 1 min time limit
