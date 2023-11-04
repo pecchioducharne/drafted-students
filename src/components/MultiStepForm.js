@@ -5,7 +5,6 @@ import axios from "axios";
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 
-
 import VideoRecorder from "react-video-recorder/lib/video-recorder";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
@@ -377,7 +376,7 @@ const MultiStepForm = ({ submitHandler }) => {
     border: "none",
     cursor: "pointer",
     width: "169px",
-    fontWeight: "bold"
+    fontWeight: "bold",
   };
 
   const previousButtonStyles = {
@@ -442,16 +441,19 @@ const MultiStepForm = ({ submitHandler }) => {
   //  let globalVideo3Link = "";
 
   const [isLoading, setIsLoading] = useState(false);
-
   function YouTubeEmbedQuestion1() {
     return (
-      <div className="youtube-container">
+      <div
+        className="youtube-container"
+        style={{ overflow: "hidden", borderRadius: "8px" }}
+      >
         <iframe
           width="350"
           height="315"
           src="https://www.youtube.com/embed/T9Dym8dDLzM?autoplay=1&controls=1&modestbranding=1&rel=0"
           title="YouTube video player"
           frameborder="0"
+          style={{ borderRadius: "14px" }} // Add border-radius here
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
@@ -468,6 +470,7 @@ const MultiStepForm = ({ submitHandler }) => {
           src="https://www.youtube.com/embed/IshJHdFFtcg?si=dOJl_w_f62enHHSN?autoplay=1&controls=0&modestbranding=1&rel=0"
           title="YouTube video player"
           frameborder="0"
+          style={{ borderRadius: "14px" }} // Add border-radius here
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
@@ -484,6 +487,7 @@ const MultiStepForm = ({ submitHandler }) => {
           src="https://www.youtube.com/embed/W1vP__7BAEY?si=nktGyavw_DQlWOP7?autoplay=1&controls=0&modestbranding=1&rel=0"
           title="YouTube video player"
           frameborder="0"
+          style={{ borderRadius: "14px" }} // Add border-radius here
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
@@ -1464,6 +1468,8 @@ const MultiStepForm = ({ submitHandler }) => {
                     >
                       Question 1 Explained
                     </a>
+                    <br></br>
+                    <br></br>
                     <YouTubeEmbedQuestion1 />
                   </p>
                 </p>
@@ -1583,6 +1589,8 @@ const MultiStepForm = ({ submitHandler }) => {
                         >
                           Question 1 Explained
                         </a>
+                        <br></br>
+                        <br></br>
                         <YouTubeEmbedQuestion1 />
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
@@ -1765,6 +1773,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   >
                     Question 2 Explained
                   </a>
+                  <br></br>
+                  <br></br>
                   <YouTubeEmbedQuestion2 />
                 </p>
                 <VideoRecorder
@@ -1882,6 +1892,8 @@ const MultiStepForm = ({ submitHandler }) => {
                         >
                           Question 2 Explained
                         </a>
+                        <br></br>
+                        <br></br>
                         <YouTubeEmbedQuestion2 />
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
@@ -2069,6 +2081,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   >
                     Question 3 Explained (Video)
                   </a>
+                  <br></br>
+                  <br></br>
                   <YouTubeEmbedQuestion3 />
                 </p>
                 <VideoRecorder
@@ -2186,6 +2200,8 @@ const MultiStepForm = ({ submitHandler }) => {
                         >
                           Question 3 Explained (Video)
                         </a>
+                        <br></br>
+                        <br></br>
                         <YouTubeEmbedQuestion3 />
                       </p>
                       <div style={{ marginBottom: "20px" }}></div>
