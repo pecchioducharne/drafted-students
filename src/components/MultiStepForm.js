@@ -368,6 +368,18 @@ const MultiStepForm = ({ submitHandler }) => {
     cursor: "pointer",
   };
 
+  const uploadButtonStyles = {
+    borderRadius: "8px",
+    backgroundColor: "#207a56",
+    textDecoration: "none",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    cursor: "pointer",
+    width: "169px",
+    fontWeight: "bold"
+  };
+
   const previousButtonStyles = {
     borderRadius: "8px",
     backgroundColor: "#e5e5e5",
@@ -1303,7 +1315,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   <div>
                     <h3>Answer all questions in one video</h3>
                     <p>Try and keep total video duration under 5 minutes</p>
-                    <label htmlFor="file" style={buttonStyles}>
+                    <label htmlFor="file" style={uploadButtonStyles}>
                       Upload Video Resume
                     </label>
                     <input
