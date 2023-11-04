@@ -400,7 +400,7 @@ const MultiStepForm = ({ submitHandler }) => {
 
   const handleKeyPress = (event, nextStep) => {
     if (event.key === "Enter") {
-      setStep(nextStep);
+      setAndPersistStep(nextStep);
     }
   };
 
@@ -595,7 +595,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
                   console.log("Saved university: ", globalUniversity);
-                  setStep(3); // skips step
+                  setAndPersistStep(3); // skips step
                 } else if (values.email.endsWith("miami.edu")) {
                   // University of Miami
                   // draftedUniversity = "University of Miami";
@@ -603,7 +603,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
                   console.log("Saved university: ", globalUniversity);
-                  setStep(3); // skips step
+                  setAndPersistStep(3); // skips step
                 } else if (values.email.endsWith("usf.edu")) {
                   // University of Southern Florida
                   // draftedUniversity = "University of South Florida";
@@ -611,12 +611,12 @@ const MultiStepForm = ({ submitHandler }) => {
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
                   console.log("Saved university: ", globalUniversity);
-                  setStep(3); // skips step
+                  setAndPersistStep(3); // skips step
                 } else {
                   // Not a drafted uni, go to next
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
-                  setStep(2);
+                  setAndPersistStep(2);
                 }
               }}
             >
@@ -707,7 +707,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   console.log(values.university.label);
                   let chosenUniversity = values.university.label;
                   setGlobalUniversity(chosenUniversity);
-                  setStep(3);
+                  setAndPersistStep(3);
                 }
               }}
             >
@@ -741,7 +741,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   >
                     <button
                       type="button"
-                      onClick={() => setStep(1)}
+                      onClick={() => setAndPersistStep(1)}
                       style={previousButtonStyles}
                     >
                       Previous
@@ -781,7 +781,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 // globalPassword = values.password;
                 setGlobalPassword(values.password);
                 console.log("Saved password...");
-                setStep(4);
+                setAndPersistStep(4);
               }
             }}
           >
@@ -829,10 +829,10 @@ const MultiStepForm = ({ submitHandler }) => {
                     globalEmail.endsWith("@umiami.edu")
                   ) {
                     console.log("i know your uni");
-                    setStep(1);
+                    setAndPersistStep(1);
                   } else {
                     console.log("idk know your uni" + draftedUniversity);
-                    setStep(2);
+                    setAndPersistStep(2);
                   }
                 }}
                 style={previousButtonStyles}
@@ -955,7 +955,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       "."
                   );
                 }
-                setStep(5);
+                setAndPersistStep(5);
               } else {
                 setFormSubmitted(false);
               }
@@ -1119,7 +1119,7 @@ const MultiStepForm = ({ submitHandler }) => {
               <br></br>
               <button
                 type="button"
-                onClick={() => setStep(3)}
+                onClick={() => setAndPersistStep(3)}
                 style={previousButtonStyles}
               >
                 Previous
@@ -1137,7 +1137,7 @@ const MultiStepForm = ({ submitHandler }) => {
           <>
             <Formik
               initialValues={{ file: null }}
-              onSubmit={() => setStep(6)}
+              onSubmit={() => setAndPersistStep(6)}
               onKeyPress={() => handleKeyPress(6)}
             >
               {({ values, setFieldValue }) => (
@@ -1332,7 +1332,7 @@ const MultiStepForm = ({ submitHandler }) => {
                             await handleUpload(file, "combined");
                             await handleTextUpload();
                             // If upload is successful, move to the desired step
-                            setStep(9);
+                            setAndPersistStep(9);
                           } catch (err) {
                             console.error("Error uploading video: ", err);
                           } finally {
@@ -1349,7 +1349,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   <p>Continue onboarding, answer 3 questions 1 minute each</p>
                   <button
                     type="button"
-                    onClick={() => setStep(4)}
+                    onClick={() => setAndPersistStep(4)}
                     style={previousButtonStyles}
                   >
                     Previous
@@ -1359,7 +1359,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     onClick={() => {
                       // Check if a file has been uploaded
                       if (!values.file) {
-                        setStep(6);
+                        setAndPersistStep(6);
                       }
                     }}
                     style={buttonStyles}
@@ -1397,7 +1397,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   setIsLoading(true);
                   console.log("values.video1:", values.video1);
                   await handleUpload(values.video1, 1);
-                  setStep(7);
+                  setAndPersistStep(7);
                 } catch (error) {
                   console.error("Video upload failed:", error);
                   // Optionally show error to user here
@@ -1482,7 +1482,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 <p className="video-info">Unlimited retries</p>
                 <button
                   type="button"
-                  onClick={() => setStep(5)}
+                  onClick={() => setAndPersistStep(5)}
                   style={previousButtonStyles}
                 >
                   Previous
@@ -1600,7 +1600,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           setIsLoading(true);
                           console.log("values.video1:", values.video1);
                           await handleUpload(values.video1, 1);
-                          setStep(7);
+                          setAndPersistStep(7);
                         } catch (error) {
                           console.error("Video upload failed:", error);
                           // Optionally show error to user here
@@ -1640,7 +1640,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         <p className="video-info">Unlimited retries</p>
                         <button
                           type="button"
-                          onClick={() => setStep(5)}
+                          onClick={() => setAndPersistStep(5)}
                           style={previousButtonStyles}
                         >
                           Previous
@@ -1684,7 +1684,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   setIsLoading(true);
                   console.log("values.video2:", values.video2);
                   await handleUpload(values.video2, 2);
-                  setStep(8);
+                  setAndPersistStep(8);
                 } catch (error) {
                   console.error("Video upload failed:", error);
                   // Optionally show error to user here
@@ -1782,7 +1782,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 <p className="video-info">Unlimited retries</p>
                 <button
                   type="button"
-                  onClick={() => setStep(6)}
+                  onClick={() => setAndPersistStep(6)}
                   style={previousButtonStyles}
                 >
                   Previous
@@ -1899,7 +1899,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           setIsLoading(true);
                           console.log("values.video2:", values.video2);
                           await handleUpload(values.video2, 2);
-                          setStep(8);
+                          setAndPersistStep(8);
                         } catch (error) {
                           console.error("Video upload failed:", error);
                           // Optionally show error to user here
@@ -1939,7 +1939,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         <p className="video-info">Unlimited retries</p>
                         <button
                           type="button"
-                          onClick={() => setStep(6)}
+                          onClick={() => setAndPersistStep(6)}
                           style={previousButtonStyles}
                         >
                           Previous
@@ -1984,7 +1984,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   await handleUpload(values.video3, 3);
                   // if (globalResume != null) { await handleResumeUpload(globalResume); }
                   await handleTextUpload();
-                  setStep(9);
+                  setAndPersistStep(9);
                 } catch (error) {
                   console.error("Video upload failed:", error);
                   // Optionally show error to user here
@@ -2086,7 +2086,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 <p className="video-info">Unlimited retries</p>
                 <button
                   type="button"
-                  onClick={() => setStep(6)}
+                  onClick={() => setAndPersistStep(6)}
                   style={previousButtonStyles}
                 >
                   Previous
@@ -2204,7 +2204,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           console.log("values.video3:", values.video3);
                           await handleUpload(values.video3, 3);
                           await handleTextUpload();
-                          setStep(9);
+                          setAndPersistStep(9);
                         } catch (error) {
                           console.error("Video upload failed:", error);
                           // Optionally show error to user here
@@ -2244,7 +2244,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         <p className="video-info">Unlimited retries</p>
                         <button
                           type="button"
-                          onClick={() => setStep(7)}
+                          onClick={() => setAndPersistStep(7)}
                           style={previousButtonStyles}
                         >
                           Previous
@@ -2298,7 +2298,7 @@ const MultiStepForm = ({ submitHandler }) => {
 
               <button
                 type="button"
-                onClick={() => setStep(8)}
+                onClick={() => setAndPersistStep(8)}
                 style={previousButtonStyles}
               >
                 Previous
