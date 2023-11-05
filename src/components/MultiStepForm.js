@@ -748,14 +748,14 @@ const MultiStepForm = ({ submitHandler }) => {
                       onClick={() => setAndPersistStep(1)}
                       style={previousButtonStyles}
                     >
-                      Previous
+                      Back
                     </button>
                     <button
                       type="submit"
                       style={buttonStyles}
                       disabled={!values.university}
                     >
-                      Continue to the next step
+                      Continue
                     </button>
                   </div>
                   <Persist name="persistStep2" />
@@ -841,7 +841,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 }}
                 style={previousButtonStyles}
               >
-                Previous
+                Back
               </button>
               <button type="submit" style={buttonStyles}>
                 Create Account
@@ -1126,7 +1126,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 onClick={() => setAndPersistStep(3)}
                 style={previousButtonStyles}
               >
-                Previous
+                Back
               </button>
               <button type="submit" style={buttonStyles}>
                 Next
@@ -1356,7 +1356,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     onClick={() => setAndPersistStep(4)}
                     style={previousButtonStyles}
                   >
-                    Previous
+                    Back
                   </button>
                   <button
                     type="button"
@@ -1493,7 +1493,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   onClick={() => setAndPersistStep(5)}
                   style={previousButtonStyles}
                 >
-                  Previous
+                  Back
                 </button>
                 <button type="submit" style={buttonStyles} disabled={isLoading}>
                   Submit and Next
@@ -1655,7 +1655,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           onClick={() => setAndPersistStep(5)}
                           style={previousButtonStyles}
                         >
-                          Previous
+                          Back
                         </button>
                         <button type="submit" style={buttonStyles}>
                           Submit and Next
@@ -1801,7 +1801,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   onClick={() => setAndPersistStep(6)}
                   style={previousButtonStyles}
                 >
-                  Previous
+                  Back
                 </button>
                 <button type="submit" style={buttonStyles}>
                   Submit and Next
@@ -1962,7 +1962,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           onClick={() => setAndPersistStep(6)}
                           style={previousButtonStyles}
                         >
-                          Previous
+                          Back
                         </button>
                         <button type="submit" style={buttonStyles}>
                           Submit and Next
@@ -2113,7 +2113,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   onClick={() => setAndPersistStep(6)}
                   style={previousButtonStyles}
                 >
-                  Previous
+                  Back
                 </button>
                 <button type="submit" style={buttonStyles}>
                   Submit and Next
@@ -2275,7 +2275,7 @@ const MultiStepForm = ({ submitHandler }) => {
                           onClick={() => setAndPersistStep(7)}
                           style={previousButtonStyles}
                         >
-                          Previous
+                          Back
                         </button>
                         <button
                           type="submit"
