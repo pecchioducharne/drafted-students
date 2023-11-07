@@ -502,6 +502,38 @@ const MultiStepForm = ({ submitHandler }) => {
     const isMounted = useRef(false);
 
     const [showProTips, setShowProTips] = useState(false);
+    const [showVideo1, setShowVideo1] = useState(false);
+
+    // This function is called when the link is clicked
+    const toggleVideo1 = (event) => {
+      // Prevent the default anchor behavior of going to the link
+      event.preventDefault();
+
+      // Set the showVideo1 state to true to show the YouTubeEmbedQuestion1 component
+      setShowVideo1(!showVideo1);
+    };
+
+    const [showVideo2, setShowVideo2] = useState(false);
+
+    // This function is called when the link is clicked
+    const toggleVideo2 = (event) => {
+      // Prevent the default anchor behavior of going to the link
+      event.preventDefault();
+
+      // Set the showVideo1 state to true to show the YouTubeEmbedQuestion1 component
+      setShowVideo2(!showVideo2);
+    };
+
+    const [showVideo3, setShowVideo3] = useState(false);
+
+    // This function is called when the link is clicked
+    const toggleVideo3 = (event) => {
+      // Prevent the default anchor behavior of going to the link
+      event.preventDefault();
+
+      // Set the showVideo1 state to true to show the YouTubeEmbedQuestion1 component
+      setShowVideo3(!showVideo3);
+    };
 
     const toggleProTips = () => {
       setShowProTips(!showProTips);
@@ -1459,31 +1491,35 @@ const MultiStepForm = ({ submitHandler }) => {
                       </li>
                     </ul>
                   )}
-                  <p>
+                  <div>
                     <a
                       href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
+                      onClick={toggleVideo1}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#53AD7A", fontWeight: "bold" }}
                     >
-                      Question 1 Explained
+                      Click to watch Question 1 Explained
                     </a>
-                    <br></br>
-                    <br></br>
-                    <YouTubeEmbedQuestion1 />
-                  </p>
+                    <br />
+                    <br />
+                    {showVideo1 && <YouTubeEmbedQuestion1 />}
+                  </div>
                 </p>
-                <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
-                <VideoRecorder
-                  key={1}
-                  isOnInitially
-                  timeLimit={60000}
-                  showReplayControls
-                  onRecordingComplete={(videoBlobOrFile) => {
-                    console.log("Video blob:", videoBlobOrFile);
-                    setFieldValue("video1", videoBlobOrFile);
-                  }}
-                />
+                <div
+                  className="video-recorder-wrapper"
+                  style={{ borderRadius: "14px", overflow: "hidden" }}
+                >
+                  <VideoRecorder
+                    key={1}
+                    isOnInitially
+                    timeLimit={60000}
+                    showReplayControls
+                    onRecordingComplete={(videoBlobOrFile) => {
+                      console.log("Video blob:", videoBlobOrFile);
+                      setFieldValue("video1", videoBlobOrFile);
+                    }}
+                  />
                 </div>
                 <div className="video-frame"></div>
                 <p className="video-info">Video Response: 1 min time limit</p>
@@ -1582,19 +1618,20 @@ const MultiStepForm = ({ submitHandler }) => {
                           </li>
                         </ul>
                       </p>
-                      <p>
+                      <div>
                         <a
                           href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
+                          onClick={toggleVideo1}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ color: "#53AD7A", fontWeight: "bold" }}
                         >
-                          Question 1 Explained
+                          Click to watch Question 1 Explained
                         </a>
-                        <br></br>
-                        <br></br>
-                        <YouTubeEmbedQuestion1 />
-                      </p>
+                        <br />
+                        <br />
+                        {showVideo1 && <YouTubeEmbedQuestion1 />}
+                      </div>
                       <div style={{ marginBottom: "20px" }}></div>
                       <Persist name="persistStep6" />
                     </Form>
@@ -1633,17 +1670,20 @@ const MultiStepForm = ({ submitHandler }) => {
                         }}
                         onSubmit={handleSubmit}
                       >
-                        <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
-                        <VideoRecorder
-                          key={1}
-                          isOnInitially
-                          timeLimit={60000}
-                          showReplayControls
-                          onRecordingComplete={(videoBlobOrFile) => {
-                            console.log("Video blob:", videoBlobOrFile);
-                            setFieldValue("video1", videoBlobOrFile);
-                          }}
-                        />
+                        <div
+                          className="video-recorder-wrapper"
+                          style={{ borderRadius: "14px", overflow: "hidden" }}
+                        >
+                          <VideoRecorder
+                            key={1}
+                            isOnInitially
+                            timeLimit={60000}
+                            showReplayControls
+                            onRecordingComplete={(videoBlobOrFile) => {
+                              console.log("Video blob:", videoBlobOrFile);
+                              setFieldValue("video1", videoBlobOrFile);
+                            }}
+                          />
                         </div>
                         <div className="video-frame"></div>
                         <p className="video-info">
@@ -1768,30 +1808,34 @@ const MultiStepForm = ({ submitHandler }) => {
                     </ul>
                   )}
                 </p>
-                <p>
+                <div>
                   <a
                     href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG"
+                    onClick={toggleVideo2}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: "#53AD7A", fontWeight: "bold" }}
                   >
-                    Question 2 Explained
+                    Click to watch Question 2 Explained
                   </a>
-                  <br></br>
-                  <br></br>
-                  <YouTubeEmbedQuestion2 />
-                </p>
-                <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
-                <VideoRecorder
-                  key={2}
-                  isOnInitially
-                  timeLimit={60000}
-                  showReplayControls
-                  onRecordingComplete={(videoBlobOrFile) => {
-                    console.log("Video blob:", videoBlobOrFile);
-                    setFieldValue("video2", videoBlobOrFile);
-                  }}
-                />
+                  <br />
+                  <br />
+                  {showVideo2 && <YouTubeEmbedQuestion2 />}
+                </div>
+                <div
+                  className="video-recorder-wrapper"
+                  style={{ borderRadius: "14px", overflow: "hidden" }}
+                >
+                  <VideoRecorder
+                    key={2}
+                    isOnInitially
+                    timeLimit={60000}
+                    showReplayControls
+                    onRecordingComplete={(videoBlobOrFile) => {
+                      console.log("Video blob:", videoBlobOrFile);
+                      setFieldValue("video2", videoBlobOrFile);
+                    }}
+                  />
                 </div>
                 <div className="video-frame"></div>
                 <p className="video-info">Video Response: 1 min time limit</p>
@@ -1889,19 +1933,20 @@ const MultiStepForm = ({ submitHandler }) => {
                           </li>
                         </ul>
                       </p>
-                      <p>
+                      <div>
                         <a
                           href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG"
+                          onClick={toggleVideo2}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ color: "#53AD7A", fontWeight: "bold" }}
                         >
-                          Question 2 Explained
+                          Click to watch Question 2 Explained
                         </a>
-                        <br></br>
-                        <br></br>
-                        <YouTubeEmbedQuestion2 />
-                      </p>
+                        <br />
+                        <br />
+                        {showVideo2 && <YouTubeEmbedQuestion2 />}
+                      </div>
                       <div style={{ marginBottom: "20px" }}></div>
                       <Persist name="persistStep7" />
                     </Form>
@@ -1940,17 +1985,20 @@ const MultiStepForm = ({ submitHandler }) => {
                         }}
                         onSubmit={handleSubmit}
                       >
-                        <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
-                        <VideoRecorder
-                          key={2}
-                          isOnInitially
-                          timeLimit={60000}
-                          showReplayControls
-                          onRecordingComplete={(videoBlobOrFile) => {
-                            console.log("Video blob:", videoBlobOrFile);
-                            setFieldValue("video2", videoBlobOrFile);
-                          }}
-                        />
+                        <div
+                          className="video-recorder-wrapper"
+                          style={{ borderRadius: "14px", overflow: "hidden" }}
+                        >
+                          <VideoRecorder
+                            key={2}
+                            isOnInitially
+                            timeLimit={60000}
+                            showReplayControls
+                            onRecordingComplete={(videoBlobOrFile) => {
+                              console.log("Video blob:", videoBlobOrFile);
+                              setFieldValue("video2", videoBlobOrFile);
+                            }}
+                          />
                         </div>
                         <div className="video-frame"></div>
                         <p className="video-info">
@@ -2080,30 +2128,34 @@ const MultiStepForm = ({ submitHandler }) => {
                     </ul>
                   )}
                 </p>
-                <p>
+                <div>
                   <a
                     href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV"
+                    onClick={toggleVideo3}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{ color: "#53AD7A", fontWeight: "bold" }}
                   >
-                    Question 3 Explained (Video)
+                    Click to watch Question 3 Explained
                   </a>
-                  <br></br>
-                  <br></br>
-                  <YouTubeEmbedQuestion3 />
-                </p>
-                <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
-                <VideoRecorder
-                  key={3}
-                  isOnInitially
-                  timeLimit={60000}
-                  showReplayControls
-                  onRecordingComplete={(videoBlobOrFile) => {
-                    console.log("Video blob:", videoBlobOrFile);
-                    setFieldValue("video3", videoBlobOrFile);
-                  }}
-                />
+                  <br />
+                  <br />
+                  {showVideo3 && <YouTubeEmbedQuestion3 />}
+                </div>
+                <div
+                  className="video-recorder-wrapper"
+                  style={{ borderRadius: "14px", overflow: "hidden" }}
+                >
+                  <VideoRecorder
+                    key={3}
+                    isOnInitially
+                    timeLimit={60000}
+                    showReplayControls
+                    onRecordingComplete={(videoBlobOrFile) => {
+                      console.log("Video blob:", videoBlobOrFile);
+                      setFieldValue("video3", videoBlobOrFile);
+                    }}
+                  />
                 </div>
                 <div className="video-frame"></div>
                 <p className="video-info">Video Response: 1 min time limit</p>
@@ -2201,19 +2253,20 @@ const MultiStepForm = ({ submitHandler }) => {
                           </li>
                         </ul>
                       </p>
-                      <p>
+                      <div>
                         <a
                           href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV"
+                          onClick={toggleVideo3}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ color: "#53AD7A", fontWeight: "bold" }}
                         >
-                          Question 3 Explained (Video)
+                          Click to watch Question 3 Explained
                         </a>
-                        <br></br>
-                        <br></br>
-                        <YouTubeEmbedQuestion3 />
-                      </p>
+                        <br />
+                        <br />
+                        {showVideo3 && <YouTubeEmbedQuestion3 />}
+                      </div>
                       <div style={{ marginBottom: "20px" }}></div>
                       <Persist name="persistStep8" />
                     </Form>
@@ -2253,17 +2306,20 @@ const MultiStepForm = ({ submitHandler }) => {
                         }}
                         onSubmit={handleSubmit}
                       >
-                       <div className="video-recorder-wrapper" style={{ borderRadius: '14px', overflow: 'hidden' }}>
-                        <VideoRecorder
-                          key={3}
-                          isOnInitially
-                          timeLimit={60000}
-                          showReplayControls
-                          onRecordingComplete={(videoBlobOrFile) => {
-                            console.log("Video blob:", videoBlobOrFile);
-                            setFieldValue("video3", videoBlobOrFile);
-                          }}
-                        />
+                        <div
+                          className="video-recorder-wrapper"
+                          style={{ borderRadius: "14px", overflow: "hidden" }}
+                        >
+                          <VideoRecorder
+                            key={3}
+                            isOnInitially
+                            timeLimit={60000}
+                            showReplayControls
+                            onRecordingComplete={(videoBlobOrFile) => {
+                              console.log("Video blob:", videoBlobOrFile);
+                              setFieldValue("video3", videoBlobOrFile);
+                            }}
+                          />
                         </div>
                         <div className="video-frame"></div>
                         <p className="video-info">
