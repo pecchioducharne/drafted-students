@@ -1366,7 +1366,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       </a>
                     </p>
                   )}
-                  <div>
+                  {/* <div>
                     <h3>Answer all questions in one video</h3>
                     <p>Try and keep total video duration under 5 minutes</p>
                     <label htmlFor="file" style={uploadButtonStyles}>
@@ -1395,12 +1395,14 @@ const MultiStepForm = ({ submitHandler }) => {
                         }
                       }}
                     />
-                    {values.file && <span>{values.file}</span>}
-                  </div>
+                    {values.file && <span>{values.file}</span>} */}
+                  {/* </div> */}
                   <br />
                   {/* <h3>or</h3> */}
-                  <h3>Record question by question</h3>
-                  <p>Continue onboarding, answer 3 questions 1 minute each</p>
+                  {/* <h3>Record question by question</h3> */}
+                  {/* <p>Continue onboarding, answer 3 questions 1 minute each</p> */}
+                  <h3>Don't worry, you can record on Drafted or upload each video per question</h3>
+                  <br></br>
                   <button
                     type="button"
                     onClick={() => setAndPersistStep(4)}
