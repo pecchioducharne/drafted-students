@@ -158,6 +158,12 @@ const MultiStepForm = ({ submitHandler }) => {
 
     if (questionNumber === "combined") {
       filename = `${globalFirstName}-${globalLastName}-combined-video-resume.mp4`;
+    } else if (questionNumber === "1") {
+      filename = `${globalFirstName}-${globalLastName}-video-resume-1.mp4`;
+    } else if (questionNumber === "2") {
+      filename = `${globalFirstName}-${globalLastName}-video-resume-2.mp4`;
+    } else if (questionNumber === "3") {
+      filename = `${globalFirstName}-${globalLastName}-video-resume-3.mp4`;
     } else {
       filename = `${globalFirstName}-${globalLastName}-video-resume-${questionNumber}.mp4`;
     }
@@ -379,6 +385,18 @@ const MultiStepForm = ({ submitHandler }) => {
     fontWeight: "bold",
   };
 
+  const uploadVideoButtonStyles = {
+    borderRadius: "8px",
+    backgroundColor: "#207a56",
+    textDecoration: "none",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    cursor: "pointer",
+    width: "215px",
+    fontWeight: "bold",
+  };
+
   const previousButtonStyles = {
     borderRadius: "8px",
     backgroundColor: "#e5e5e5",
@@ -454,7 +472,7 @@ const MultiStepForm = ({ submitHandler }) => {
           title="YouTube video player"
           frameborder="0"
           style={{ borderRadius: "14px" }} // Add border-radius here
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
@@ -471,7 +489,7 @@ const MultiStepForm = ({ submitHandler }) => {
           title="YouTube video player"
           frameborder="0"
           style={{ borderRadius: "14px" }} // Add border-radius here
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
@@ -488,7 +506,7 @@ const MultiStepForm = ({ submitHandler }) => {
           title="YouTube video player"
           frameborder="0"
           style={{ borderRadius: "14px" }} // Add border-radius here
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen
         ></iframe>
       </div>
@@ -1545,6 +1563,35 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   />
                 )}
+                <br></br>
+                <br></br>
+                <label htmlFor="file" style={uploadVideoButtonStyles}>
+                  Upload Question 1 and Next
+                </label>
+                <input
+                  id="file"
+                  name="file"
+                  type="file"
+                  accept="video/*" // Accepts only video files
+                  onChange={async (event) => {
+                    const file = event.currentTarget.files[0];
+                    if (file) {
+                      setIsLoading(true); // Start loading stage
+                      setFieldValue("file", file.name); // Store the filename in Formik's state
+                      try {
+                        await handleUpload(file, "1");
+                        await handleTextUpload();
+                        // If upload is successful, move to the desired step
+                        setAndPersistStep(7);
+                      } catch (err) {
+                        console.error("Error uploading video: ", err);
+                      } finally {
+                        setIsLoading(false); // End loading stage
+                      }
+                    }
+                  }}
+                />
+                {values.file && <span>{values.file}</span>}
                 <Persist name="persistStep6" />
               </Form>
             )}
@@ -1711,6 +1758,35 @@ const MultiStepForm = ({ submitHandler }) => {
                             }}
                           />
                         )}
+                        <br></br>
+                        <br></br>
+                        <label htmlFor="file" style={uploadVideoButtonStyles}>
+                          Upload Question 1 and Next
+                        </label>
+                        <input
+                          id="file"
+                          name="file"
+                          type="file"
+                          accept="video/*" // Accepts only video files
+                          onChange={async (event) => {
+                            const file = event.currentTarget.files[0];
+                            if (file) {
+                              setIsLoading(true); // Start loading stage
+                              setFieldValue("file", file.name); // Store the filename in Formik's state
+                              try {
+                                await handleUpload(file, "1");
+                                await handleTextUpload();
+                                // If upload is successful, move to the desired step
+                                setAndPersistStep(7);
+                              } catch (err) {
+                                console.error("Error uploading video: ", err);
+                              } finally {
+                                setIsLoading(false); // End loading stage
+                              }
+                            }
+                          }}
+                        />
+                        {values.file && <span>{values.file}</span>}
                         <Persist name="persistStep6" />
                       </Form>
                     )}
@@ -1861,6 +1937,35 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   />
                 )}
+                <br></br>
+                <br></br>
+                <label htmlFor="file" style={uploadVideoButtonStyles}>
+                  Upload Question 2 and Next
+                </label>
+                <input
+                  id="file"
+                  name="file"
+                  type="file"
+                  accept="video/*" // Accepts only video files
+                  onChange={async (event) => {
+                    const file = event.currentTarget.files[0];
+                    if (file) {
+                      setIsLoading(true); // Start loading stage
+                      setFieldValue("file", file.name); // Store the filename in Formik's state
+                      try {
+                        await handleUpload(file, "2");
+                        await handleTextUpload();
+                        // If upload is successful, move to the desired step
+                        setAndPersistStep(8);
+                      } catch (err) {
+                        console.error("Error uploading video: ", err);
+                      } finally {
+                        setIsLoading(false); // End loading stage
+                      }
+                    }
+                  }}
+                />
+                {values.file && <span>{values.file}</span>}
                 <Persist name="persistStep7" />
               </Form>
             )}
@@ -2026,6 +2131,35 @@ const MultiStepForm = ({ submitHandler }) => {
                             }}
                           />
                         )}
+                        <br></br>
+                        <br></br>
+                        <label htmlFor="file" style={uploadVideoButtonStyles}>
+                          Upload Question 2 and Next
+                        </label>
+                        <input
+                          id="file"
+                          name="file"
+                          type="file"
+                          accept="video/*" // Accepts only video files
+                          onChange={async (event) => {
+                            const file = event.currentTarget.files[0];
+                            if (file) {
+                              setIsLoading(true); // Start loading stage
+                              setFieldValue("file", file.name); // Store the filename in Formik's state
+                              try {
+                                await handleUpload(file, "2");
+                                await handleTextUpload();
+                                // If upload is successful, move to the desired step
+                                setAndPersistStep(8);
+                              } catch (err) {
+                                console.error("Error uploading video: ", err);
+                              } finally {
+                                setIsLoading(false); // End loading stage
+                              }
+                            }
+                          }}
+                        />
+                        {values.file && <span>{values.file}</span>}
                         <Persist name="persistStep7" />
                       </Form>
                     )}
@@ -2181,6 +2315,35 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   />
                 )}
+                <br></br>
+                <br></br>
+                <label htmlFor="file" style={uploadVideoButtonStyles}>
+                  Upload Question 3 and Next
+                </label>
+                <input
+                  id="file"
+                  name="file"
+                  type="file"
+                  accept="video/*" // Accepts only video files
+                  onChange={async (event) => {
+                    const file = event.currentTarget.files[0];
+                    if (file) {
+                      setIsLoading(true); // Start loading stage
+                      setFieldValue("file", file.name); // Store the filename in Formik's state
+                      try {
+                        await handleUpload(file, "3");
+                        await handleTextUpload();
+                        // If upload is successful, move to the desired step
+                        setAndPersistStep(9);
+                      } catch (err) {
+                        console.error("Error uploading video: ", err);
+                      } finally {
+                        setIsLoading(false); // End loading stage
+                      }
+                    }
+                  }}
+                />
+                {values.file && <span>{values.file}</span>}
                 <Persist name="persistStep8" />
               </Form>
             )}
@@ -2351,6 +2514,35 @@ const MultiStepForm = ({ submitHandler }) => {
                             }}
                           />
                         )}
+                        <br></br>
+                        <br></br>
+                        <label htmlFor="file" style={uploadVideoButtonStyles}>
+                          Upload Question 3 and Next
+                        </label>
+                        <input
+                          id="file"
+                          name="file"
+                          type="file"
+                          accept="video/*" // Accepts only video files
+                          onChange={async (event) => {
+                            const file = event.currentTarget.files[0];
+                            if (file) {
+                              setIsLoading(true); // Start loading stage
+                              setFieldValue("file", file.name); // Store the filename in Formik's state
+                              try {
+                                await handleUpload(file, "3");
+                                await handleTextUpload();
+                                // If upload is successful, move to the desired step
+                                setAndPersistStep(9);
+                              } catch (err) {
+                                console.error("Error uploading video: ", err);
+                              } finally {
+                                setIsLoading(false); // End loading stage
+                              }
+                            }
+                          }}
+                        />
+                        {values.file && <span>{values.file}</span>}
                       </Form>
                     )}
                   </Formik>
