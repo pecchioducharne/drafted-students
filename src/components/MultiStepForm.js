@@ -1218,8 +1218,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     to <strong>appdrafted@gmail.com</strong> including all
                     candidate information and attaching video resume.
                   </p>
-                  <p
-                    onClick={() => setShowText(!showText)}
+                  <a
+                    href="https://drive.google.com/file/d/1op7e1ItCyR9qd5KeGZmCrVV88WiCkmN_/view?usp=sharing"
+                    target="_blank"
                     style={{
                       color: "#53AD7A",
                       fontWeight: "bold",
@@ -1227,7 +1228,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                   >
                     Show all questions
-                  </p>
+                  </a>
                   {showText && (
                     <p>
                       {/* Questions in advance */}
@@ -1401,7 +1402,10 @@ const MultiStepForm = ({ submitHandler }) => {
                   {/* <h3>or</h3> */}
                   {/* <h3>Record question by question</h3> */}
                   {/* <p>Continue onboarding, answer 3 questions 1 minute each</p> */}
-                  <h3>Don't worry, you can record on Drafted or upload each video per question</h3>
+                  <h3>
+                    Don't worry, you can record on Drafted or upload each video
+                    per question
+                  </h3>
                   <br></br>
                   <button
                     type="button"
