@@ -125,6 +125,8 @@ const MultiStepForm = ({ submitHandler }) => {
   const [globalVideo1Link, setGlobalVideo1Link] = useState("");
   const [globalVideo2Link, setGlobalVideo2Link] = useState("");
   const [globalVideo3Link, setGlobalVideo3Link] = useState("");
+  const [videoRecorded, setVideoRecorded] = useState(false);
+  const [videoUploaded, setVideoUploaded] = useState(false);
 
   const handleNameChange = (event) => {
     setName(event.target.value); // Update the name state variable
@@ -219,6 +221,9 @@ const MultiStepForm = ({ submitHandler }) => {
               "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key
             );
           }
+          console.log("Video uploaded successfully");
+          setVideoUploaded(true); // Update the state here
+          resolve(data);
           resolve(data);
         }
       });
@@ -366,6 +371,16 @@ const MultiStepForm = ({ submitHandler }) => {
   const buttonStyles = {
     borderRadius: "8px",
     backgroundColor: "#207a56",
+    textDecoration: "none",
+    color: "white",
+    padding: "10px 20px",
+    border: "none",
+    cursor: "pointer",
+  };
+
+  const inactiveButtonStyles = {
+    borderRadius: "8px",
+    backgroundColor: "black",
     textDecoration: "none",
     color: "white",
     padding: "10px 20px",
@@ -1288,23 +1303,38 @@ const MultiStepForm = ({ submitHandler }) => {
                       {showProTips && (
                         <ul>
                           <li>
-                            Don’t be modest — this is the time to be confident
-                            about your strengths and really sell yourself to
-                            employers.
+                            <span
+                              style={{ fontWeight: "bold", color: "#53AD7A" }}
+                            >
+                              Don’t be modest — this is the time to be confident
+                              about your strengths and really sell yourself to
+                              employers.
+                            </span>{" "}
+                            Focus on your unique skills and experiences, and
+                            explain why these make you the ideal candidate.
                           </li>
                           <li>
-                            Focus on your education, skills, and experiences
-                            that make you unique! Tell employers how your unique
-                            skills will help the company succeed.
+                            <span
+                              style={{ fontWeight: "bold", color: "#53AD7A" }}
+                            >
+                              Focus on your education, skills, and experiences
+                              that make you unique!
+                            </span>{" "}
+                            Tell employers how your unique skills will help the
+                            company succeed.
                           </li>
                           <li>
-                            Employers ask this to identify reasons why hiring
-                            you is better than hiring a similarly qualified
-                            candidate.
+                            <span
+                              style={{ fontWeight: "bold", color: "#53AD7A" }}
+                            >
+                              Employers ask this to identify reasons why hiring
+                              you is better than hiring a similarly qualified
+                              candidate.
+                            </span>{" "}
+                            Use specific examples to demonstrate your skills and
+                            achievements, and relate them back to the
+                            requirements of the job.
                           </li>
-                          <li>
-                            Avoid generic phrases like "I'm a hard worker".
-                          </li>{" "}
                         </ul>
                       )}
                       <br></br>
@@ -1424,7 +1454,8 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                     style={buttonStyles}
                   >
-                    🎥 Continue to record
+                    {/* 🎥 Continue to record */}
+                    Next
                   </button>
                   {isLoading && (
                     <img
@@ -1494,24 +1525,33 @@ const MultiStepForm = ({ submitHandler }) => {
                   {showProTips && (
                     <ul>
                       <li>
-                        This is the typical "walk me through your resume"
-                        question. Talk about what you majored in and why. What
-                        internships or experiences you've had, and what have you
-                        learned from them? What skills will you bring to the
-                        hiring company?
+                        <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
+                          This is the typical "walk me through your resume"
+                          question.
+                        </span>{" "}
+                        Talk about what you majored in and why. What internships
+                        or experiences you've had, and what have you learned
+                        from them? What skills will you bring to the hiring
+                        company?
                       </li>
                       <li>
-                        Show why you're the best candidate to get an
-                        opportunity, in terms of degree, internships, and
-                        experience as well as soft skills which truly set you
-                        apart. Talk about what you are passionate about, and
-                        what you hope to explore in your first role.
+                        <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
+                          Show why you're the best candidate to get an
+                          opportunity,
+                        </span>{" "}
+                        in terms of degree, internships, and experience as well
+                        as soft skills which truly set you apart. Talk about
+                        what you are passionate about, and what you hope to
+                        explore in your first role.
                       </li>
                       <li>
-                        Demonstrate that you can communicate clearly and
-                        effectively, present yourself professionally, and most
-                        importantly have fun and show your enthusiasm to go pro
-                        and put that degree to work!
+                        <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
+                          Demonstrate that you can communicate clearly and
+                          effectively,
+                        </span>{" "}
+                        present yourself professionally, and most importantly
+                        have fun and show your enthusiasm to go pro and put that
+                        degree to work!
                       </li>
                     </ul>
                   )}
@@ -1692,7 +1732,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 </div>
                 <div style={{ flex: 1, marginLeft: "10px" }}>
                   <Formik
-                    initialValues={{ video1: null }}
+                    initialValues={{ video1: null, videoUploaded: false }}
                     onSubmit={async (values, { setSubmitting }) => {
                       if (values.video1) {
                         console.log("video 1 recorded");
@@ -1735,39 +1775,19 @@ const MultiStepForm = ({ submitHandler }) => {
                             onRecordingComplete={(videoBlobOrFile) => {
                               console.log("Video blob:", videoBlobOrFile);
                               setFieldValue("video1", videoBlobOrFile);
+                              setVideoRecorded(true);
                             }}
                           />
                         </div>
                         <div className="video-frame"></div>
-                        <p className="video-info">
-                          Video Response: 1 min time limit
-                        </p>
-                        <p className="video-info">Unlimited retries</p>
-                        <button
-                          type="button"
-                          onClick={() => setAndPersistStep(5)}
-                          style={previousButtonStyles}
-                        >
-                          Back
-                        </button>
-                        <button type="submit" style={buttonStyles}>
-                          Submit and Next
-                        </button>
-                        {isLoading && (
-                          <img
-                            src={loadingGif}
-                            alt="Loading..."
-                            style={{
-                              width: "24px",
-                              height: "24px",
-                              marginLeft: "10px",
-                            }}
-                          />
-                        )}
+                        <br></br>
+                        <span style={{ fontWeight: "bold", color: "black" }}>
+                          or
+                        </span>
                         <br></br>
                         <br></br>
                         <label htmlFor="file" style={uploadVideoButtonStyles}>
-                          Upload Question 1 and Next
+                          Upload Question 1
                         </label>
                         <input
                           id="file"
@@ -1783,7 +1803,7 @@ const MultiStepForm = ({ submitHandler }) => {
                                 await handleUpload(file, "1");
                                 await handleTextUpload();
                                 // If upload is successful, move to the desired step
-                                setAndPersistStep(7);
+                                // setAndPersistStep(7);
                               } catch (err) {
                                 console.error("Error uploading video: ", err);
                               } finally {
@@ -1793,6 +1813,38 @@ const MultiStepForm = ({ submitHandler }) => {
                           }}
                         />
                         {values.file && <span>{values.file}</span>}
+                        <p className="video-info">
+                          Video Response: 1 min time limit
+                        </p>
+                        <p className="video-info">Unlimited retries</p>
+                        <button
+                          type="button"
+                          onClick={() => setAndPersistStep(5)}
+                          style={previousButtonStyles}
+                        >
+                          Back
+                        </button>
+                        <button
+                          type="submit"
+                          style={
+                            (videoRecorded || videoUploaded)
+                              ? buttonStyles
+                              : inactiveButtonStyles
+                          }
+                        >
+                          Submit and Next
+                        </button>
+                        {isLoading && (
+                          <img
+                            src={loadingGif}
+                            alt="Loading..."
+                            style={{
+                              width: "24px",
+                              height: "24px",
+                              marginLeft: "10px",
+                            }}
+                          />
+                        )}
                         <Persist name="persistStep6" />
                       </Form>
                     )}
@@ -2247,23 +2299,29 @@ const MultiStepForm = ({ submitHandler }) => {
                   {showProTips && (
                     <ul>
                       <li>
-                        This is like your "highlight reel" moment. Show off!
+                        <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
+                          This is like your "highlight reel" moment. Show off!
+                        </span>{" "}
                         Share specific examples where you exhibited
                         problem-solving skills and the ability to overcome
                         obstacles.
                       </li>
                       <li>
-                        Pick one specific challenge in your studies, personal
-                        life, or work/internships. Tell a story with a positive
-                        outcome and/or positive lesson learned that you can
-                        contribute to the workplace.
+                        <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
+                          Pick one specific challenge in your studies, personal
+                          life, or work/internships.
+                        </span>{" "}
+                        Tell a story with a positive outcome and/or positive
+                        lesson learned that you can contribute to the workplace.
                       </li>
                       <li>
-                        Emphasize key "soft skills". Examples of soft skills
-                        include creativity, leadership, resilience,
-                        adaptability, quick decision-making, etc. Relate these
-                        to the specific challenge and outcome you are
-                        discussing.
+                        <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
+                          Emphasize key "soft skills".
+                        </span>{" "}
+                        Examples of soft skills include creativity, leadership,
+                        resilience, adaptability, quick decision-making, etc.
+                        Relate these to the specific challenge and outcome you
+                        are discussing.
                       </li>
                     </ul>
                   )}
@@ -2302,7 +2360,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 <p className="video-info">Unlimited retries</p>
                 <button
                   type="button"
-                  onClick={() => setAndPersistStep(6)}
+                  onClick={() => setAndPersistStep(7)}
                   style={previousButtonStyles}
                 >
                   Back
