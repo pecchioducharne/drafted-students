@@ -1078,7 +1078,7 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <br></br>
               <div>
-                <label htmlFor="graduationYear">* Graduation Year</label>
+                <label htmlFor="graduationYear">Graduation Year *</label>
                 <Field
                   as="select"
                   id="graduationYear"
