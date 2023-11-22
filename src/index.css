@@ -120,3 +120,18 @@ button[type='button'] {
   font-size: 14px;
   margin-top: 4px;
 }
+
+.label-icons-container {
+  display: flex;
+  align-items: center;
+}
+
+.label-icons-container label {
+  margin-left: 10px;
+}
+
+.label-icons-container img {
+  margin-right: 5px;
+  margin-left: 3px;
+  margin-top: 8px;
+}

@@ -14,6 +14,8 @@ import Levenshtein from "fast-levenshtein";
 import usfTampaGif from "./usf-tampa.gif";
 import loadingGif from "./loader.gif";
 import { Persist } from "formik-persist";
+import linkedInIcon from "./linkedin.svg";
+import githubIcon from "./github.svg";
 
 const S3_BUCKET_NAME = "uploads-video-resumes";
 const COLLEGE_API_KEY = "HVwaXJVdWqpqjayHBi6OMRGk5CDGybJtu8SN8M57";
@@ -1128,16 +1130,33 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <div>
                 <br></br>
-                <label htmlFor="linkedInProfile">
-                  LinkedIn Profile (Optional)
-                </label>
+                  <label htmlFor="linkedInProfile">
+                    LinkedIn Profile or GitHub
+                  </label>
                 <Field
                   type="text"
                   id="linkedInProfileURL"
                   name="linkedInProfileURL"
-                  placeholder="You can paste your LinkedIn URL here"
+                  placeholder="You can paste your URL here"
                   style={{ width: "95%" }}
                 />
+                <div className="label-icons-container">
+                <img
+                  src={linkedInIcon}
+                  style={{
+                    width: "20px",
+                    display: "inline-block",
+                  }}
+                />
+                <img
+                  src={githubIcon}
+                  style={{
+                    width: "20px",
+                    display: "inline-block",
+                  }}
+                />
+                </div>
+                <div></div>
                 <ErrorMessage
                   name="linkedInProfileURL"
                   component="div"
@@ -1827,7 +1846,7 @@ const MultiStepForm = ({ submitHandler }) => {
                         <button
                           type="submit"
                           style={
-                            (videoRecorded || videoUploaded)
+                            videoRecorded || videoUploaded
                               ? buttonStyles
                               : inactiveButtonStyles
                           }
