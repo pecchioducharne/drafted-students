@@ -526,7 +526,7 @@ const MultiStepForm = ({ submitHandler }) => {
   const redirectToLogin = () => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
-    const loginUrl = `http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`;
+    const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
   
     window.location.href = loginUrl;
   };
