@@ -4,7 +4,7 @@ import { doc, getDoc } from "firebase/firestore";
 import "./ProfileDashboard.css";
 import SignOutButton from "./SignOutButton";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from './UserContext';
+import { UserContext } from "./UserContext";
 
 const ProfileDashboard = ({
   firstName,
@@ -28,10 +28,10 @@ const ProfileDashboard = ({
       if (userInfo.email) {
         console.log("There is an email field: " + email);
         const userDocRef = doc(db, "drafted-accounts", email);
-        console.log("Getting doc")
+        console.log("Getting doc");
         const docSnap = await getDoc(userDocRef);
         if (docSnap.exists()) {
-          console.log("Doc exists!")
+          console.log("Doc exists!");
           const userData = docSnap.data();
           console.log("Video 1: " + userData.video1);
           setVideoUrl(userData.video1);
@@ -86,7 +86,7 @@ const ProfileDashboard = ({
   return (
     <div className="profile-dashboard">
       <div className="header-section">
-        <h1 className="name">{`${userInfo.firstName} ${userInfo.lastName}`}</h1>
+        <h1 className="name">{`${firstName || ""} ${lastName || ""}`}</h1>
         <div className="university">{userInfo.university}</div>
       </div>
       <div className="info-section">
@@ -105,7 +105,11 @@ const ProfileDashboard = ({
         <div className="profile-field">
           <strong>LinkedIn</strong>
           <p>
-            <a href={userInfo.linkedIn} target="_blank" rel="noopener noreferrer">
+            <a
+              href={userInfo.linkedIn}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {userInfo.linkedIn}
             </a>
           </p>
