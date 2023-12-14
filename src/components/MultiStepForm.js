@@ -990,7 +990,9 @@ const MultiStepForm = ({ submitHandler }) => {
               confirmPassword: "",
             }}
             validationSchema={Yup.object().shape({
-              password: Yup.string().required("Password is required"),
+              password: Yup.string()
+                .required("Password is required")
+                .min(6, "Password needs to be at least six characters long"),
               confirmPassword: Yup.string()
                 .oneOf([Yup.ref("password"), null], "Passwords must match")
                 .required("Confirm Password is required"),
