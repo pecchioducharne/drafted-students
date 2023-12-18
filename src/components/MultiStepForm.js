@@ -12,7 +12,6 @@ import axios from "axios";
 /* eslint-disable no-unused-vars */
 
 import VideoRecorder from "react-video-recorder/lib/video-recorder";
-import ProfileDashboard from "./ProfileDashboard";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import * as Yup from "yup";
@@ -107,6 +106,7 @@ const MultiStepForm = ({ submitHandler }) => {
   const { setUserInfo } = useContext(UserContext);
 
   const [step, setStep] = useState(1);
+  const [isFormCompleted, setIsFormCompleted] = useState(false);
   const [, /*formSubmitted*/ setFormSubmitted] = useState(false);
   const [, /*isVideoRecorded*/ setIsVideoRecorded] = useState(false);
   const [values /*setValues*/] = useState({});
@@ -167,21 +167,21 @@ const MultiStepForm = ({ submitHandler }) => {
     resume: "",
   };
 
-  const transitionToDashboard = (userData) => {
-    // Update the context with userData
-    setUserData({
-      firstName: userData.firstName,
-      lastName: userData.lastName,
-      university: userData.university,
-      major: userData.major,
-      graduationYear: userData.graduationYear,
-      email: userData.email,
-      linkedIn: userData.linkedIn,
-    });
+  // const transitionToDashboard = (userData) => {
+  //   // Update the context with userData
+  //   setUserData({
+  //     firstName: userData.firstName,
+  //     lastName: userData.lastName,
+  //     university: userData.university,
+  //     major: userData.major,
+  //     graduationYear: userData.graduationYear,
+  //     email: userData.email,
+  //     linkedIn: userData.linkedIn,
+  //   });
 
-    // Navigate to the dashboard
-    navigate("/dashboard");
-  };
+  //   // Navigate to the dashboard
+  //   navigate("/dashboard");
+  // };
 
   const handleUpload = (videoBlobOrFile, questionNumber) => {
     // video upload
@@ -1121,6 +1121,10 @@ const MultiStepForm = ({ submitHandler }) => {
 
               console.log("Values captured in form, ", values);
 
+              if (values.firstName && values.lastName && values.major && values.graduationYear) {
+                setIsFormCompleted(true);
+              }
+
               // Now use formData to upload to Firestore
               await handleTextUpload(values);
               setAndPersistStep(5);
@@ -1591,9 +1595,13 @@ const MultiStepForm = ({ submitHandler }) => {
         );
 
       case 6:
-        setShouldUseEffect(false);
-        redirectToLogin();
-        break;
+        if (isFormCompleted) {
+          redirectToLogin();
+        } else {
+          localStorage.clear();
+          setAndPersistStep(1);
+        }
+        return;
       // setShouldUseEffect(false);
 
       // setUserInfo({
