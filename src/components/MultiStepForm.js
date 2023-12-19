@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useNavigate } from "react-router-dom";
 import { db, auth } from "./firebase";
 import { UserContext } from "./UserContext";
@@ -353,7 +354,7 @@ const MultiStepForm = ({ submitHandler }) => {
     localStorage.setItem("formCurrentStep", newStep);
   }
 
-  const handleTextUpload = async (values) => {
+  const handleTextUpload = async (values, resumeFile) => {
     try {
       // Create a Firebase account
       const userCredential = await createUserWithEmailAndPassword(
@@ -361,7 +362,29 @@ const MultiStepForm = ({ submitHandler }) => {
         globalEmail,
         globalPassword
       );
+
+      console.log("Creating new Account...");
+      // New Firebase account
       const user = userCredential.user;
+
+      if (user) {
+        console.log("Created account with email: " + user.email);
+      }
+
+      // To store resume
+      let resumeURL = "";
+
+      if (resumeFile) {
+        console.log("There is a resume...");
+        const storage = getStorage();
+        const resumeRef = ref(storage, `resumes/${user.email}/${resumeFile.name}`);
+
+        // Upload the resume file
+        const uploadResult = await uploadBytes(resumeRef, resumeFile);
+        resumeURL = await getDownloadURL(uploadResult.ref);
+      } else {
+        console.log("No resume detected");
+      }
 
       // Create an object with the form data, excluding linkedInURL if it's empty
       const formData = {
@@ -374,6 +397,7 @@ const MultiStepForm = ({ submitHandler }) => {
         video1: "",
         video2: "",
         video3: "",
+        resume: resumeURL,
       };
 
       // Conditionally add linkedInURL if it's not empty
@@ -397,6 +421,7 @@ const MultiStepForm = ({ submitHandler }) => {
         video2: "",
         video3: "",
         linkedInURL: formData.linkedInURL || "",
+        resume: resumeURL
       });
 
       console.log("User account created and data uploaded to Firestore.");
@@ -1125,8 +1150,10 @@ const MultiStepForm = ({ submitHandler }) => {
                 setIsFormCompleted(true);
               }
 
+              const resumeFile = selectedResume; // Adjust as per your file input handling
+
               // Now use formData to upload to Firestore
-              await handleTextUpload(values);
+              await handleTextUpload(values, resumeFile);
               setAndPersistStep(5);
             }}
           >
@@ -1229,7 +1256,7 @@ const MultiStepForm = ({ submitHandler }) => {
               <div>
                 <br></br>
                 <label htmlFor="linkedInProfile">
-                  LinkedIn Profile or GitHub
+                  LinkedIn Profile
                 </label>
                 <Field
                   type="text"
@@ -1246,13 +1273,13 @@ const MultiStepForm = ({ submitHandler }) => {
                       display: "inline-block",
                     }}
                   />
-                  <img
+                  {/* <img
                     src={githubIcon}
                     style={{
                       width: "20px",
                       display: "inline-block",
                     }}
-                  />
+                  /> */}
                 </div>
                 <div></div>
                 <ErrorMessage
@@ -1284,7 +1311,10 @@ const MultiStepForm = ({ submitHandler }) => {
                   accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   style={{ display: "none" }} // hide the default file input
                   onChange={async (event) => {
-                    setSelectedResume(event.currentTarget.files[0]);
+                    const file = event.currentTarget.files[0];
+                    if (file) {
+                      setSelectedResume(event.currentTarget.files[0]);
+                    }
                     setGlobalResume("resume", event.currentTarget.files[0]);
                   }}
                 />
