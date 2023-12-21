@@ -103,6 +103,7 @@ var s3 = new AWS.S3({
 });
 
 const MultiStepForm = ({ submitHandler }) => {
+
   const navigate = useNavigate();
   const { setUserInfo } = useContext(UserContext);
 
@@ -820,6 +821,9 @@ const MultiStepForm = ({ submitHandler }) => {
         setStep(Number(persistedStep));
       }
     }, []);
+
+    // Clear local storage before new onboarding
+    localStorage.clear();
 
     switch (step) {
       case 1:
