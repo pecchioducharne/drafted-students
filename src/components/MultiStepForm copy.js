@@ -1362,15 +1362,188 @@ const MultiStepForm = ({ submitHandler }) => {
             >
               {({ values, setFieldValue }) => (
                 <Form>
-                  <h2>✨ Let's complete your profile</h2>
+                  <h2>✨ Let's record your video resume</h2>
                   <h3>
                   With just one video resume, you'll be visible to every employer on Drafted who's looking for someone with your major.
                   </h3>
-                  <h4>
-                  In three quick questions, you can create your video resume and grab the attention of employers.<br></br><br></br>
-                  Each question gives you up to a minute to show off your skills and personality.<br></br><br></br>
-                  Don't fret about the pressure – you can redo each answer until you feel confident in your responses.
-                  </h4>
+                  <p>
+                  Let’s complete your profile! In three quick questions, you can create your video resume and grab the attention of employers. Each question gives you up to a minute to show off your skills and personality. Don't fret about the pressure – you can redo each answer until you feel confident in your responses.
+                  </p>
+                  <p>
+                    Or record video on your own and submit{" "}
+                    <a
+                      href={`mailto:appdrafted@gmail.com?subject=Ready to get Drafted&body=Hi!  I am ready to get Drafted. Here's my info:%0D%0A%0D%0AEmail:%0D%0AName:%0D%0AMajor:%0D%0AGraduation Year:%0D%0AGraduation Month:%0D%0ALinkedIn Profile:%0D%0A%0D%0APlease make sure to attach video resume (try and keep it under 5 minutes).`}
+                      style={{ color: "#53AD7A", fontWeight: "bold" }}
+                    >
+                      via email
+                    </a>{" "}
+                    to <strong>appdrafted@gmail.com</strong> including all
+                    candidate information and attaching video resume.
+                  </p>
+                  <a
+                    href="https://drive.google.com/file/d/1op7e1ItCyR9qd5KeGZmCrVV88WiCkmN_/view?usp=sharing"
+                    target="_blank"
+                    style={{
+                      color: "#53AD7A",
+                      fontWeight: "bold",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Show all questions
+                  </a>
+                  {showText && (
+                    <p>
+                      {/* Questions in advance */}
+                      <h4>🗺️ 1: Tell us your story</h4>
+                      <span
+                        onClick={toggleProTips}
+                        style={{ cursor: "pointer", fontWeight: "bold" }}
+                      >
+                        (Click for pro tips)
+                      </span>
+                      {showProTips && (
+                        <ul>
+                          <li>
+                            This is the typical "walk me through your resume"
+                            question. Talk about what you majored in and why.
+                            What internships or experiences you've had, and what
+                            have you learned from them? What skills will you
+                            bring to the hiring company?
+                          </li>
+                          <li>
+                            Show why you're the best candidate to get an
+                            opportunity, in terms of degree, internships, and
+                            experience as well as soft skills which truly set
+                            you apart. Talk about what you are passionate about,
+                            and what you hope to explore in your first role.
+                          </li>
+                          <li>
+                            Demonstrate that you can communicate clearly and
+                            effectively, present yourself professionally, and
+                            most importantly have fun and show your enthusiasm
+                            to go pro and put that degree to work!
+                          </li>
+                        </ul>
+                      )}
+                      <br></br>
+                      <a
+                        href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
+                      >
+                        (Click to watch video: Question 1 Explained)
+                      </a>
+                      <h4>
+                        🪄 2: What makes you stand out amongst other candidates?
+                      </h4>
+                      <span
+                        onClick={toggleProTips}
+                        style={{ cursor: "pointer", fontWeight: "bold" }}
+                      >
+                        (Click for pro tips)
+                      </span>
+                      {showProTips && (
+                        <ul>
+                          <li>
+                            <span
+                              style={{ fontWeight: "bold", color: "#53AD7A" }}
+                            >
+                              Don’t be modest — this is the time to be confident
+                              about your strengths and really sell yourself to
+                              employers.
+                            </span>{" "}
+                            Focus on your unique skills and experiences, and
+                            explain why these make you the ideal candidate.
+                          </li>
+                          <li>
+                            <span
+                              style={{ fontWeight: "bold", color: "#53AD7A" }}
+                            >
+                              Focus on your education, skills, and experiences
+                              that make you unique!
+                            </span>{" "}
+                            Tell employers how your unique skills will help the
+                            company succeed.
+                          </li>
+                          <li>
+                            <span
+                              style={{ fontWeight: "bold", color: "#53AD7A" }}
+                            >
+                              Employers ask this to identify reasons why hiring
+                              you is better than hiring a similarly qualified
+                              candidate.
+                            </span>{" "}
+                            Use specific examples to demonstrate your skills and
+                            achievements, and relate them back to the
+                            requirements of the job.
+                          </li>
+                        </ul>
+                      )}
+                      <br></br>
+                      <a
+                        href="https://youtu.be/IshJHdFFtcg?si=1T8CrRqPFuVvM6kG"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
+                      >
+                        (Click to watch video: Question 2 Explained)
+                      </a>
+                      <h4>
+                        🧗 3: Tell us about a time when you overcame a challenge
+                      </h4>
+                      <span
+                        onClick={toggleProTips}
+                        style={{ cursor: "pointer", fontWeight: "bold" }}
+                      >
+                        (Click for pro tips)
+                      </span>
+                      {showProTips && (
+                        <ul>
+                          <li>
+                            This is like your "highlight reel" moment. Show off!
+                            Share specific examples where you exhibited
+                            problem-solving skills and the ability to overcome
+                            obstacles.
+                          </li>
+                          <li>
+                            Pick one specific challenge in your studies,
+                            personal life, or work/internships. Tell a story
+                            with a positive outcome and/or positive lesson
+                            learned that you can contribute to the workplace.
+                          </li>
+                          <li>
+                            Emphasize key "soft skills". Examples of soft skills
+                            include creativity, leadership, resilience,
+                            adaptability, quick decision-making, etc. Relate
+                            these to the specific challenge and outcome you are
+                            discussing.
+                          </li>
+                        </ul>
+                      )}
+                      <br></br>
+                      <a
+                        href="https://youtu.be/W1vP__7BAEY?si=VJph5kNvmRmTe4dV"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "black",
+                          fontWeight: "bold",
+                          textDecoration: "none",
+                        }}
+                      >
+                        (Click to watch video: Question 3 Explained)
+                      </a>
+                    </p>
+                  )}
                   {/* <div>
                     <h3>Answer all questions in one video</h3>
                     <p>Try and keep total video duration under 5 minutes</p>
