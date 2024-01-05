@@ -1176,10 +1176,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   firstName: values.firstName,
                   lastName: values.lastName,
                   major: values.major,
-                  graduationMonth: values.graduationMonth,
                   graduationYear: values.graduationYear,
                   university: globalUniversity,
-                  linkedInURL: values.linkedInURL,
                   // Add other relevant parameters here
                 });
               }
