@@ -874,7 +874,7 @@ const MultiStepForm = ({ submitHandler }) => {
 
                 if (window.ttq) {
                   window.ttq.track("Download", {
-                    content_type: "form_submission",
+                    content_id: "form_submission",
                     email: values.email, // You can pass any relevant information
                     // Add other relevant parameters here
                   });
@@ -1172,7 +1172,7 @@ const MultiStepForm = ({ submitHandler }) => {
               // Add TikTok Pixel tracking event here
               if (window.ttq) {
                 window.ttq.track("SubmitForm", {
-                  content_type: "form_submission",
+                  content_id: "form_submission",
                   firstName: values.firstName,
                   lastName: values.lastName,
                   major: values.major,
