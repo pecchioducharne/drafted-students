@@ -869,6 +869,14 @@ const MultiStepForm = ({ submitHandler }) => {
                   setGlobalEmail(values.email);
                   setAndPersistStep(2);
                 }
+
+                if (window.ttq) {
+                  window.ttq.track('Download', {
+                    content_type: 'form_submission',
+                    email: values.email,  // You can pass any relevant information
+                    // Add other relevant parameters here
+                  });
+                }
               }}
             >
               {(formik) => (
@@ -1430,8 +1438,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                     style={buttonStyles}
                   >
-                    {/* 🎥 Continue to record */}
-                    Next
+                    Complete profile
                   </button>
                   {isLoading && (
                     <img
