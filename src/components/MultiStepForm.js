@@ -103,7 +103,6 @@ var s3 = new AWS.S3({
 });
 
 const MultiStepForm = ({ submitHandler }) => {
-
   const navigate = useNavigate();
   const { setUserInfo } = useContext(UserContext);
 
@@ -378,7 +377,10 @@ const MultiStepForm = ({ submitHandler }) => {
       if (resumeFile) {
         console.log("There is a resume...");
         const storage = getStorage();
-        const resumeRef = ref(storage, `resumes/${user.email}/${resumeFile.name}`);
+        const resumeRef = ref(
+          storage,
+          `resumes/${user.email}/${resumeFile.name}`
+        );
 
         // Upload the resume file
         const uploadResult = await uploadBytes(resumeRef, resumeFile);
@@ -422,7 +424,7 @@ const MultiStepForm = ({ submitHandler }) => {
         video2: "",
         video3: "",
         linkedInURL: formData.linkedInURL || "",
-        resume: resumeURL
+        resume: resumeURL,
       });
 
       console.log("User account created and data uploaded to Firestore.");
@@ -553,7 +555,7 @@ const MultiStepForm = ({ submitHandler }) => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
     const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-  
+
     window.location.href = loginUrl;
   };
 
@@ -871,9 +873,9 @@ const MultiStepForm = ({ submitHandler }) => {
                 }
 
                 if (window.ttq) {
-                  window.ttq.track('Download', {
-                    content_type: 'form_submission',
-                    email: values.email,  // You can pass any relevant information
+                  window.ttq.track("Download", {
+                    content_type: "form_submission",
+                    email: values.email, // You can pass any relevant information
                     // Add other relevant parameters here
                   });
                 }
@@ -1158,8 +1160,28 @@ const MultiStepForm = ({ submitHandler }) => {
 
               console.log("Values captured in form, ", values);
 
-              if (values.firstName && values.lastName && values.major && values.graduationYear) {
+              if (
+                values.firstName &&
+                values.lastName &&
+                values.major &&
+                values.graduationYear
+              ) {
                 setIsFormCompleted(true);
+              }
+
+              // Add TikTok Pixel tracking event here
+              if (window.ttq) {
+                window.ttq.track("SubmitForm", {
+                  content_type: "form_submission",
+                  firstName: values.firstName,
+                  lastName: values.lastName,
+                  major: values.major,
+                  graduationMonth: values.graduationMonth,
+                  graduationYear: values.graduationYear,
+                  university: globalUniversity,
+                  linkedInURL: values.linkedInURL,
+                  // Add other relevant parameters here
+                });
               }
 
               const resumeFile = selectedResume; // Adjust as per your file input handling
@@ -1267,9 +1289,7 @@ const MultiStepForm = ({ submitHandler }) => {
               </div>
               <div>
                 <br></br>
-                <label htmlFor="linkedInProfile">
-                  LinkedIn Profile
-                </label>
+                <label htmlFor="linkedInProfile">LinkedIn Profile</label>
                 <Field
                   type="text"
                   id="linkedInProfileURL"
@@ -1372,12 +1392,19 @@ const MultiStepForm = ({ submitHandler }) => {
                 <Form>
                   <h2>✨ Let's complete your profile</h2>
                   <h3>
-                  With just one video resume, you'll be visible to every employer on Drafted who's looking for someone with your major.
+                    With just one video resume, you'll be visible to every
+                    employer on Drafted who's looking for someone with your
+                    major.
                   </h3>
                   <h4>
-                  In three quick questions, you can create your video resume and grab the attention of employers.<br></br><br></br>
-                  Each question gives you up to a minute to show off your skills and personality.<br></br><br></br>
-                  Don't fret about the pressure – you can redo each answer until you feel confident in your responses.
+                    In three quick questions, you can create your video resume
+                    and grab the attention of employers.<br></br>
+                    <br></br>
+                    Each question gives you up to a minute to show off your
+                    skills and personality.<br></br>
+                    <br></br>
+                    Don't fret about the pressure – you can redo each answer
+                    until you feel confident in your responses.
                   </h4>
                   {/* <div>
                     <h3>Answer all questions in one video</h3>
