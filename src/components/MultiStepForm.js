@@ -1,28 +1,26 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, getDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { db, auth } from "./firebase";
 import { UserContext } from "./UserContext";
+import { auth, db } from "./firebase";
 
 import axios from "axios";
 
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 
-import VideoRecorder from "react-video-recorder/lib/video-recorder";
-import Select from "react-select";
-import AsyncSelect from "react-select/async";
-import * as Yup from "yup";
 import AWS from "aws-sdk";
 import Levenshtein from "fast-levenshtein";
-import usfTampaGif from "./usf-tampa.gif";
-import loadingGif from "./loader.gif";
 import { Persist } from "formik-persist";
+import AsyncSelect from "react-select/async";
+import VideoRecorder from "react-video-recorder/lib/video-recorder";
+import * as Yup from "yup";
 import linkedInIcon from "./linkedin.svg";
-import githubIcon from "./github.svg";
+import loadingGif from "./loader.gif";
+import usfTampaGif from "./usf-tampa.gif";
 
 const S3_BUCKET_NAME = "uploads-video-resumes";
 const COLLEGE_API_KEY = "HVwaXJVdWqpqjayHBi6OMRGk5CDGybJtu8SN8M57";
@@ -61,7 +59,6 @@ const findUniversities = (inputValue) => {
       return universities;
     })
     .catch((error) => {
-      console.error("Error during fetching universities", error);
       return [];
     });
 };
@@ -168,25 +165,10 @@ const MultiStepForm = ({ submitHandler }) => {
     resume: "",
   };
 
-  // const transitionToDashboard = (userData) => {
-  //   // Update the context with userData
-  //   setUserData({
-  //     firstName: userData.firstName,
-  //     lastName: userData.lastName,
-  //     university: userData.university,
-  //     major: userData.major,
-  //     graduationYear: userData.graduationYear,
-  //     email: userData.email,
-  //     linkedIn: userData.linkedIn,
-  //   });
 
-  //   // Navigate to the dashboard
-  //   navigate("/dashboard");
-  // };
 
   const handleUpload = (videoBlobOrFile, questionNumber) => {
-    // video upload
-    console.log("Handle upload is called");
+  
 
     let filename;
 
@@ -216,17 +198,10 @@ const MultiStepForm = ({ submitHandler }) => {
     return new Promise((resolve, reject) => {
       s3.putObject(videoParams, function (err, data) {
         if (err) {
-          console.log("Error during upload: ", err);
-          console.log(err, err.stack); // an error occurred
+          
           reject(err);
         } else {
-          console.log(data); // successful response
-          console.log(
-            "Video " +
-              questionNumber +
-              " was uploaded successfully at " +
-              data.Location
-          );
+          
           // You no longer need to set the video recorded states here
           // as they are being set right after the recording is complete
           if (questionNumber === 1) {
@@ -253,7 +228,6 @@ const MultiStepForm = ({ submitHandler }) => {
               "https://uploads-video-resumes.s3.amazonaws.com/" + data.Key
             );
           }
-          console.log("Video uploaded successfully");
           setVideoUploaded(true); // Update the state here
           resolve(data);
           resolve(data);
@@ -262,92 +236,7 @@ const MultiStepForm = ({ submitHandler }) => {
     });
   };
 
-  const handleResumeUpload = (resumeFile) => {
-    console.log("handleResumeUpload called");
-
-    try {
-      setResumeUploading(true);
-
-      const filename = `${globalFirstName}-${globalLastName}-resume.${resumeFile.name
-        .split(".")
-        .pop()}`; // Get the file extension from the uploaded file
-
-      const resumeParams = {
-        Bucket: S3_BUCKET_NAME,
-        Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${filename}`,
-        Body: resumeFile,
-        ContentType: resumeFile.type,
-        ACL: "public-read",
-      };
-
-      s3.putObject(resumeParams, function (err, data) {
-        if (err) {
-          console.log("Error during resume upload: ", err);
-          console.log(err, err.stack);
-        } else {
-          console.log(data);
-          console.log("Resume was uploaded successfully at " + data.Location);
-        }
-      });
-
-      setResumeUploaded(true);
-    } catch (error) {
-      console.error("Resume upload failed:", error);
-      // Optionally show error to user here
-    } finally {
-      setResumeUploading(false);
-    }
-  };
-
-  const handleNextVideoStep = async (step, videoBlobOrFile) => {
-    if (step === 6 && !isVideo1Recorded) {
-      alert("Please finish video recording to proceed and get Drafted!");
-      return;
-    } else if (step === 7 && !isVideo2Recorded) {
-      alert("Please finish video recording to proceed and get Drafted!");
-      return;
-    } else if (step === 8 && !isVideo3Recorded) {
-      alert("Please finish video recording to proceed and get Drafted!");
-      return;
-    }
-    // success cases
-
-    // question 1
-    if (step === 6 && isVideo1Recorded && globalVideo1Link !== "") {
-      console.log("Video 1 was recorded");
-      setStep(7);
-    } else if (step === 6 && isVideo1Recorded && globalVideo1Link === "") {
-      alert("Uploading video resume! Give us a sec...");
-      await handleUpload(videoBlobOrFile, 1);
-      setStep(7);
-    } else {
-      alert("Please finish video recording to proceed and get Drafted!");
-    }
-
-    // question 2
-    if (step === 7 && isVideo2Recorded && globalVideo2Link !== "") {
-      console.log("Video 2 was recorded");
-      setStep(8);
-    } else if (step === 7 && isVideo2Recorded && globalVideo2Link === "") {
-      alert("Uploading video resume! Give us a sec...");
-      await handleUpload(videoBlobOrFile, 2);
-      setStep(8);
-    } else {
-      alert("Please finish video recording to proceed and get Drafted!");
-    }
-
-    // question 3
-    if (step === 8 && isVideo3Recorded && globalVideo3Link !== "") {
-      console.log("Video 3 was recorded");
-      setStep(9);
-    } else if (step === 8 && isVideo3Recorded && globalVideo3Link === "") {
-      alert("Uploading video resume! Give us a sec...");
-      await handleUpload(videoBlobOrFile, 3);
-      setStep(9);
-    } else {
-      alert("Please finish video recording to proceed and get Drafted!");
-    }
-  };
+ 
 
   function setAndPersistStep(newStep) {
     setStep(newStep);
@@ -363,19 +252,17 @@ const MultiStepForm = ({ submitHandler }) => {
         globalPassword
       );
 
-      console.log("Creating new Account...");
+     
       // New Firebase account
       const user = userCredential.user;
 
       if (user) {
-        console.log("Created account with email: " + user.email);
       }
 
       // To store resume
       let resumeURL = "";
 
       if (resumeFile) {
-        console.log("There is a resume...");
         const storage = getStorage();
         const resumeRef = ref(
           storage,
@@ -386,7 +273,7 @@ const MultiStepForm = ({ submitHandler }) => {
         const uploadResult = await uploadBytes(resumeRef, resumeFile);
         resumeURL = await getDownloadURL(uploadResult.ref);
       } else {
-        console.log("No resume detected");
+       
       }
 
       // Create an object with the form data, excluding linkedInURL if it's empty
@@ -408,7 +295,6 @@ const MultiStepForm = ({ submitHandler }) => {
         formData.linkedInURL = values.linkedInURL;
       }
 
-      console.log("Form data to be uploaded: ", formData);
 
       // Upload the form data to Firestore with the user's email as the document ID
       const userDataRef = doc(db, "drafted-accounts", user.email);
@@ -427,62 +313,16 @@ const MultiStepForm = ({ submitHandler }) => {
         resume: resumeURL,
       });
 
-      console.log("User account created and data uploaded to Firestore.");
+      
 
       // Redirect to the Profile Dashboard or any other page.
       // You can use React Router for navigation.
     } catch (error) {
-      console.error("Error creating account and uploading data:", error);
       // Handle the error appropriately
     }
   };
 
-  // const handleTextUpload = () => {
-  //   console.log("handleTextUpload called with the fields:");
-  //   console.log(globalFirstName);
-  //   console.log(globalLastName);
-  //   console.log(globalUniversity);
-  //   console.log(globalMajor);
-  //   console.log(globalGraduationMonth);
-  //   console.log(globalGraduationYear);
-  //   console.log(globalLinkedInProfileURL);
-  //   console.log(globalVideo1Link);
-  //   console.log(globalVideo2Link);
-  //   console.log(globalFirstName);
-
-  //   const formData = {
-  //     firstName: globalFirstName,
-  //     lastName: globalLastName,
-  //     university: globalUniversity,
-  //     major: globalMajor,
-  //     graduationMonth: globalGraduationMonth,
-  //     graduationYear: globalGraduationYear,
-  //     linkedInURL: globalLinkedInProfileURL,
-  //     video1: globalVideo1Link,
-  //     video2: globalVideo2Link,
-  //     video3: globalVideo3Link,
-  //   };
-  //   const formDataJsonString = JSON.stringify(formData);
-
-  //   // Handle submission of form data
-  //   const params = {
-  //     Bucket: S3_BUCKET_NAME,
-  //     Key: `${globalUniversity}/${globalFirstName} ${globalLastName}/${globalFirstName}-${globalLastName}-information.json`,
-  //     Body: formDataJsonString,
-  //     ContentType: "application/json",
-  //     ACL: "public-read",
-  //   };
-
-  //   s3.putObject(params, function (err, data) {
-  //     if (err) {
-  //       console.log(err, err.stack); // an error occurred
-  //     } else {
-  //       console.log(data); // successful response
-  //       console.log("JSON was uploaded successfully at " + data.Location);
-  //     }
-  //   });
-  // };
-
+ 
   const buttonStyles = {
     borderRadius: "8px",
     backgroundColor: "#207a56",
@@ -554,68 +394,19 @@ const MultiStepForm = ({ submitHandler }) => {
   const redirectToLogin = () => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
-    const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-
+   // const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
+   const loginUrl =`http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`
     window.location.href = loginUrl;
   };
 
-  const months = {
-    1: "January",
-    2: "February",
-    3: "March",
-    4: "April",
-    5: "Mayo",
-    6: "June",
-    7: "July",
-    8: "August",
-    9: "September",
-    10: "October",
-    11: "November",
-    12: "December",
-  };
+
 
   const onSubmit = (values) => {
-    console.log(values);
+   
   };
 
-  //  let draftedUniversity = "";
-  //  let globalEmail = "";
-  //  let globalPassword = ""; // @TODO: Encrypt, attention to Drafted engineers: never, never, EVER log any password or critical customer information!
-  //  let globalFirstName = "";
-  //  let globalLastName = "";
-  // //  let globalUniversity = "";
-  //  let globalMajor = "";
-  //  let globalGraduationMonth = "";
-  //  let globalGraduationYear = "";
-  //  let globalLinkedInProfileURL = "";
-  //  let globalResume = null; // @TODO: Have to figure this out
-  //  let globalVideo1 = null; // What file type is this?
-  //  let globalVideo2 = null;
-  //  let globalVideo3 = null;
-  //  let globalVideo1Link = "";
-  //  let globalVideo2Link = "";
-  //  let globalVideo3Link = "";
-
   const [isLoading, setIsLoading] = useState(false);
-  function YouTubeEmbedQuestion1() {
-    return (
-      <div
-        className="youtube-container"
-        style={{ overflow: "hidden", borderRadius: "8px" }}
-      >
-        <iframe
-          width="350"
-          height="315"
-          src="https://www.youtube.com/embed/T9Dym8dDLzM?autoplay=1&controls=1&modestbranding=1&rel=0"
-          title="YouTube video player"
-          frameborder="0"
-          style={{ borderRadius: "14px" }} // Add border-radius here
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-        ></iframe>
-      </div>
-    );
-  }
+ 
 
   function YouTubeEmbedQuestion2() {
     return (
@@ -706,10 +497,10 @@ const MultiStepForm = ({ submitHandler }) => {
               if (docSnap.exists()) {
                 setUserData(docSnap.data());
               } else {
-                console.log("No such document!");
+               
               }
             } catch (error) {
-              console.error("Error fetching document:", error);
+            
             }
           }
         };
@@ -728,91 +519,77 @@ const MultiStepForm = ({ submitHandler }) => {
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved university: ", globalUniversity);
+      
       }
     }, [globalUniversity, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved email: ", globalEmail);
       }
     }, [globalEmail, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved password");
       }
     }, [shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved first name: ", globalFirstName);
       }
     }, [globalFirstName, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved last name: ", globalLastName);
       }
     }, [globalLastName, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved major: ", globalMajor);
       }
     }, [globalMajor, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved graduation month: ", globalGraduationMonth);
       }
     }, [globalGraduationMonth, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved graduation year: ", globalGraduationYear);
       }
     }, [globalGraduationYear, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved LinkedIn profile: ", globalLinkedInProfileURL);
       }
     }, [globalLinkedInProfileURL, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved video1: ", globalVideo1);
       }
     }, [globalVideo1, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved video2: ", globalVideo2);
       }
     }, [globalVideo2, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved video3: ", globalVideo3);
       }
     }, [globalVideo3, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved video 1 link: ", globalVideo1Link);
       }
     }, [globalVideo1Link, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved video 2 link: ", globalVideo2Link);
       }
     }, [globalVideo2Link, shouldUseEffect]);
 
     useEffect(() => {
       if (shouldUseEffect) {
-        console.log("Saved video 3 link: ", globalVideo3Link);
       }
     }, [globalVideo3Link, shouldUseEffect]);
 
@@ -833,7 +610,7 @@ const MultiStepForm = ({ submitHandler }) => {
           <>
             <Formik
               initialValues={{
-                email: "",
+                email:globalEmail,
               }}
               validationSchema={Yup.object({
                 email: Yup.string()
@@ -847,7 +624,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   setGlobalUniversity("Florida International University");
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
-                  console.log("Saved university: ", globalUniversity);
+               
                   setAndPersistStep(3); // skips step
                 } else if (values.email.endsWith("miami.edu")) {
                   // University of Miami
@@ -855,7 +632,6 @@ const MultiStepForm = ({ submitHandler }) => {
                   setGlobalUniversity("University of Miami");
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
-                  console.log("Saved university: ", globalUniversity);
                   setAndPersistStep(3); // skips step
                 } else if (values.email.endsWith("usf.edu")) {
                   // University of Southern Florida
@@ -863,11 +639,11 @@ const MultiStepForm = ({ submitHandler }) => {
                   setGlobalUniversity("University of South Florida");
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
-                  console.log("Saved university: ", globalUniversity);
                   setAndPersistStep(3); // skips step
                 } else {
                   // Not a drafted uni, go to next
-                  // globalEmail = values.email;
+                  // globalEmail = values.email;]
+                  
                   setGlobalEmail(values.email);
                   setAndPersistStep(2);
                 }
@@ -881,7 +657,9 @@ const MultiStepForm = ({ submitHandler }) => {
                 }
               }}
             >
-              {(formik) => (
+              {(formik) => {
+              
+                return(
                 <Form>
                   <h2>🎯 Let's find your next job</h2>
                   <h3>Join Drafted's community of job seekers</h3>
@@ -890,11 +668,13 @@ const MultiStepForm = ({ submitHandler }) => {
                     early career professionals to find jobs and internships.
                   </p>
                   <div>
-                    <label htmlFor="email">Email Address</label>
+                    <label htmlFor="email">Email Address Test </label>
                     <Field
+                      value={formik.values.email}
                       type="email"
                       id="email"
                       name="email"
+                     
                       style={{ width: "95%" }}
                     />
                     <ErrorMessage
@@ -942,21 +722,19 @@ const MultiStepForm = ({ submitHandler }) => {
                       Let's go pro
                     </button>
                   </div>
-                  {/* Uncomment to go directly to video step */}
-                  {/* <button type="button" onClick={setStep(6)}>
-                    Debug Video
-                  </button> */}
+
                   <Persist name="persistStep1" />
                 </Form>
-              )}
+              )}}
             </Formik>
           </>
         );
       case 2:
+     
         return (
           <>
             <Formik
-              initialValues={{ university: null }}
+              initialValues={{ university:globalUniversity }}
               validationSchema={Yup.object({
                 university: Yup.object().shape({
                   label: Yup.string().required("Please select your school"),
@@ -965,8 +743,8 @@ const MultiStepForm = ({ submitHandler }) => {
               })}
               onSubmit={(values) => {
                 if (values.university !== "") {
-                  console.log(values.university.label);
                   let chosenUniversity = values.university.label;
+                
                   setGlobalUniversity(chosenUniversity);
                   setAndPersistStep(3);
                 }
@@ -1025,9 +803,10 @@ const MultiStepForm = ({ submitHandler }) => {
         return (
           <Formik
             initialValues={{
-              password: "",
-              confirmPassword: "",
+              password: globalPassword,
+              confirmPassword: globalPassword,
             }}
+            enableReinitialize={true}
             validationSchema={Yup.object().shape({
               password: Yup.string()
                 .required("Password is required")
@@ -1043,7 +822,6 @@ const MultiStepForm = ({ submitHandler }) => {
               ) {
                 // globalPassword = values.password;
                 setGlobalPassword(values.password);
-                console.log("Saved password...");
                 setAndPersistStep(4);
               }
             }}
@@ -1089,12 +867,12 @@ const MultiStepForm = ({ submitHandler }) => {
                   if (
                     globalEmail.endsWith("@fiu.edu") ||
                     globalEmail.endsWith("@usf.edu") ||
-                    globalEmail.endsWith("@umiami.edu")
+                    globalEmail.endsWith("@miami.edu")
                   ) {
-                    console.log("i know your uni");
+                  
                     setAndPersistStep(1);
                   } else {
-                    console.log("idk know your uni" + draftedUniversity);
+                  
                     setAndPersistStep(2);
                   }
                 }}
@@ -1113,11 +891,11 @@ const MultiStepForm = ({ submitHandler }) => {
         return (
           <Formik
             initialValues={{
-              firstName: "",
-              lastName: "",
-              major: "",
-              graduationMonth: "",
-              graduationYear: "",
+              firstName: globalFirstName,
+              lastName: globalLastName,
+              major: globalMajor,
+              graduationMonth: globalGraduationMonth,
+              graduationYear: globalGraduationYear,
               resume: null,
             }}
             validationSchema={Yup.object().shape({
@@ -1129,22 +907,8 @@ const MultiStepForm = ({ submitHandler }) => {
               ),
             })}
             onSubmit={async (values) => {
-              console.log("First name: " + values.firstName);
-              console.log("Last name: " + values.lastName);
-              console.log("Major name: " + values.major);
-              console.log("Graduation month: " + values.graduationMonth);
-              console.log("Graduation year: " + values.graduationYear);
-              console.log("University name: " + globalUniversity);
-              const formData = {
-                firstName: values.firstName,
-                lastName: values.lastName,
-                major: values.major,
-                graduationMonth: values.graduationMonth, // Ensure this is being set correctly in your form
-                graduationYear: values.graduationYear,
-                university: globalUniversity, // Assuming globalUniversity is set correctly earlier
-                linkedInURL: values.linkedInURL,
-                // other fields...
-              };
+           
+       
 
               setGlobalFirstName(values.firstName);
               setGlobalLastName(values.lastName);
@@ -1158,7 +922,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 setGlobalLinkedInProfileURL(values.linkedInURL);
               }
 
-              console.log("Values captured in form, ", values);
+              
 
               if (
                 values.firstName &&
@@ -1404,45 +1168,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     Don't fret about the pressure – you can redo each answer
                     until you feel confident in your responses.
                   </h4>
-                  {/* <div>
-                    <h3>Answer all questions in one video</h3>
-                    <p>Try and keep total video duration under 5 minutes</p>
-                    <label htmlFor="file" style={uploadButtonStyles}>
-                      Upload Video Resume
-                    </label>
-                    <input
-                      id="file"
-                      name="file"
-                      type="file"
-                      accept="video/*" // Accepts only video files
-                      onChange={async (event) => {
-                        const file = event.currentTarget.files[0];
-                        if (file) {
-                          setIsLoading(true); // Start loading stage
-                          setFieldValue("file", file.name); // Store the filename in Formik's state
-                          try {
-                            await handleUpload(file, "combined");
-                            await handleTextUpload();
-                            // If upload is successful, move to the desired step
-                            setAndPersistStep(9);
-                          } catch (err) {
-                            console.error("Error uploading video: ", err);
-                          } finally {
-                            setIsLoading(false); // End loading stage
-                          }
-                        }
-                      }}
-                    />
-                    {values.file && <span>{values.file}</span>} */}
-                  {/* </div> */}
+                 
                   <br />
-                  {/* <h3>or</h3> */}
-                  {/* <h3>Record question by question</h3> */}
-                  {/* <p>Continue onboarding, answer 3 questions 1 minute each</p> */}
-                  {/* <h3>
-                    Don't worry, you can record on Drafted or upload each video
-                    per question
-                  </h3> */}
+                 
                   <br></br>
                   <button
                     type="button"
@@ -1490,418 +1218,8 @@ const MultiStepForm = ({ submitHandler }) => {
           localStorage.clear();
           setAndPersistStep(1);
         }
-        return;
-      // setShouldUseEffect(false);
-
-      // setUserInfo({
-      //   firstName: globalFirstName,
-      //   lastName: globalLastName,
-      //   university: globalUniversity,
-      //   major: globalMajor,
-      //   graduationYear: globalGraduationYear,
-      //   graduationMonth: globalGraduationMonth,
-      //   email: globalEmail,
-      //   linkedIn: globalLinkedInProfileURL,
-      // });
-
-      // navigate("/dashboard");
-      // return userData ? (
-      //   <ProfileDashboard
-      //     firstName={userData.firstName}
-      //     lastName={userData.lastName}
-      //     university={userData.university}
-      //     major={userData.major}
-      //     graduationYear={userData.graduationYear}
-      //     email={userData.email}
-      //     linkedIn={userData.linkedIn}
-      //     // video1={''}
-      //     // video2={''}
-      //     // video3={''}
-      //   />
-      // ) : (
-      //   <p>Loading...</p>
-      // );
-
-      // const isMobile = window.innerWidth <= 768;
-
-      // const mobileForm = (
-      //   <Formik
-      //     initialValues={{ video1: null }}
-      //     onSubmit={async (values, { setSubmitting }) => {
-      //       if (values.video1) {
-      //         console.log("video 1 recorded");
-      //         try {
-      //           setIsLoading(true);
-      //           console.log("values.video1:", values.video1);
-      //           await handleUpload(values.video1, 1);
-      //           setAndPersistStep(7);
-      //         } catch (error) {
-      //           console.error("Video upload failed:", error);
-      //           // Optionally show error to user here
-      //         } finally {
-      //           setIsLoading(false);
-      //           setSubmitting(false);
-      //         }
-      //       } else {
-      //         alert("Please record a video before proceeding!");
-      //         setSubmitting(false);
-      //       }
-      //     }}
-      //   >
-      //     {({ setFieldValue, handleSubmit, handleChange }) => (
-      //       <Form
-      //         style={{
-      //           backgroundColor: "white",
-      //           borderRadius: "8px",
-      //           padding: "20px",
-      //           width: "90%",
-      //           margin: "0 auto",
-      //         }}
-      //         onSubmit={handleSubmit}
-      //       >
-      //         <h2>Question 1 of 3</h2>
-      //         <h3>🗺️ Tell us your story</h3>
-      //         <p>
-      //           <span
-      //             onClick={toggleProTips}
-      //             style={{ cursor: "pointer", fontWeight: "bold" }}
-      //           >
-      //             Click for pro tips
-      //           </span>
-      //           {showProTips && (
-      //             <ul>
-      //               <li>
-      //                 <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
-      //                   This is the typical "walk me through your resume"
-      //                   question.
-      //                 </span>{" "}
-      //                 Talk about what you majored in and why. What internships
-      //                 or experiences you've had, and what have you learned
-      //                 from them? What skills will you bring to the hiring
-      //                 company?
-      //               </li>
-      //               <li>
-      //                 <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
-      //                   Show why you're the best candidate to get an
-      //                   opportunity,
-      //                 </span>{" "}
-      //                 in terms of degree, internships, and experience as well
-      //                 as soft skills which truly set you apart. Talk about
-      //                 what you are passionate about, and what you hope to
-      //                 explore in your first role.
-      //               </li>
-      //               <li>
-      //                 <span style={{ fontWeight: "bold", color: "#53AD7A" }}>
-      //                   Demonstrate that you can communicate clearly and
-      //                   effectively,
-      //                 </span>{" "}
-      //                 present yourself professionally, and most importantly
-      //                 have fun and show your enthusiasm to go pro and put that
-      //                 degree to work!
-      //               </li>
-      //             </ul>
-      //           )}
-      //           <div>
-      //             <a
-      //               href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
-      //               onClick={toggleVideo1}
-      //               target="_blank"
-      //               rel="noopener noreferrer"
-      //               style={{ color: "#53AD7A", fontWeight: "bold" }}
-      //             >
-      //               Click to watch Question 1 Explained
-      //             </a>
-      //             <br />
-      //             <br />
-      //             {showVideo1 && <YouTubeEmbedQuestion1 />}
-      //           </div>
-      //         </p>
-      //         <div
-      //           className="video-recorder-wrapper"
-      //           style={{ borderRadius: "14px", overflow: "hidden" }}
-      //         >
-      //           <VideoRecorder
-      //             key={1}
-      //             isOnInitially
-      //             timeLimit={60000}
-      //             showReplayControls
-      //             onRecordingComplete={(videoBlobOrFile) => {
-      //               console.log("Video blob:", videoBlobOrFile);
-      //               setFieldValue("video1", videoBlobOrFile);
-      //             }}
-      //           />
-      //         </div>
-      //         <div className="video-frame"></div>
-      //         <p className="video-info">Video Response: 1 min time limit</p>
-      //         <p className="video-info">Unlimited retries</p>
-      //         <button
-      //           type="button"
-      //           onClick={() => setAndPersistStep(5)}
-      //           style={previousButtonStyles}
-      //         >
-      //           Back
-      //         </button>
-      //         <button type="submit" style={buttonStyles} disabled={isLoading}>
-      //           Submit and Next
-      //         </button>
-      //         {isLoading && (
-      //           <img
-      //             src={loadingGif}
-      //             alt="Loading..."
-      //             style={{
-      //               width: "24px",
-      //               height: "24px",
-      //               marginLeft: "10px",
-      //             }}
-      //           />
-      //         )}
-      //         <br></br>
-      //         <br></br>
-      //         <label htmlFor="file" style={uploadVideoButtonStyles}>
-      //           Upload Question 1 and Next
-      //         </label>
-      //         <input
-      //           id="file"
-      //           name="file"
-      //           type="file"
-      //           accept="video/*" // Accepts only video files
-      //           onChange={async (event) => {
-      //             const file = event.currentTarget.files[0];
-      //             if (file) {
-      //               setIsLoading(true); // Start loading stage
-      //               setFieldValue("file", file.name); // Store the filename in Formik's state
-      //               try {
-      //                 await handleUpload(file, "1");
-      //                 await handleTextUpload();
-      //                 // If upload is successful, move to the desired step
-      //                 setAndPersistStep(7);
-      //               } catch (err) {
-      //                 console.error("Error uploading video: ", err);
-      //               } finally {
-      //                 setIsLoading(false); // End loading stage
-      //               }
-      //             }
-      //           }}
-      //         />
-      //         {values.file && <span>{values.file}</span>}
-      //         <Persist name="persistStep6" />
-      //       </Form>
-      //     )}
-      //   </Formik>
-      // );
-
-      // const desktopForm = (
-      //   <>
-      //     <div
-      //       style={{
-      //         display: "flex",
-      //         justifyContent: "center",
-      //         alignItems: "center",
-      //         height: "100vh",
-      //         marginTop: "-50px",
-      //       }}
-      //     >
-      //       <div style={{ display: "flex", width: "800px" }}>
-      //         <div style={{ flex: 1, marginRight: "10px" }}>
-      //           <Formik
-      //             onSubmit={async (values, { setSubmitting }) => {
-      //               // Submit logic for the text form
-      //               console.log("is this getting hit?");
-      //             }}
-      //           >
-      //             <Form
-      //               style={{
-      //                 backgroundColor: "white",
-      //                 borderRadius: "8px",
-      //                 padding: "20px",
-      //               }}
-      //             >
-      //               <h2>Question 1 of 3</h2>
-      //               <h3>🗺️ Tell us your story</h3>
-      //               <p>
-      //                 <ul>
-      //                   <li>
-      //                     <span
-      //                       style={{ fontWeight: "bold", color: "#53AD7A" }}
-      //                     >
-      //                       This is the typical "walk me through your resume"
-      //                       question.
-      //                     </span>{" "}
-      //                     Talk about what you majored in and why. What
-      //                     internships or experiences you've had, and what have
-      //                     you learned from them? What skills will you bring to
-      //                     the hiring company?
-      //                   </li>
-      //                   <li>
-      //                     <span
-      //                       style={{ fontWeight: "bold", color: "#53AD7A" }}
-      //                     >
-      //                       Show why you're the best candidate to get an
-      //                       opportunity,
-      //                     </span>{" "}
-      //                     in terms of degree, internships, and experience as
-      //                     well as soft skills which truly set you apart. Talk
-      //                     about what you are passionate about, and what you
-      //                     hope to explore in your first role.
-      //                   </li>
-      //                   <li>
-      //                     <span
-      //                       style={{ fontWeight: "bold", color: "#53AD7A" }}
-      //                     >
-      //                       Demonstrate that you can communicate clearly and
-      //                       effectively,
-      //                     </span>{" "}
-      //                     present yourself professionally, and most
-      //                     importantly have fun and show your enthusiasm to go
-      //                     pro and put that degree to work!
-      //                   </li>
-      //                 </ul>
-      //               </p>
-      //               <div>
-      //                 <a
-      //                   href="https://youtu.be/T9Dym8dDLzM?si=bfF-HDKHnuTAcRdq"
-      //                   onClick={toggleVideo1}
-      //                   target="_blank"
-      //                   rel="noopener noreferrer"
-      //                   style={{ color: "#53AD7A", fontWeight: "bold" }}
-      //                 >
-      //                   Click to watch Question 1 Explained
-      //                 </a>
-      //                 <br />
-      //                 <br />
-      //                 {showVideo1 && <YouTubeEmbedQuestion1 />}
-      //               </div>
-      //               <div style={{ marginBottom: "20px" }}></div>
-      //               <Persist name="persistStep6" />
-      //             </Form>
-      //           </Formik>
-      //         </div>
-      //         <div style={{ flex: 1, marginLeft: "10px" }}>
-      //           <Formik
-      //             initialValues={{ video1: null, videoUploaded: false }}
-      //             onSubmit={async (values, { setSubmitting }) => {
-      //               if (values.video1) {
-      //                 console.log("video 1 recorded");
-      //                 try {
-      //                   setIsLoading(true);
-      //                   console.log("values.video1:", values.video1);
-      //                   await handleUpload(values.video1, 1);
-      //                   setAndPersistStep(7);
-      //                 } catch (error) {
-      //                   console.error("Video upload failed:", error);
-      //                   // Optionally show error to user here
-      //                 } finally {
-      //                   setIsLoading(false);
-      //                   setSubmitting(false);
-      //                 }
-      //               } else {
-      //                 alert("Please record a video before proceeding!");
-      //                 setSubmitting(false);
-      //               }
-      //             }}
-      //           >
-      //             {({ setFieldValue, handleSubmit }) => (
-      //               <Form
-      //                 style={{
-      //                   backgroundColor: "white",
-      //                   borderRadius: "8px",
-      //                   padding: "20px",
-      //                 }}
-      //                 onSubmit={handleSubmit}
-      //               >
-      //                 <div
-      //                   className="video-recorder-wrapper"
-      //                   style={{ borderRadius: "14px", overflow: "hidden" }}
-      //                 >
-      //                   <VideoRecorder
-      //                     key={1}
-      //                     isOnInitially
-      //                     timeLimit={60000}
-      //                     showReplayControls
-      //                     onRecordingComplete={(videoBlobOrFile) => {
-      //                       console.log("Video blob:", videoBlobOrFile);
-      //                       setFieldValue("video1", videoBlobOrFile);
-      //                       setVideoRecorded(true);
-      //                     }}
-      //                   />
-      //                 </div>
-      //                 <div className="video-frame"></div>
-      //                 <br></br>
-      //                 <span style={{ fontWeight: "bold", color: "black" }}>
-      //                   or
-      //                 </span>
-      //                 <br></br>
-      //                 <br></br>
-      //                 <label htmlFor="file" style={uploadVideoButtonStyles}>
-      //                   Upload Question 1
-      //                 </label>
-      //                 <input
-      //                   id="file"
-      //                   name="file"
-      //                   type="file"
-      //                   accept="video/*" // Accepts only video files
-      //                   onChange={async (event) => {
-      //                     const file = event.currentTarget.files[0];
-      //                     if (file) {
-      //                       setIsLoading(true); // Start loading stage
-      //                       setFieldValue("file", file.name); // Store the filename in Formik's state
-      //                       try {
-      //                         await handleUpload(file, "1");
-      //                         await handleTextUpload();
-      //                         // If upload is successful, move to the desired step
-      //                         // setAndPersistStep(7);
-      //                       } catch (err) {
-      //                         console.error("Error uploading video: ", err);
-      //                       } finally {
-      //                         setIsLoading(false); // End loading stage
-      //                       }
-      //                     }
-      //                   }}
-      //                 />
-      //                 {values.file && <span>{values.file}</span>}
-      //                 <p className="video-info">
-      //                   Video Response: 1 min time limit
-      //                 </p>
-      //                 <p className="video-info">Unlimited retries</p>
-      //                 <button
-      //                   type="button"
-      //                   onClick={() => setAndPersistStep(5)}
-      //                   style={previousButtonStyles}
-      //                 >
-      //                   Back
-      //                 </button>
-      //                 <button
-      //                   type="submit"
-      //                   style={
-      //                     videoRecorded || videoUploaded
-      //                       ? buttonStyles
-      //                       : inactiveButtonStyles
-      //                   }
-      //                 >
-      //                   Submit and Next
-      //                 </button>
-      //                 {isLoading && (
-      //                   <img
-      //                     src={loadingGif}
-      //                     alt="Loading..."
-      //                     style={{
-      //                       width: "24px",
-      //                       height: "24px",
-      //                       marginLeft: "10px",
-      //                     }}
-      //                   />
-      //                 )}
-      //                 <Persist name="persistStep6" />
-      //               </Form>
-      //             )}
-      //           </Formik>
-      //         </div>
-      //       </div>
-      //     </div>
-      //   </>
-      // );
-
-      // return isMobile ? mobileForm : desktopForm;
+        return null;
+     
 
       case 7:
         const isMobile2 = window.innerWidth <= 768;
@@ -1911,14 +1229,11 @@ const MultiStepForm = ({ submitHandler }) => {
             initialValues={{ video3: null }}
             onSubmit={async (values, { setSubmitting }) => {
               if (values.video2) {
-                console.log("video 2 recorded");
                 try {
                   setIsLoading(true);
-                  console.log("values.video2:", values.video2);
                   await handleUpload(values.video2, 2);
                   setAndPersistStep(8);
                 } catch (error) {
-                  console.error("Video upload failed:", error);
                   // Optionally show error to user here
                 } finally {
                   setIsLoading(false);
@@ -2012,7 +1327,6 @@ const MultiStepForm = ({ submitHandler }) => {
                     timeLimit={60000}
                     showReplayControls
                     onRecordingComplete={(videoBlobOrFile) => {
-                      console.log("Video blob:", videoBlobOrFile);
                       setFieldValue("video2", videoBlobOrFile);
                     }}
                   />
@@ -2062,7 +1376,6 @@ const MultiStepForm = ({ submitHandler }) => {
                         // If upload is successful, move to the desired step
                         setAndPersistStep(8);
                       } catch (err) {
-                        console.error("Error uploading video: ", err);
                       } finally {
                         setIsLoading(false); // End loading stage
                       }
@@ -2166,14 +1479,12 @@ const MultiStepForm = ({ submitHandler }) => {
                     initialValues={{ video2: null }}
                     onSubmit={async (values, { setSubmitting }) => {
                       if (values.video2) {
-                        console.log("video 2 recorded");
+                      
                         try {
                           setIsLoading(true);
-                          console.log("values.video2:", values.video2);
                           await handleUpload(values.video2, 2);
                           setAndPersistStep(8);
                         } catch (error) {
-                          console.error("Video upload failed:", error);
                           // Optionally show error to user here
                         } finally {
                           setIsLoading(false);
@@ -2204,7 +1515,6 @@ const MultiStepForm = ({ submitHandler }) => {
                             timeLimit={60000}
                             showReplayControls
                             onRecordingComplete={(videoBlobOrFile) => {
-                              console.log("Video blob:", videoBlobOrFile);
                               setFieldValue("video2", videoBlobOrFile);
                             }}
                           />
@@ -2256,7 +1566,6 @@ const MultiStepForm = ({ submitHandler }) => {
                                 // If upload is successful, move to the desired step
                                 setAndPersistStep(8);
                               } catch (err) {
-                                console.error("Error uploading video: ", err);
                               } finally {
                                 setIsLoading(false); // End loading stage
                               }
@@ -2283,16 +1592,16 @@ const MultiStepForm = ({ submitHandler }) => {
             initialValues={{ video3: null }}
             onSubmit={async (values, { setSubmitting }) => {
               if (values.video3) {
-                console.log("video 3 recorded");
+               
                 try {
                   setIsLoading(true);
-                  console.log("values.video3:", values.video3);
+                 
                   await handleUpload(values.video3, 3);
                   // if (globalResume != null) { await handleResumeUpload(globalResume); }
                   await handleTextUpload();
                   setAndPersistStep(9);
                 } catch (error) {
-                  console.error("Video upload failed:", error);
+                
                   // Optionally show error to user here
                 } finally {
                   setIsLoading(false);
@@ -2396,7 +1705,6 @@ const MultiStepForm = ({ submitHandler }) => {
                     timeLimit={60000}
                     showReplayControls
                     onRecordingComplete={(videoBlobOrFile) => {
-                      console.log("Video blob:", videoBlobOrFile);
                       setFieldValue("video3", videoBlobOrFile);
                     }}
                   />
@@ -2446,7 +1754,6 @@ const MultiStepForm = ({ submitHandler }) => {
                         // If upload is successful, move to the desired step
                         setAndPersistStep(9);
                       } catch (err) {
-                        console.error("Error uploading video: ", err);
                       } finally {
                         setIsLoading(false); // End loading stage
                       }
@@ -2550,15 +1857,12 @@ const MultiStepForm = ({ submitHandler }) => {
                     initialValues={{ video3: null }}
                     onSubmit={async (values, { setSubmitting }) => {
                       if (values.video3) {
-                        console.log("video 3 recorded");
                         try {
                           setIsLoading(true);
-                          console.log("values.video3:", values.video3);
                           await handleUpload(values.video3, 3);
                           await handleTextUpload();
                           setAndPersistStep(9);
                         } catch (error) {
-                          console.error("Video upload failed:", error);
                           // Optionally show error to user here
                         } finally {
                           setIsLoading(false);
@@ -2589,7 +1893,6 @@ const MultiStepForm = ({ submitHandler }) => {
                             timeLimit={60000}
                             showReplayControls
                             onRecordingComplete={(videoBlobOrFile) => {
-                              console.log("Video blob:", videoBlobOrFile);
                               setFieldValue("video3", videoBlobOrFile);
                             }}
                           />
@@ -2645,7 +1948,6 @@ const MultiStepForm = ({ submitHandler }) => {
                                 // If upload is successful, move to the desired step
                                 setAndPersistStep(9);
                               } catch (err) {
-                                console.error("Error uploading video: ", err);
                               } finally {
                                 setIsLoading(false); // End loading stage
                               }

@@ -16,6 +16,7 @@
     "react-router-dom": "^6.20.1",
     "react-scripts": "^5.0.1",
     "react-select": "^5.7.3",
+    "react-spinner-animated": "^3.1.1",
     "react-video-recorder": "^3.19.4",
     "styled-components": "^4.1.1",
     "web-vitals": "^2.1.4",
