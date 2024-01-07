@@ -394,8 +394,8 @@ const MultiStepForm = ({ submitHandler }) => {
   const redirectToLogin = () => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
-   // const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-   const loginUrl =`http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`
+   const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
+  //  const loginUrl =`http://localhost:3002/login?email=${encodedEmail}&password=${encodedPassword}`
     window.location.href = loginUrl;
   };
 
@@ -668,7 +668,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     early career professionals to find jobs and internships.
                   </p>
                   <div>
-                    <label htmlFor="email">Email Address Test </label>
+                    <label htmlFor="email">Email Address</label>
                     <Field
                       value={formik.values.email}
                       type="email"
