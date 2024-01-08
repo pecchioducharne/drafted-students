@@ -896,20 +896,23 @@ const MultiStepForm = ({ submitHandler }) => {
               major: globalMajor,
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
-              resume: null,
+              linkedInURL:globalLinkedInProfileURL,
+              linkedInProfileURL:globalLinkedInProfileURL,
+              resume: globalResume,
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
               lastName: Yup.string().required("Last Name is required"),
               major: Yup.string().required("Major is required"),
+              
               graduationYear: Yup.number().required(
                 "Graduation Year is required"
               ),
             })}
             onSubmit={async (values) => {
            
-       
-
+              
+              console.log(values);
               setGlobalFirstName(values.firstName);
               setGlobalLastName(values.lastName);
               setGlobalMajor(values.major);
@@ -918,9 +921,9 @@ const MultiStepForm = ({ submitHandler }) => {
                 setGlobalGraduationMonth(values.graduationMonth);
               }
               setGlobalGraduationYear(values.graduationYear);
-              if (values.linkedInURL) {
-                setGlobalLinkedInProfileURL(values.linkedInURL);
-              }
+              // if (values.linkedInProfileURL) {
+                setGlobalLinkedInProfileURL(values.linkedInProfileURL);
+             // }
 
               
 
