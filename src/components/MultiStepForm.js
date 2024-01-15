@@ -23,6 +23,8 @@ import logoAmazon from "./logo-amazon.png";
 import logoGotu from "./logo-gotu.png";
 import logoJPMorgan from "./logo-jpmorgan.png";
 import logoLula from "./logo-lula.png";
+import getDraftedScreenshot from "./get-drafted.png";
+
 import loadingGif from "./loader.gif";
 import usfTampaGif from "./usf-tampa.gif";
 
@@ -1131,9 +1133,7 @@ const MultiStepForm = ({ submitHandler }) => {
               {({ values, setFieldValue }) => (
                 <Form>
                   <h2>✨ Let's complete your profile</h2>
-                  <h4>
-                    Get connected to startups and brand-name companies:
-                  </h4>
+                  <h3>Get connected to startups and brand-name companies</h3>
                   <div
                     style={{
                       display: "flex",
@@ -1164,11 +1164,25 @@ const MultiStepForm = ({ submitHandler }) => {
                     />
                   </div>
                   <h3>
-                    With just one video resume, you'll be visible to every
-                    employer on Drafted who's looking for someone with your
-                    major.
+                    With a single video resume, you'll be visible to every
+                    employer on Drafted
                   </h3>
-                  <h4>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <img
+                      src={getDraftedScreenshot}
+                      alt="Lula"
+                      style={{ maxWidth: "200px", height: "auto" }}
+                    />
+                  </div>
+
+                  <p>
                     In three quick questions, you can create your video resume
                     and grab the attention of employers.<br></br>
                     <br></br>
@@ -1177,7 +1191,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     <br></br>
                     Don't fret about the pressure – you can redo each answer
                     until you feel confident in your responses.
-                  </h4>
+                  </p>
 
                   <br />
 
