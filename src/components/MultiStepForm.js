@@ -19,6 +19,10 @@ import AsyncSelect from "react-select/async";
 import VideoRecorder from "react-video-recorder/lib/video-recorder";
 import * as Yup from "yup";
 import linkedInIcon from "./linkedin.svg";
+import logoAmazon from "./logo-amazon.png";
+import logoGotu from "./logo-gotu.png";
+import logoJPMorgan from "./logo-jpmorgan.png";
+import logoLula from "./logo-lula.png";
 import loadingGif from "./loader.gif";
 import usfTampaGif from "./usf-tampa.gif";
 
@@ -165,11 +169,7 @@ const MultiStepForm = ({ submitHandler }) => {
     resume: "",
   };
 
-
-
   const handleUpload = (videoBlobOrFile, questionNumber) => {
-  
-
     let filename;
 
     if (questionNumber === "combined") {
@@ -198,10 +198,8 @@ const MultiStepForm = ({ submitHandler }) => {
     return new Promise((resolve, reject) => {
       s3.putObject(videoParams, function (err, data) {
         if (err) {
-          
           reject(err);
         } else {
-          
           // You no longer need to set the video recorded states here
           // as they are being set right after the recording is complete
           if (questionNumber === 1) {
@@ -236,8 +234,6 @@ const MultiStepForm = ({ submitHandler }) => {
     });
   };
 
- 
-
   function setAndPersistStep(newStep) {
     setStep(newStep);
     localStorage.setItem("formCurrentStep", newStep);
@@ -252,7 +248,6 @@ const MultiStepForm = ({ submitHandler }) => {
         globalPassword
       );
 
-     
       // New Firebase account
       const user = userCredential.user;
 
@@ -273,7 +268,6 @@ const MultiStepForm = ({ submitHandler }) => {
         const uploadResult = await uploadBytes(resumeRef, resumeFile);
         resumeURL = await getDownloadURL(uploadResult.ref);
       } else {
-       
       }
 
       // Create an object with the form data, excluding linkedInURL if it's empty
@@ -295,7 +289,6 @@ const MultiStepForm = ({ submitHandler }) => {
         formData.linkedInURL = values.linkedInURL;
       }
 
-
       // Upload the form data to Firestore with the user's email as the document ID
       const userDataRef = doc(db, "drafted-accounts", user.email);
       await setDoc(userDataRef, {
@@ -313,8 +306,6 @@ const MultiStepForm = ({ submitHandler }) => {
         resume: resumeURL,
       });
 
-      
-
       // Redirect to the Profile Dashboard or any other page.
       // You can use React Router for navigation.
     } catch (error) {
@@ -322,7 +313,6 @@ const MultiStepForm = ({ submitHandler }) => {
     }
   };
 
- 
   const buttonStyles = {
     borderRadius: "8px",
     backgroundColor: "#207a56",
@@ -394,19 +384,14 @@ const MultiStepForm = ({ submitHandler }) => {
   const redirectToLogin = () => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
-   const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-  //  const loginUrl =`http://localhost:3002/login?email=${encodedEmail}&password=${encodedPassword}`
+    const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
+    //  const loginUrl =`http://localhost:3002/login?email=${encodedEmail}&password=${encodedPassword}`
     window.location.href = loginUrl;
   };
 
-
-
-  const onSubmit = (values) => {
-   
-  };
+  const onSubmit = (values) => {};
 
   const [isLoading, setIsLoading] = useState(false);
- 
 
   function YouTubeEmbedQuestion2() {
     return (
@@ -497,11 +482,8 @@ const MultiStepForm = ({ submitHandler }) => {
               if (docSnap.exists()) {
                 setUserData(docSnap.data());
               } else {
-               
               }
-            } catch (error) {
-            
-            }
+            } catch (error) {}
           }
         };
 
@@ -519,7 +501,6 @@ const MultiStepForm = ({ submitHandler }) => {
 
     useEffect(() => {
       if (shouldUseEffect) {
-      
       }
     }, [globalUniversity, shouldUseEffect]);
 
@@ -610,7 +591,7 @@ const MultiStepForm = ({ submitHandler }) => {
           <>
             <Formik
               initialValues={{
-                email:globalEmail,
+                email: globalEmail,
               }}
               validationSchema={Yup.object({
                 email: Yup.string()
@@ -624,7 +605,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   setGlobalUniversity("Florida International University");
                   // globalEmail = values.email;
                   setGlobalEmail(values.email);
-               
+
                   setAndPersistStep(3); // skips step
                 } else if (values.email.endsWith("miami.edu")) {
                   // University of Miami
@@ -643,7 +624,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 } else {
                   // Not a drafted uni, go to next
                   // globalEmail = values.email;]
-                  
+
                   setGlobalEmail(values.email);
                   setAndPersistStep(2);
                 }
@@ -658,83 +639,83 @@ const MultiStepForm = ({ submitHandler }) => {
               }}
             >
               {(formik) => {
-              
-                return(
-                <Form>
-                  <h2>🎯 Let's find your next job</h2>
-                  <h3>Join Drafted's community of job seekers</h3>
-                  <p>
-                    The best place for college students, recent graduates, and
-                    early career professionals to find jobs and internships.
-                  </p>
-                  <div>
-                    <label htmlFor="email">Email Address</label>
-                    <Field
-                      value={formik.values.email}
-                      type="email"
-                      id="email"
-                      name="email"
-                     
-                      style={{ width: "95%" }}
-                    />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      className="error"
-                    />
-                  </div>
-                  {formik.values.email.endsWith("fiu.edu") && (
-                    <>
-                      <p style={{ fontWeight: "bold" }}>
-                        Florida International University
-                      </p>
-                      <p>Welcome, Panther!</p>
-                    </>
-                  )}
-                  {formik.values.email.endsWith("miami.edu") && (
-                    <>
-                      <p style={{ fontWeight: "bold" }}>University of Miami</p>
-                      <p>Welcome, Cane!</p>
-                    </>
-                  )}
-                  {formik.values.email.endsWith("usf.edu") && (
-                    <>
-                      <p style={{ fontWeight: "bold" }}>
-                        University of South Florida
-                      </p>
-                      <p>Welcome, Bull!</p>
-                      <img
-                        src={usfTampaGif}
-                        alt="USF Tampa"
-                        style={{
-                          width: "120px",
-                          display: "block",
-                          margin: "0 auto",
-                          borderRadius: "8px",
-                        }}
+                return (
+                  <Form>
+                    <h2>🎯 Let's find your next job</h2>
+                    <h3>Join Drafted's community of job seekers</h3>
+                    <p>
+                      The best place for college students, recent graduates, and
+                      early career professionals to find jobs and internships.
+                    </p>
+                    <div>
+                      <label htmlFor="email">Email Address</label>
+                      <Field
+                        value={formik.values.email}
+                        type="email"
+                        id="email"
+                        name="email"
+                        style={{ width: "95%" }}
                       />
-                    </>
-                  )}
-                  <br />
-                  <br></br>
-                  <div style={{ display: "flex" }}>
-                    <button type="submit" style={letsGoProButtonStyle}>
-                      Let's go pro
-                    </button>
-                  </div>
+                      <ErrorMessage
+                        name="email"
+                        component="div"
+                        className="error"
+                      />
+                    </div>
+                    {formik.values.email.endsWith("fiu.edu") && (
+                      <>
+                        <p style={{ fontWeight: "bold" }}>
+                          Florida International University
+                        </p>
+                        <p>Welcome, Panther!</p>
+                      </>
+                    )}
+                    {formik.values.email.endsWith("miami.edu") && (
+                      <>
+                        <p style={{ fontWeight: "bold" }}>
+                          University of Miami
+                        </p>
+                        <p>Welcome, Cane!</p>
+                      </>
+                    )}
+                    {formik.values.email.endsWith("usf.edu") && (
+                      <>
+                        <p style={{ fontWeight: "bold" }}>
+                          University of South Florida
+                        </p>
+                        <p>Welcome, Bull!</p>
+                        <img
+                          src={usfTampaGif}
+                          alt="USF Tampa"
+                          style={{
+                            width: "120px",
+                            display: "block",
+                            margin: "0 auto",
+                            borderRadius: "8px",
+                          }}
+                        />
+                      </>
+                    )}
+                    <br />
+                    <br></br>
+                    <div style={{ display: "flex" }}>
+                      <button type="submit" style={letsGoProButtonStyle}>
+                        Let's go pro
+                      </button>
+                    </div>
 
-                  <Persist name="persistStep1" />
-                </Form>
-              )}}
+                    <Persist name="persistStep1" />
+                  </Form>
+                );
+              }}
             </Formik>
           </>
         );
       case 2:
-     
         return (
           <>
             <Formik
-              initialValues={{ university:globalUniversity }}
+              initialValues={{ university: globalUniversity }}
               validationSchema={Yup.object({
                 university: Yup.object().shape({
                   label: Yup.string().required("Please select your school"),
@@ -744,7 +725,7 @@ const MultiStepForm = ({ submitHandler }) => {
               onSubmit={(values) => {
                 if (values.university !== "") {
                   let chosenUniversity = values.university.label;
-                
+
                   setGlobalUniversity(chosenUniversity);
                   setAndPersistStep(3);
                 }
@@ -869,10 +850,8 @@ const MultiStepForm = ({ submitHandler }) => {
                     globalEmail.endsWith("@usf.edu") ||
                     globalEmail.endsWith("@miami.edu")
                   ) {
-                  
                     setAndPersistStep(1);
                   } else {
-                  
                     setAndPersistStep(2);
                   }
                 }}
@@ -896,22 +875,20 @@ const MultiStepForm = ({ submitHandler }) => {
               major: globalMajor,
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
-              linkedInURL:globalLinkedInProfileURL,
-              linkedInProfileURL:globalLinkedInProfileURL,
+              linkedInURL: globalLinkedInProfileURL,
+              linkedInProfileURL: globalLinkedInProfileURL,
               resume: globalResume,
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
               lastName: Yup.string().required("Last Name is required"),
               major: Yup.string().required("Major is required"),
-              
+
               graduationYear: Yup.number().required(
                 "Graduation Year is required"
               ),
             })}
             onSubmit={async (values) => {
-           
-              
               console.log(values);
               setGlobalFirstName(values.firstName);
               setGlobalLastName(values.lastName);
@@ -922,10 +899,8 @@ const MultiStepForm = ({ submitHandler }) => {
               }
               setGlobalGraduationYear(values.graduationYear);
               // if (values.linkedInProfileURL) {
-                setGlobalLinkedInProfileURL(values.linkedInProfileURL);
-             // }
-
-              
+              setGlobalLinkedInProfileURL(values.linkedInProfileURL);
+              // }
 
               if (
                 values.firstName &&
@@ -1156,6 +1131,38 @@ const MultiStepForm = ({ submitHandler }) => {
               {({ values, setFieldValue }) => (
                 <Form>
                   <h2>✨ Let's complete your profile</h2>
+                  <h4>
+                    Get connected to startups and brand-name companies:
+                  </h4>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-evenly",
+                      alignItems: "center",
+                      marginBottom: "20px",
+                    }}
+                  >
+                    <img
+                      src={logoLula}
+                      alt="Lula"
+                      style={{ maxWidth: "100px", height: "auto" }}
+                    />
+                    {/* <img
+                      src={logoAmazon}
+                      alt="Amazon"
+                      style={{ maxWidth: "100px", height: "auto" }}
+                    /> */}
+                    <img
+                      src={logoGotu}
+                      alt="Gotu"
+                      style={{ maxWidth: "100px", height: "auto" }}
+                    />
+                    <img
+                      src={logoJPMorgan}
+                      alt="JPMorgan"
+                      style={{ maxWidth: "100px", height: "auto" }}
+                    />
+                  </div>
                   <h3>
                     With just one video resume, you'll be visible to every
                     employer on Drafted who's looking for someone with your
@@ -1171,9 +1178,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     Don't fret about the pressure – you can redo each answer
                     until you feel confident in your responses.
                   </h4>
-                 
+
                   <br />
-                 
+
                   <br></br>
                   <button
                     type="button"
@@ -1222,7 +1229,6 @@ const MultiStepForm = ({ submitHandler }) => {
           setAndPersistStep(1);
         }
         return null;
-     
 
       case 7:
         const isMobile2 = window.innerWidth <= 768;
@@ -1482,7 +1488,6 @@ const MultiStepForm = ({ submitHandler }) => {
                     initialValues={{ video2: null }}
                     onSubmit={async (values, { setSubmitting }) => {
                       if (values.video2) {
-                      
                         try {
                           setIsLoading(true);
                           await handleUpload(values.video2, 2);
@@ -1595,16 +1600,14 @@ const MultiStepForm = ({ submitHandler }) => {
             initialValues={{ video3: null }}
             onSubmit={async (values, { setSubmitting }) => {
               if (values.video3) {
-               
                 try {
                   setIsLoading(true);
-                 
+
                   await handleUpload(values.video3, 3);
                   // if (globalResume != null) { await handleResumeUpload(globalResume); }
                   await handleTextUpload();
                   setAndPersistStep(9);
                 } catch (error) {
-                
                   // Optionally show error to user here
                 } finally {
                   setIsLoading(false);
