@@ -737,8 +737,8 @@ const MultiStepForm = ({ submitHandler }) => {
                 <Form>
                   <h2>🎓 Find your school</h2>
                   <p>
-                    Select your university below. This will help more employers
-                    targeting your school find you.
+                    Select your university below. Employers who prioritize your
+                    school will see your profile right away.
                   </p>
                   <div>
                     <label htmlFor="university">Search your university</label>
@@ -934,7 +934,7 @@ const MultiStepForm = ({ submitHandler }) => {
             }}
           >
             <Form>
-              <h2>🪪 Tell us about yourself</h2>
+              <h2>💬 Tell us about yourself</h2>
               {name && <p>🙋🏽 Hi, {name}!</p>}
               <div>
                 <label htmlFor="firstName">First Name * </label>
@@ -1069,7 +1069,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 <button
                   type="button"
                   onClick={() => document.getElementById("resume").click()}
-                  style={buttonStyles}
+                  // style={{ backgroundColor: "gray", color: "white" }}
                   disabled={selectedResume || resumeUploaded}
                 >
                   {resumeUploaded
@@ -1078,6 +1078,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     ? "Resume Selected"
                     : "Upload Resume"}
                 </button>
+
                 <Field
                   type="file"
                   id="resume"
@@ -1115,7 +1116,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 Back
               </button>
               <button type="submit" style={buttonStyles}>
-                Next
+                Continue
               </button>
               <p>* Required fields</p>
               <Persist name="persistStep4" />
@@ -1133,7 +1134,7 @@ const MultiStepForm = ({ submitHandler }) => {
               {({ values, setFieldValue }) => (
                 <Form>
                   <h2>✨ Let's complete your profile</h2>
-                  <h3>Get connected to startups and brand-name companies</h3>
+                  <h3>Create your video resume, get recruited by hundred of startups & Fortune 500 companies instantly</h3>
                   <div
                     style={{
                       display: "flex",
@@ -1163,10 +1164,6 @@ const MultiStepForm = ({ submitHandler }) => {
                       style={{ maxWidth: "100px", height: "auto" }}
                     />
                   </div>
-                  <h3>
-                    With a single video resume, you'll be visible to every
-                    employer on Drafted
-                  </h3>
                   <div
                     style={{
                       display: "flex",
@@ -1215,7 +1212,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     }}
                     style={buttonStyles}
                   >
-                    Complete profile
+                    Continue
                   </button>
                   {isLoading && (
                     <img
