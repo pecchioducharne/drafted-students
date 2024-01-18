@@ -877,43 +877,30 @@ const MultiStepForm = ({ submitHandler }) => {
               major: globalMajor,
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
-              linkedInURL: globalLinkedInProfileURL,
               linkedInProfileURL: globalLinkedInProfileURL,
-              resume: globalResume,
+              resume: "", // Initial value set to an empty string for the resume
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
               lastName: Yup.string().required("Last Name is required"),
               major: Yup.string().required("Major is required"),
-
               graduationYear: Yup.number().required(
                 "Graduation Year is required"
               ),
             })}
             onSubmit={async (values) => {
-              console.log(values);
+              // Update state with form values
               setGlobalFirstName(values.firstName);
               setGlobalLastName(values.lastName);
               setGlobalMajor(values.major);
-              setGlobalUniversity(globalUniversity);
-              if (values.graduationMonth) {
-                setGlobalGraduationMonth(values.graduationMonth);
-              }
+              setGlobalGraduationMonth(values.graduationMonth);
               setGlobalGraduationYear(values.graduationYear);
-              // if (values.linkedInProfileURL) {
               setGlobalLinkedInProfileURL(values.linkedInProfileURL);
-              // }
 
-              if (
-                values.firstName &&
-                values.lastName &&
-                values.major &&
-                values.graduationYear
-              ) {
-                setIsFormCompleted(true);
-              }
+              // Update form completion state
+              setIsFormCompleted(true);
 
-              // Add TikTok Pixel tracking event here
+              // TikTok Pixel tracking event
               if (window.ttq) {
                 window.ttq.track("SubmitForm", {
                   content_id: "form_submission",
@@ -922,205 +909,204 @@ const MultiStepForm = ({ submitHandler }) => {
                   major: values.major,
                   graduationYear: values.graduationYear,
                   university: globalUniversity,
-                  // Add other relevant parameters here
                 });
               }
 
-              const resumeFile = selectedResume; // Adjust as per your file input handling
-
-              // Now use formData to upload to Firestore
+              // Handle text upload to Firestore
+              const resumeFile = selectedResume;
               await handleTextUpload(values, resumeFile);
               setAndPersistStep(5);
             }}
           >
-            <Form>
-              <h2>💬 Tell us about yourself</h2>
-              {name && <p>🙋🏽 Hi, {name}!</p>}
-              <div>
-                <label htmlFor="firstName">First Name * </label>
-                <Field
-                  type="text"
-                  id="firstName"
-                  name="firstName"
-                  placeholder="What's your name?"
-                  style={{ width: "95%" }}
-                />
-                <ErrorMessage
-                  name="firstName"
-                  component="div"
-                  className="error"
-                />
-              </div>
-              <br></br>
-              <div>
-                <label htmlFor="lastName">Last Name *</label>
-                <Field
-                  type="text"
-                  id="lastName"
-                  name="lastName"
-                  placeholder="What's your last name?"
-                  style={{ width: "95%" }}
-                />
-                <ErrorMessage
-                  name="lastName"
-                  component="div"
-                  className="error"
-                />
-              </div>
-              <br></br>
-              <div>
-                <label htmlFor="major">Major *</label>
-                <Field
-                  type="text"
-                  id="major"
-                  name="major"
-                  placeholder="What's your major?"
-                  style={{ width: "95%" }}
-                />
-                <ErrorMessage name="major" component="div" className="error" />
-              </div>
-              <br></br>
-              <div>
-                <label htmlFor="graduationYear">Graduation Year *</label>
-                <Field
-                  as="select"
-                  id="graduationYear"
-                  name="graduationYear"
-                  style={{ width: "95%" }}
-                >
-                  <option value="">Select a year</option>
-                  {[...Array(8)].map((_, i) => (
-                    <option key={i} value={2020 + i}>
-                      {2020 + i}
-                    </option>
-                  ))}
-                </Field>
-                <ErrorMessage
-                  name="graduationYear"
-                  component="div"
-                  className="error"
-                />
+            {({ setFieldValue }) => (
+              <Form>
+                <h2>💬 Tell us about yourself</h2>
+                {name && <p>🙋🏽 Hi, {name}!</p>}
+                <div>
+                  <label htmlFor="firstName">First Name * </label>
+                  <Field
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    placeholder="What's your name?"
+                    style={{ width: "95%" }}
+                  />
+                  <ErrorMessage
+                    name="firstName"
+                    component="div"
+                    className="error"
+                  />
+                </div>
                 <br></br>
-              </div>
-              <br></br>
-              <div>
-                <label htmlFor="graduationMonth">
-                  Graduation Month (Optional)
-                </label>
-                <Field
-                  as="select"
-                  id="graduationMonth"
-                  name="graduationMonth"
-                  style={{ width: "95%" }}
-                >
-                  <option value="">Select a month</option>
-                  {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-                    <option key={month} value={month}>
-                      {new Date(0, month - 1).toLocaleString("en-US", {
-                        month: "long",
-                      })}
-                    </option>
-                  ))}
-                </Field>
-                <ErrorMessage
-                  name="graduationMonth"
-                  component="div"
-                  className="error"
-                />
+                <div>
+                  <label htmlFor="lastName">Last Name *</label>
+                  <Field
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    placeholder="What's your last name?"
+                    style={{ width: "95%" }}
+                  />
+                  <ErrorMessage
+                    name="lastName"
+                    component="div"
+                    className="error"
+                  />
+                </div>
                 <br></br>
-              </div>
-              <div>
+                <div>
+                  <label htmlFor="major">Major *</label>
+                  <Field
+                    type="text"
+                    id="major"
+                    name="major"
+                    placeholder="What's your major?"
+                    style={{ width: "95%" }}
+                  />
+                  <ErrorMessage
+                    name="major"
+                    component="div"
+                    className="error"
+                  />
+                </div>
                 <br></br>
-                <label htmlFor="linkedInProfile">LinkedIn Profile</label>
-                <Field
-                  type="text"
-                  id="linkedInProfileURL"
-                  name="linkedInProfileURL"
-                  placeholder="You can paste your URL here"
-                  style={{ width: "95%" }}
-                />
-                <div className="label-icons-container">
-                  <img
-                    src={linkedInIcon}
-                    style={{
-                      width: "20px",
-                      display: "inline-block",
+                <div>
+                  <label htmlFor="graduationYear">Graduation Year *</label>
+                  <Field
+                    as="select"
+                    id="graduationYear"
+                    name="graduationYear"
+                    style={{ width: "95%" }}
+                  >
+                    <option value="">Select a year</option>
+                    {[...Array(8)].map((_, i) => (
+                      <option key={i} value={2020 + i}>
+                        {2020 + i}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                    name="graduationYear"
+                    component="div"
+                    className="error"
+                  />
+                  <br></br>
+                </div>
+                <br></br>
+                <div>
+                  <label htmlFor="graduationMonth">
+                    Graduation Month (Optional)
+                  </label>
+                  <Field
+                    as="select"
+                    id="graduationMonth"
+                    name="graduationMonth"
+                    style={{ width: "95%" }}
+                  >
+                    <option value="">Select a month</option>
+                    {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                      (month) => (
+                        <option key={month} value={month}>
+                          {new Date(0, month - 1).toLocaleString("en-US", {
+                            month: "long",
+                          })}
+                        </option>
+                      )
+                    )}
+                  </Field>
+                  <ErrorMessage
+                    name="graduationMonth"
+                    component="div"
+                    className="error"
+                  />
+                  <br></br>
+                </div>
+                <div>
+                  <br></br>
+                  <label htmlFor="linkedInProfile">LinkedIn Profile</label>
+                  <Field
+                    type="text"
+                    id="linkedInProfileURL"
+                    name="linkedInProfileURL"
+                    placeholder="You can paste your URL here"
+                    style={{ width: "95%" }}
+                  />
+                  <div className="label-icons-container">
+                    <img
+                      src={linkedInIcon}
+                      style={{
+                        width: "20px",
+                        display: "inline-block",
+                      }}
+                    />
+                  </div>
+                  <ErrorMessage
+                    name="linkedInProfileURL"
+                    component="div"
+                    className="error"
+                  />
+                  <br></br>
+                </div>
+                <div>
+                  <br></br>
+                  <label htmlFor="resume">Resume (Optional)</label>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById("resume").click()}
+                    disabled={selectedResume || resumeUploaded}
+                  >
+                    {resumeUploaded
+                      ? "Resume Uploaded"
+                      : selectedResume
+                      ? "Resume Selected"
+                      : "Upload Resume"}
+                  </button>
+                  <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    style={{ display: "none" }}
+                    onChange={(event) => {
+                      const file = event.currentTarget.files[0];
+                      if (file) {
+                        setSelectedResume(file);
+                        setFieldValue("resume", file); // Update Formik state
+                      }
                     }}
                   />
-                  {/* <img
-                    src={githubIcon}
-                    style={{
-                      width: "20px",
-                      display: "inline-block",
-                    }}
-                  /> */}
+                  <ErrorMessage
+                    name="resume"
+                    component="div"
+                    className="error"
+                  />
+                  {resumeUploading && (
+                    <img
+                      src={loadingGif}
+                      alt="Loading..."
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        marginLeft: "10px",
+                      }}
+                    />
+                  )}
                 </div>
-                <div></div>
-                <ErrorMessage
-                  name="linkedInProfileURL"
-                  component="div"
-                  className="error"
-                />
                 <br></br>
-              </div>
-              <div>
-                <br></br>
-                <label htmlFor="globalResume">Resume (Optional)</label>
                 <button
                   type="button"
-                  onClick={() => document.getElementById("resume").click()}
-                  // style={{ backgroundColor: "gray", color: "white" }}
-                  disabled={selectedResume || resumeUploaded}
+                  onClick={() => setAndPersistStep(3)}
+                  style={previousButtonStyles}
                 >
-                  {resumeUploaded
-                    ? "Resume Uploaded"
-                    : selectedResume
-                    ? "Resume Selected"
-                    : "Upload Resume"}
+                  Back
                 </button>
-
-                <Field
-                  type="file"
-                  id="resume"
-                  name="resume"
-                  accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                  style={{ display: "none" }} // hide the default file input
-                  onChange={async (event) => {
-                    const file = event.currentTarget.files[0];
-                    if (file) {
-                      setSelectedResume(event.currentTarget.files[0]);
-                    }
-                    setGlobalResume("resume", event.currentTarget.files[0]);
-                  }}
-                />
-                <ErrorMessage name="resume" component="div" className="error" />
-                {resumeUploading && (
-                  <img
-                    src={loadingGif}
-                    alt="Loading..."
-                    style={{
-                      width: "24px",
-                      height: "24px",
-                      marginLeft: "10px",
-                    }}
-                  />
-                )}
-              </div>
-
-              <br></br>
-              <button
-                type="button"
-                onClick={() => setAndPersistStep(3)}
-                style={previousButtonStyles}
-              >
-                Back
-              </button>
-              <button type="submit" style={buttonStyles}>
-                Continue
-              </button>
-              <p>* Required fields</p>
-              <Persist name="persistStep4" />
-            </Form>
+                <button type="submit" style={buttonStyles}>
+                  Continue
+                </button>
+                <p>* Required fields</p>
+                <Persist name="persistStep4" />
+              </Form>
+            )}
           </Formik>
         );
       case 5:
@@ -1134,7 +1120,10 @@ const MultiStepForm = ({ submitHandler }) => {
               {({ values, setFieldValue }) => (
                 <Form>
                   <h2>✨ Let's complete your profile</h2>
-                  <h3>Create your video resume, get recruited by hundred of startups & Fortune 500 companies instantly</h3>
+                  <h3>
+                    Create your video resume, get recruited by hundred of
+                    startups & Fortune 500 companies instantly
+                  </h3>
                   <div
                     style={{
                       display: "flex",
