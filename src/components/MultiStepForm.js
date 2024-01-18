@@ -387,8 +387,8 @@ const MultiStepForm = ({ submitHandler }) => {
   const redirectToLogin = () => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
-    // const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-    const loginUrl = `http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`;
+    const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
+    // const loginUrl = `http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`;
     window.location.href = loginUrl;
   };
 
@@ -878,7 +878,8 @@ const MultiStepForm = ({ submitHandler }) => {
               major: globalMajor,
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
-              linkedInProfileURL: globalLinkedInProfileURL,
+              linkedInURL: globalLinkedInProfileURL,
+              resume: null, // Initial value set to null for the resume
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
@@ -913,9 +914,8 @@ const MultiStepForm = ({ submitHandler }) => {
               }
 
               // Handle text upload to Firestore
-              const resumeFile = resumeFile; // Use the separate state variable
+              const resumeFile = values.resume;
               await handleTextUpload(values, resumeFile);
-              values.resume = resumeFile; // Set the resume field in the values object
               setAndPersistStep(5);
             }}
           >
@@ -938,7 +938,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     className="error"
                   />
                 </div>
-                <br></br>
+                <br />
                 <div>
                   <label htmlFor="lastName">Last Name *</label>
                   <Field
@@ -954,7 +954,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     className="error"
                   />
                 </div>
-                <br></br>
+                <br />
                 <div>
                   <label htmlFor="major">Major *</label>
                   <Field
@@ -970,7 +970,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     className="error"
                   />
                 </div>
-                <br></br>
+                <br />
                 <div>
                   <label htmlFor="graduationYear">Graduation Year *</label>
                   <Field
@@ -991,9 +991,9 @@ const MultiStepForm = ({ submitHandler }) => {
                     component="div"
                     className="error"
                   />
-                  <br></br>
+                  <br />
                 </div>
-                <br></br>
+                <br />
                 <div>
                   <label htmlFor="graduationMonth">
                     Graduation Month (Optional)
@@ -1020,10 +1020,10 @@ const MultiStepForm = ({ submitHandler }) => {
                     component="div"
                     className="error"
                   />
-                  <br></br>
+                  <br />
                 </div>
                 <div>
-                  <br></br>
+                  <br />
                   <label htmlFor="linkedInProfile">LinkedIn Profile</label>
                   <Field
                     type="text"
@@ -1046,22 +1046,22 @@ const MultiStepForm = ({ submitHandler }) => {
                     component="div"
                     className="error"
                   />
-                  <br></br>
+                  <br />
                 </div>
                 <div>
-                  <br></br>
-                  {/* <label htmlFor="resume">Resume (Optional)</label>
+                  <br />
+                  <label htmlFor="resume">Resume (Optional)</label>
                   <button
                     type="button"
                     onClick={() => document.getElementById("resume").click()}
-                    disabled={selectedResume || resumeUploaded}
+                    disabled={selectedResume || values.resume}
                   >
                     {values.resume
                       ? "Resume Uploaded"
                       : selectedResume
                       ? "Resume Selected"
                       : "Upload Resume"}
-                  </button> */}
+                  </button>
                   <input
                     type="file"
                     id="resume"
@@ -1071,7 +1071,6 @@ const MultiStepForm = ({ submitHandler }) => {
                     onChange={(event) => {
                       const file = event.currentTarget.files[0];
                       if (file) {
-                        setResumeFile(file); // Update the resume state separately
                         setFieldValue("resume", file); // Update Formik state
                       }
                     }}
@@ -1093,7 +1092,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     />
                   )}
                 </div>
-                <br></br>
+                <br />
                 <button
                   type="button"
                   onClick={() => setAndPersistStep(3)}
