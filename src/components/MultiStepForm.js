@@ -841,7 +841,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   className="error"
                 />
               </div>
-              <p>
+              <p style={{ color: 'gray' }}>
                 Once you create an account, you'll start to receive Drafted
                 emails. You can unsubscribe at any time.
               </p>
@@ -1129,19 +1129,19 @@ const MultiStepForm = ({ submitHandler }) => {
                       display: "flex",
                       justifyContent: "space-evenly",
                       alignItems: "center",
-                      marginBottom: "20px",
+                      marginBottom: "5px",
                     }}
                   >
-                    <img
+                    {/* <img
                       src={logoLula}
                       alt="Lula"
                       style={{ maxWidth: "100px", height: "auto" }}
                     />
-                    {/* <img
+                    <img
                       src={logoAmazon}
                       alt="Amazon"
-                      style={{ maxWidth: "100px", height: "auto" }}
-                    /> */}
+                      style={{ maxWidth: "40px", height: "auto" }}
+                    />
                     <img
                       src={logoGotu}
                       alt="Gotu"
@@ -1151,7 +1151,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       src={logoJPMorgan}
                       alt="JPMorgan"
                       style={{ maxWidth: "100px", height: "auto" }}
-                    />
+                    /> */}
                   </div>
                   <div
                     style={{
@@ -1164,7 +1164,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     <img
                       src={getDraftedScreenshot}
                       alt="Lula"
-                      style={{ maxWidth: "200px", height: "auto" }}
+                      style={{ maxWidth: "400px", height: "auto" }}
                     />
                   </div>
 
