@@ -146,6 +146,7 @@ const MultiStepForm = ({ submitHandler }) => {
   const [userData, setUserData] = useState(null);
   const [isDataFetched, setIsDataFetched] = useState(false);
   const [shouldUseEffect, setShouldUseEffect] = useState(true);
+  const [resumeFile, setResumeFile] = useState(null);
 
   const handleNameChange = (event) => {
     setName(event.target.value); // Update the name state variable
@@ -386,8 +387,8 @@ const MultiStepForm = ({ submitHandler }) => {
   const redirectToLogin = () => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
-    const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-    //  const loginUrl =`http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`
+    // const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
+    const loginUrl = `http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`;
     window.location.href = loginUrl;
   };
 
@@ -878,7 +879,6 @@ const MultiStepForm = ({ submitHandler }) => {
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
               linkedInProfileURL: globalLinkedInProfileURL,
-              resume: "", // Initial value set to an empty string for the resume
             }}
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
@@ -913,8 +913,9 @@ const MultiStepForm = ({ submitHandler }) => {
               }
 
               // Handle text upload to Firestore
-              const resumeFile = selectedResume;
+              const resumeFile = resumeFile; // Use the separate state variable
               await handleTextUpload(values, resumeFile);
+              values.resume = resumeFile; // Set the resume field in the values object
               setAndPersistStep(5);
             }}
           >
@@ -1049,18 +1050,18 @@ const MultiStepForm = ({ submitHandler }) => {
                 </div>
                 <div>
                   <br></br>
-                  <label htmlFor="resume">Resume (Optional)</label>
+                  {/* <label htmlFor="resume">Resume (Optional)</label>
                   <button
                     type="button"
                     onClick={() => document.getElementById("resume").click()}
                     disabled={selectedResume || resumeUploaded}
                   >
-                    {resumeUploaded
+                    {values.resume
                       ? "Resume Uploaded"
                       : selectedResume
                       ? "Resume Selected"
                       : "Upload Resume"}
-                  </button>
+                  </button> */}
                   <input
                     type="file"
                     id="resume"
@@ -1070,7 +1071,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     onChange={(event) => {
                       const file = event.currentTarget.files[0];
                       if (file) {
-                        setSelectedResume(file);
+                        setResumeFile(file); // Update the resume state separately
                         setFieldValue("resume", file); // Update Formik state
                       }
                     }}
