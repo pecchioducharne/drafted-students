@@ -304,7 +304,7 @@ const MultiStepForm = ({ submitHandler }) => {
         video1: "",
         video2: "",
         video3: "",
-        linkedInURL: formData.linkedInURL || "",
+        linkedInURL: values.linkedInURL || "",
         resume: resumeURL,
       });
 
@@ -387,7 +387,7 @@ const MultiStepForm = ({ submitHandler }) => {
     const encodedEmail = encodeURIComponent(globalEmail);
     const encodedPassword = encodeURIComponent(globalPassword);
     const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-    //  const loginUrl =`http://localhost:3002/login?email=${encodedEmail}&password=${encodedPassword}`
+    //  const loginUrl =`http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`
     window.location.href = loginUrl;
   };
 
@@ -895,7 +895,7 @@ const MultiStepForm = ({ submitHandler }) => {
               setGlobalMajor(values.major);
               setGlobalGraduationMonth(values.graduationMonth);
               setGlobalGraduationYear(values.graduationYear);
-              setGlobalLinkedInProfileURL(values.linkedInProfileURL);
+              setGlobalLinkedInProfileURL(values.linkedInURL);
 
               // Update form completion state
               setIsFormCompleted(true);
@@ -1026,8 +1026,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   <label htmlFor="linkedInProfile">LinkedIn Profile</label>
                   <Field
                     type="text"
-                    id="linkedInProfileURL"
-                    name="linkedInProfileURL"
+                    id="linkedInURL"
+                    name="linkedInURL"
                     placeholder="You can paste your URL here"
                     style={{ width: "95%" }}
                   />
@@ -1041,7 +1041,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     />
                   </div>
                   <ErrorMessage
-                    name="linkedInProfileURL"
+                    name="linkedInURL"
                     component="div"
                     className="error"
                   />
