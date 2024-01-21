@@ -6,6 +6,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { auth, db } from "./firebase";
+import ReactGA4 from "react-ga4";
 
 import axios from "axios";
 
@@ -108,6 +109,9 @@ var s3 = new AWS.S3({
 const MultiStepForm = ({ submitHandler }) => {
   const navigate = useNavigate();
   const { setUserInfo } = useContext(UserContext);
+
+  // Google Analytics
+  ReactGA4.initialize("G-Y1YPK8NXCK"); // Replace with your Measurement ID
 
   const [step, setStep] = useState(1);
   const [isFormCompleted, setIsFormCompleted] = useState(false);
@@ -590,6 +594,9 @@ const MultiStepForm = ({ submitHandler }) => {
 
     switch (step) {
       case 1:
+        // GA4 Page Visit Tracking for Step 1
+        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-1-email" });
+
         return (
           <>
             <Formik
@@ -631,6 +638,13 @@ const MultiStepForm = ({ submitHandler }) => {
                   setGlobalEmail(values.email);
                   setAndPersistStep(2);
                 }
+
+                ReactGA4.event({
+                  category: "Form",
+                  action: "Submitted Email",
+                  label: values.email // Tracks the email used
+                });
+                
 
                 if (window.ttq) {
                   window.ttq.track("Download", {
@@ -715,6 +729,8 @@ const MultiStepForm = ({ submitHandler }) => {
           </>
         );
       case 2:
+        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-2-select-university" });
+
         return (
           <>
             <Formik
@@ -731,6 +747,12 @@ const MultiStepForm = ({ submitHandler }) => {
 
                   setGlobalUniversity(chosenUniversity);
                   setAndPersistStep(3);
+
+                  ReactGA4.event({
+                    category: "Form",
+                    action: "Selected University",
+                    label: chosenUniversity // Tracks the chosen university
+                  });
                 }
               }}
             >
@@ -784,6 +806,8 @@ const MultiStepForm = ({ submitHandler }) => {
           </>
         );
       case 3:
+        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-3" });
+
         return (
           <Formik
             initialValues={{
@@ -807,6 +831,13 @@ const MultiStepForm = ({ submitHandler }) => {
                 // globalPassword = values.password;
                 setGlobalPassword(values.password);
                 setAndPersistStep(4);
+
+                ReactGA4.event({
+                  category: "Form",
+                  action: "Submitted Password",
+                  label: "Password Creation" // Custom label for tracking
+                });
+                
               }
             }}
           >
@@ -870,6 +901,8 @@ const MultiStepForm = ({ submitHandler }) => {
           </Formik>
         );
       case 4:
+        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-4-form" });
+
         return (
           <Formik
             initialValues={{
@@ -912,6 +945,12 @@ const MultiStepForm = ({ submitHandler }) => {
                   university: globalUniversity,
                 });
               }
+
+              ReactGA4.event({
+                category: "Form",
+                action: "Submitted Personal Info",
+                label: "Step 4 Form Submission" // Custom label for tracking
+              });             
 
               // Handle text upload to Firestore
               const resumeFile = values.resume;
