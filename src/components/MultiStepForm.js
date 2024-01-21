@@ -595,7 +595,10 @@ const MultiStepForm = ({ submitHandler }) => {
     switch (step) {
       case 1:
         // GA4 Page Visit Tracking for Step 1
-        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-1-email" });
+        ReactGA4.send({
+          hitType: "pageview",
+          page: "/onboarding-step-1-email",
+        });
 
         return (
           <>
@@ -642,9 +645,8 @@ const MultiStepForm = ({ submitHandler }) => {
                 ReactGA4.event({
                   category: "Form",
                   action: "Submitted Email",
-                  label: values.email // Tracks the email used
+                  label: values.email, // Tracks the email used
                 });
-                
 
                 if (window.ttq) {
                   window.ttq.track("Download", {
@@ -729,7 +731,10 @@ const MultiStepForm = ({ submitHandler }) => {
           </>
         );
       case 2:
-        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-2-select-university" });
+        ReactGA4.send({
+          hitType: "pageview",
+          page: "/onboarding-step-2-select-university",
+        });
 
         return (
           <>
@@ -751,7 +756,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   ReactGA4.event({
                     category: "Form",
                     action: "Selected University",
-                    label: chosenUniversity // Tracks the chosen university
+                    label: chosenUniversity, // Tracks the chosen university
                   });
                 }
               }}
@@ -835,9 +840,8 @@ const MultiStepForm = ({ submitHandler }) => {
                 ReactGA4.event({
                   category: "Form",
                   action: "Submitted Password",
-                  label: "Password Creation" // Custom label for tracking
+                  label: "Password Creation", // Custom label for tracking
                 });
-                
               }
             }}
           >
@@ -872,7 +876,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   className="error"
                 />
               </div>
-              <p style={{ color: 'gray' }}>
+              <p style={{ color: "gray" }}>
                 Once you create an account, you'll start to receive Drafted
                 emails. You can unsubscribe at any time.
               </p>
@@ -949,8 +953,8 @@ const MultiStepForm = ({ submitHandler }) => {
               ReactGA4.event({
                 category: "Form",
                 action: "Submitted Personal Info",
-                label: "Step 4 Form Submission" // Custom label for tracking
-              });             
+                label: "Step 4 Form Submission", // Custom label for tracking
+              });
 
               // Handle text upload to Firestore
               const resumeFile = values.resume;
@@ -1149,11 +1153,25 @@ const MultiStepForm = ({ submitHandler }) => {
           </Formik>
         );
       case 5:
+        ReactGA4.send({
+          hitType: "pageview",
+          page: "/onboarding-step-5-continued-to-profile",
+        });
+
         return (
           <>
             <Formik
               initialValues={{ file: null }}
-              onSubmit={() => setAndPersistStep(6)}
+              onSubmit={() => {
+                setAndPersistStep(6);
+
+                // GA4 Event Tracking for Form Submission
+                ReactGA4.event({
+                  category: "Form",
+                  action: "Completed Profile, Navigated to Dashboard",
+                  label: "Step 5 Submission", // Custom label for tracking
+                });
+              }}
               onKeyPress={() => handleKeyPress(6)}
             >
               {({ values, setFieldValue }) => (
@@ -1262,8 +1280,22 @@ const MultiStepForm = ({ submitHandler }) => {
 
       case 6:
         if (isFormCompleted) {
+          // GA4 Event Tracking for Completion
+          ReactGA4.event({
+            category: "Form",
+            action: "Form Completed",
+            label: "Step 6 Completion - Loaded Dashboard", // Custom label for tracking
+          });
+
           redirectToLogin();
         } else {
+          // GA4 Event Tracking for Restart
+          ReactGA4.event({
+            category: "Form",
+            action: "Form Restarted",
+            label: "Step 6 Restart - Back to Step 1", // Custom label for tracking
+          });
+
           localStorage.clear();
           setAndPersistStep(1);
         }
