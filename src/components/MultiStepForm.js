@@ -966,6 +966,48 @@ const MultiStepForm = ({ submitHandler }) => {
               <Form>
                 <h2>💬 Tell us about yourself</h2>
                 {name && <p>🙋🏽 Hi, {name}!</p>}
+
+                <div>
+                  <label htmlFor="resume">Resume (Optional)</label>
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById("resume").click()}
+                    disabled={resumeUploaded || values.resume}
+                  >
+                    {resumeUploaded ? "Resume Uploaded" : "Upload Resume"}
+                  </button>
+                  <input
+                    type="file"
+                    id="resume"
+                    name="resume"
+                    accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    style={{ display: "none" }}
+                    onChange={(event) => {
+                      const file = event.currentTarget.files[0];
+                      if (file) {
+                        setFieldValue("resume", file); // Update Formik state
+                        setResumeUploaded(true); // Set resumeUploaded to true
+                      }
+                    }}
+                  />
+                  <ErrorMessage
+                    name="resume"
+                    component="div"
+                    className="error"
+                  />
+                  {resumeUploading && (
+                    <img
+                      src={loadingGif}
+                      alt="Loading..."
+                      style={{
+                        width: "24px",
+                        height: "24px",
+                        marginLeft: "10px",
+                      }}
+                    />
+                  )}
+                </div>
+                <br></br>
                 <div>
                   <label htmlFor="firstName">First Name * </label>
                   <Field
@@ -1091,7 +1133,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   />
                   <br />
                 </div>
-                <div>
+                {/* <div>
                   <br />
                   <label htmlFor="resume">Resume (Optional)</label>
                   <button
@@ -1134,7 +1176,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       }}
                     />
                   )}
-                </div>
+                </div> */}
                 <br />
                 <button
                   type="button"
