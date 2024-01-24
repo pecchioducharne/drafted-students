@@ -699,8 +699,8 @@ const MultiStepForm = ({ submitHandler }) => {
                     <div>
                       <Lottie
                         options={defaultOptions1}
-                        height={125}
-                        width={125}
+                        height={100}
+                        width={100}
                       />
                     </div>
                     {/* 🎯 */}
@@ -810,8 +810,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   <div>
                     <Lottie
                       options={defaultOptions2}
-                      height={125}
-                      width={125}
+                      height={100}
+                      width={100}
                     />
                   </div>
                   {/* 🎓  */}
@@ -899,7 +899,7 @@ const MultiStepForm = ({ submitHandler }) => {
           >
             <Form>
               <div>
-                <Lottie options={defaultOptions3} height={125} width={125} />
+                <Lottie options={defaultOptions3} height={100} width={100} />
               </div>
               {/* 🔑  */}
               <h2>Create your password</h2>
@@ -1021,7 +1021,7 @@ const MultiStepForm = ({ submitHandler }) => {
             {({ setFieldValue }) => (
               <Form>
                 <div>
-                  <Lottie options={defaultOptions4} height={125} width={125} />
+                  <Lottie options={defaultOptions4} height={100} width={100} />
                 </div>
                 {/* 💬  */}
                 <h2>Tell us about yourself</h2>
@@ -1281,8 +1281,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   <div>
                     <Lottie
                       options={defaultOptions5}
-                      height={125}
-                      width={125}
+                      height={100}
+                      width={100}
                     />
                   </div>
                   <h2>Let's complete your profile</h2>
