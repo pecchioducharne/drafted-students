@@ -7,6 +7,12 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { auth, db } from "./firebase";
 import ReactGA4 from "react-ga4";
+import Lottie from "react-lottie";
+import step1Animation from "./step-1.json";
+import step2Animation from "./step-2.json";
+import step3Animation from "./step-3.json";
+import step4Animation from "./step-4.json";
+import step5Animation from "./step-5.json";
 
 import axios from "axios";
 
@@ -68,6 +74,36 @@ const findUniversities = (inputValue) => {
     .catch((error) => {
       return [];
     });
+};
+
+const defaultOptions1 = {
+  loop: false, // Set to true if you want the animation to loop
+  autoplay: true, // Set to true if you want the animation to play automatically
+  animationData: step1Animation, // Your animation data (imported from your JSON file)
+};
+
+const defaultOptions2 = {
+  loop: false, // Set to true if you want the animation to loop
+  autoplay: true, // Set to true if you want the animation to play automatically
+  animationData: step2Animation, // Your animation data (imported from your JSON file)
+};
+
+const defaultOptions3 = {
+  loop: false, // Set to true if you want the animation to loop
+  autoplay: true, // Set to true if you want the animation to play automatically
+  animationData: step3Animation, // Your animation data (imported from your JSON file)
+};
+
+const defaultOptions4 = {
+  loop: false, // Set to true if you want the animation to loop
+  autoplay: true, // Set to true if you want the animation to play automatically
+  animationData: step4Animation, // Your animation data (imported from your JSON file)
+};
+
+const defaultOptions5 = {
+  loop: true, // Set to true if you want the animation to loop
+  autoplay: true, // Set to true if you want the animation to play automatically
+  animationData: step5Animation, // Your animation data (imported from your JSON file)
 };
 
 const MySelect = ({ field, form }) => {
@@ -660,7 +696,15 @@ const MultiStepForm = ({ submitHandler }) => {
               {(formik) => {
                 return (
                   <Form>
-                    <h2>🎯 Let's find your next job</h2>
+                    <div>
+                      <Lottie
+                        options={defaultOptions1}
+                        height={125}
+                        width={125}
+                      />
+                    </div>
+                    {/* 🎯 */}
+                    <h2>Let's find your next job</h2>
                     <h3>Join Drafted's community of job seekers</h3>
                     <p>
                       The best place for college students, recent graduates, and
@@ -763,7 +807,15 @@ const MultiStepForm = ({ submitHandler }) => {
             >
               {({ setFieldValue, values, errors, touched }) => (
                 <Form>
-                  <h2>🎓 Find your school</h2>
+                  <div>
+                    <Lottie
+                      options={defaultOptions2}
+                      height={125}
+                      width={125}
+                    />
+                  </div>
+                  {/* 🎓  */}
+                  <h2>Find your school</h2>
                   <p>
                     Select your university below. Employers who prioritize your
                     school will see your profile right away.
@@ -846,7 +898,11 @@ const MultiStepForm = ({ submitHandler }) => {
             }}
           >
             <Form>
-              <h2>🔑 Create your password</h2>
+              <div>
+                <Lottie options={defaultOptions3} height={125} width={125} />
+              </div>
+              {/* 🔑  */}
+              <h2>Create your password</h2>
               <div>
                 <label htmlFor="password">Password</label>
                 <Field
@@ -964,7 +1020,11 @@ const MultiStepForm = ({ submitHandler }) => {
           >
             {({ setFieldValue }) => (
               <Form>
-                <h2>💬 Tell us about yourself</h2>
+                <div>
+                  <Lottie options={defaultOptions4} height={125} width={125} />
+                </div>
+                {/* 💬  */}
+                <h2>Tell us about yourself</h2>
                 {name && <p>🙋🏽 Hi, {name}!</p>}
 
                 <div>
@@ -1218,7 +1278,14 @@ const MultiStepForm = ({ submitHandler }) => {
             >
               {({ values, setFieldValue }) => (
                 <Form>
-                  <h2>✨ Let's complete your profile</h2>
+                  <div>
+                    <Lottie
+                      options={defaultOptions5}
+                      height={125}
+                      width={125}
+                    />
+                  </div>
+                  <h2>Let's complete your profile</h2>
                   <h3>
                     Create your video resume, get recruited by hundred of
                     startups & Fortune 500 companies instantly
