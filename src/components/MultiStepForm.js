@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { auth, db } from "./firebase";
-import ReactGA4 from "react-ga4";
+import ReactGA4 from "react-ga4"; 
 import Lottie from "react-lottie";
 import step1Animation from "./step-1.json";
 import step2Animation from "./step-2.json";

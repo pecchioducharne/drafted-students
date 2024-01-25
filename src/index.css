@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -12,12 +15,12 @@ form {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   font-weight: 200;
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 option {
   font-weight: 200;
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 h2 {
@@ -36,14 +39,19 @@ p {
   font-weight: 200;
   line-height: 1.5;
   margin-bottom: 20px;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
+}
+
+p strong {
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
 }
 
 label {
   display: block;
-  font-weight: 200;
+  font-weight: 700;
   margin-bottom: 8px;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 input[type='text'],
@@ -73,7 +81,7 @@ select {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   font-weight: 200;
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .video-container {
@@ -83,7 +91,7 @@ select {
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   font-weight: 200;
-  font-family: 'Helvetica', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 input[type='file'] {
