@@ -2,51 +2,86 @@
 <html lang="en">
   <head>
     <script>
-      !function (w, d, t) {
-        w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
-      
-        ttq.load('CMAALJ3C77U4KJBR9QGG');
-        ttq.page();
-      }(window, document, 'ttq');
-      </script>
+      !(function (e, t, n) {
+        e.TiktokAnalyticsObject = n;
+        var o = (e[n] = e[n] || []);
+        (o.methods = [
+          "page",
+          "track",
+          "identify",
+          "instances",
+          "debug",
+          "on",
+          "off",
+          "once",
+          "ready",
+          "alias",
+          "group",
+          "enableCookie",
+          "disableCookie",
+        ]),
+          (o.setAndDefer = function (e, t) {
+            e[t] = function () {
+              e.push([t].concat(Array.prototype.slice.call(arguments, 0)));
+            };
+          });
+        for (var a = 0; a < o.methods.length; a++)
+          o.setAndDefer(o, o.methods[a]);
+        (o.instance = function (e) {
+          for (var t = o._i[e] || [], n = 0; n < o.methods.length; n++)
+            o.setAndDefer(t, o.methods[n]);
+          return t;
+        }),
+          (o.load = function (e, t) {
+            var a = "https://analytics.tiktok.com/i18n/pixel/events.js";
+            (o._i = o._i || {}),
+              (o._i[e] = []),
+              (o._i[e]._u = a),
+              (o._t = o._t || {}),
+              (o._t[e] = +new Date()),
+              (o._o = o._o || {}),
+              (o._o[e] = t || {});
+            var i = document.createElement("script");
+            (i.type = "text/javascript"),
+              (i.async = !0),
+              (i.src = a + "?sdkid=" + e + "&lib=" + n);
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(i, s);
+          }),
+          o.load("CMAALJ3C77U4KJBR9QGG"),
+          o.page();
+      })(window, document, "ttq");
+    </script>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/draftedTab.jpeg" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/draftedTab.jpeg" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
       content="Web site created using create-react-app"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <link rel="apple-touch-icon" href="/draftedTab.jpeg" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
+    <!-- Open Graph Tags -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Drafted" />
+    <meta property="og:description" content="Find your next opportunity with Drafted." />
+    <meta property="og:image" content="/draftedTab.jpeg" />
+    <meta property="og:url" content="http://www.joindrafted.com" />
     <title>Drafted</title>
+    
+    <link rel="apple-touch-icon" href="/logo192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Drafted</title>
+    <script defer="defer" src="/static/js/main.ebdd3ea2.js"></script>
+    <link href="/static/css/main.9a9329d6.css" rel="stylesheet" />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>
