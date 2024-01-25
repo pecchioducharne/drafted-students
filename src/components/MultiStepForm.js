@@ -80,6 +80,11 @@ const defaultOptions1 = {
   loop: false, // Set to true if you want the animation to loop
   autoplay: true, // Set to true if you want the animation to play automatically
   animationData: step1Animation, // Your animation data (imported from your JSON file)
+  // TODO: Figure out how to start it with just arrow in target
+  // rendererSettings: {
+  //   preserveAspectRatio: 'xMidYMid slice'
+  // },
+  // segments: [240.5, step1Animation.op] // starts at 1 second, ends at the last frame
 };
 
 const defaultOptions2 = {
