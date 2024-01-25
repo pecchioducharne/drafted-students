@@ -58,12 +58,12 @@ input[type='text'],
 input[type='email'],
 input[type='password'],
 select {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  background-color: #fff;
+  width: 100%; /* Ensure full width */
+  padding: 10px; /* Padding for size */
+  font-size: 16px; /* Font size */
+  border-radius: 4px; /* Rounded corners */
+  border: 1px solid #ccc; /* Border style */
+  background-color: #fff; /* Background color */
   transition: border-color 0.3s ease;
 }
 
@@ -72,6 +72,30 @@ select {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.async-select__control {
+  width: 100%; /* Match width of input fields */
+  padding: 10px; /* Match padding */
+  font-size: 16px; /* Match font size */
+  border-radius: 4px; /* Match border radius */
+  border: 1px solid #ccc; /* Match border style */
+  background-color: #fff; /* Match background color */
+  /* Add any additional styling to match the input fields */
+}
+
+.custom-university-input {
+  width: 100%; /* Match width */
+  padding: 10px; /* Match padding */
+  font-size: 16px; /* Match font size */
+  border-radius: 4px; /* Match border radius */
+  border: 1px solid #ccc; /* Match border style */
+  background-color: #fff; /* Match background color */
+  /* Add any additional styling to match the AsyncSelect */
 }
 
 .form-container {

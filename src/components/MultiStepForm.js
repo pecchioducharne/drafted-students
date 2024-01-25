@@ -6,7 +6,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
 import { auth, db } from "./firebase";
-import ReactGA4 from "react-ga4"; 
+import ReactGA4 from "react-ga4";
 import Lottie from "react-lottie";
 import step1Animation from "./step-1.json";
 import step2Animation from "./step-2.json";
@@ -783,26 +783,33 @@ const MultiStepForm = ({ submitHandler }) => {
         return (
           <>
             <Formik
-              initialValues={{ university: globalUniversity }}
+              initialValues={{
+                university: globalUniversity,
+                customUniversity: "",
+              }}
               validationSchema={Yup.object({
-                university: Yup.object().shape({
-                  label: Yup.string().required("Please select your school"),
-                  value: Yup.string().required("Please select your school"),
-                }),
+                university: Yup.object().nullable(),
+                customUniversity: Yup.string().test(
+                  "customUniversity",
+                  "Please enter your school's name",
+                  function (value) {
+                    const { university } = this.parent;
+                    return university && university.value ? true : value;
+                  }
+                ),
               })}
               onSubmit={(values) => {
-                if (values.university !== "") {
-                  let chosenUniversity = values.university.label;
+                let chosenUniversity =
+                  values.university.label || values.customUniversity;
 
-                  setGlobalUniversity(chosenUniversity);
-                  setAndPersistStep(3);
+                setGlobalUniversity(chosenUniversity);
+                setAndPersistStep(3);
 
-                  ReactGA4.event({
-                    category: "Form",
-                    action: "Selected University",
-                    label: chosenUniversity, // Tracks the chosen university
-                  });
-                }
+                ReactGA4.event({
+                  category: "Form",
+                  action: "Selected University",
+                  label: chosenUniversity, // Tracks the chosen university
+                });
               }}
             >
               {({ setFieldValue, values, errors, touched }) => (
@@ -820,7 +827,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     Select your university below. Employers who prioritize your
                     school will see your profile right away.
                   </p>
-                  <div>
+                  <div className="form-field">
                     <label htmlFor="university">Search your university</label>
                     <Field
                       name="university"
@@ -833,12 +840,26 @@ const MultiStepForm = ({ submitHandler }) => {
                       <div className="error">{errors.university}</div>
                     ) : null}
                   </div>
-
+                  {!values.university ? (
+                    <>
+                      <h3>Can't find your school?</h3>
+                      <label htmlFor="customUniversity">Type in the name of your place of study:</label>
+                      <Field
+                        name="customUniversity"
+                        type="text"
+                        placeholder="Name of your educational institution"
+                        style={{ width: '95%' }}
+                      />
+                      {touched.customUniversity && errors.customUniversity && (
+                        <div className="error">{errors.customUniversity}</div>
+                      )}
+                    </>
+                  ) : null}
                   <div
                     style={{
                       display: "flex",
                       justifyContent: "space-between",
-                      marginTop: "10px",
+                      marginTop: "20px",
                     }}
                   >
                     <button
@@ -851,7 +872,7 @@ const MultiStepForm = ({ submitHandler }) => {
                     <button
                       type="submit"
                       style={buttonStyles}
-                      disabled={!values.university}
+                      disabled={!values.university && !values.customUniversity}
                     >
                       Continue
                     </button>
@@ -1169,7 +1190,7 @@ const MultiStepForm = ({ submitHandler }) => {
                 </div>
                 <div>
                   <br />
-                  <label htmlFor="linkedInProfile">LinkedIn Profile</label>
+                  <label htmlFor="linkedInProfile">LinkedIn Profile (Optional)</label>
                   <Field
                     type="text"
                     id="linkedInURL"
