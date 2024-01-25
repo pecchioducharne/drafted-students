@@ -217,6 +217,28 @@ const MultiStepForm = ({ submitHandler }) => {
     resume: "",
   };
 
+  async function matchEmailDomainWithUniversity(email) {
+    try {
+      const response = await axios.get(
+        "https://raw.githubusercontent.com/Hipo/university-domains-list/master/world_universities_and_domains.json"
+      );
+      const universities = response.data;
+
+      // Extract the domain from the email
+      const emailDomain = email.split("@")[1];
+
+      // Find a university that matches the email domain
+      const matchedUniversity = universities.find((university) => {
+        return university.domains.includes(emailDomain);
+      });
+
+      return matchedUniversity;
+    } catch (error) {
+      console.error("Error matching email domain with university:", error);
+      return null;
+    }
+  }
+
   const handleUpload = (videoBlobOrFile, questionNumber) => {
     let filename;
 
@@ -641,6 +663,10 @@ const MultiStepForm = ({ submitHandler }) => {
           page: "/onboarding-step-1-email",
         });
 
+        // Initialize variables to store the matched university name and favicon URL
+        let matchedUniversityName = "";
+        let universityFaviconUrl = "";
+
         return (
           <>
             <Formik
@@ -652,35 +678,28 @@ const MultiStepForm = ({ submitHandler }) => {
                   .email("Invalid email address")
                   .required("Email is required"),
               })}
-              onSubmit={(values) => {
-                if (values.email.endsWith("fiu.edu")) {
-                  // FIU
-                  // draftedUniversity = "Florida International University";
-                  setGlobalUniversity("Florida International University");
-                  // globalEmail = values.email;
-                  setGlobalEmail(values.email);
+              onSubmit={async (values) => {
+                const matchedUniversity = await matchEmailDomainWithUniversity(
+                  values.email
+                );
 
-                  setAndPersistStep(3); // skips step
-                } else if (values.email.endsWith("miami.edu")) {
-                  // University of Miami
-                  // draftedUniversity = "University of Miami";
-                  setGlobalUniversity("University of Miami");
-                  // globalEmail = values.email;
+                if (matchedUniversity) {
+                  // If a university is matched, set the global university and skip to step 3
+                  setGlobalUniversity(matchedUniversity.name);
                   setGlobalEmail(values.email);
-                  setAndPersistStep(3); // skips step
-                } else if (values.email.endsWith("usf.edu")) {
-                  // University of Southern Florida
-                  // draftedUniversity = "University of South Florida";
-                  setGlobalUniversity("University of South Florida");
-                  // globalEmail = values.email;
-                  setGlobalEmail(values.email);
-                  setAndPersistStep(3); // skips step
+                  setAndPersistStep(3);
+
+                  // Set the matched university name and favicon URL
+                  matchedUniversityName = matchedUniversity.name;
+                  universityFaviconUrl = matchedUniversity.favicon;
                 } else {
-                  // Not a drafted uni, go to next
-                  // globalEmail = values.email;]
-
+                  // If no university is matched, proceed to step 2
                   setGlobalEmail(values.email);
                   setAndPersistStep(2);
+
+                  // Reset the matched university name and favicon URL
+                  matchedUniversityName = "";
+                  universityFaviconUrl = "";
                 }
 
                 ReactGA4.event({
@@ -723,6 +742,24 @@ const MultiStepForm = ({ submitHandler }) => {
                         id="email"
                         name="email"
                         style={{ width: "95%" }}
+                        placeholder="Use .edu email to skip a step"
+                        onChange={async (e) => {
+                          // Reset the matched university name when the user changes the email
+                          matchedUniversityName = "";
+                          universityFaviconUrl = "";
+                          formik.handleChange(e);
+
+                          // Check for a recognized university when the email changes
+                          const matchedUniversity =
+                            await matchEmailDomainWithUniversity(
+                              e.target.value
+                            );
+                          if (matchedUniversity) {
+                            // If a university is matched, set the matched university name and favicon URL
+                            matchedUniversityName = matchedUniversity.name;
+                            universityFaviconUrl = matchedUniversity.favicon;
+                          }
+                        }}
                       />
                       <ErrorMessage
                         name="email"
@@ -730,39 +767,26 @@ const MultiStepForm = ({ submitHandler }) => {
                         className="error"
                       />
                     </div>
-                    {formik.values.email.endsWith("fiu.edu") && (
-                      <>
-                        <p style={{ fontWeight: "bold" }}>
-                          Florida International University
-                        </p>
-                        <p>Welcome, Panther!</p>
-                      </>
+
+                    {/* Show the matched university name if it's available */}
+                    {matchedUniversityName && (
+                      <div>
+                        <h3>Welcome, {matchedUniversityName} student!</h3>
+                      </div>
                     )}
-                    {formik.values.email.endsWith("miami.edu") && (
-                      <>
-                        <p style={{ fontWeight: "bold" }}>
-                          University of Miami
-                        </p>
-                        <p>Welcome, Cane!</p>
-                      </>
-                    )}
-                    {formik.values.email.endsWith("usf.edu") && (
-                      <>
-                        <p style={{ fontWeight: "bold" }}>
-                          University of South Florida
-                        </p>
-                        <p>Welcome, Bull!</p>
+
+                    {/* Display the favicon below the welcome message */}
+                    {universityFaviconUrl && (
+                      <div>
                         <img
-                          src={usfTampaGif}
-                          alt="USF Tampa"
+                          src={universityFaviconUrl}
+                          alt={`${matchedUniversityName} Favicon`}
                           style={{
-                            width: "120px",
-                            display: "block",
-                            margin: "0 auto",
-                            borderRadius: "8px",
+                            width: "64px", // Increased the width
+                            height: "64px", // Increased the height
                           }}
                         />
-                      </>
+                      </div>
                     )}
                     <br />
                     <br></br>
@@ -771,7 +795,6 @@ const MultiStepForm = ({ submitHandler }) => {
                         Let's go pro
                       </button>
                     </div>
-
                     <Persist name="persistStep1" />
                   </Form>
                 );
@@ -848,12 +871,14 @@ const MultiStepForm = ({ submitHandler }) => {
                   {!values.university ? (
                     <>
                       <h3>Can't find your school?</h3>
-                      <label htmlFor="customUniversity">Type in the name of your place of study:</label>
+                      <label htmlFor="customUniversity">
+                        Type in the name of your place of study:
+                      </label>
                       <Field
                         name="customUniversity"
                         type="text"
                         placeholder="Name of your educational institution"
-                        style={{ width: '95%' }}
+                        style={{ width: "95%" }}
                       />
                       {touched.customUniversity && errors.customUniversity && (
                         <div className="error">{errors.customUniversity}</div>
@@ -888,104 +913,106 @@ const MultiStepForm = ({ submitHandler }) => {
             </Formik>
           </>
         );
-      case 3:
-        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-3" });
-
-        return (
-          <Formik
-            initialValues={{
-              password: globalPassword,
-              confirmPassword: globalPassword,
-            }}
-            enableReinitialize={true}
-            validationSchema={Yup.object().shape({
-              password: Yup.string()
-                .required("Password is required")
-                .min(6, "Password needs to be at least six characters long"),
-              confirmPassword: Yup.string()
-                .oneOf([Yup.ref("password"), null], "Passwords must match")
-                .required("Confirm Password is required"),
-            })}
-            onSubmit={(values) => {
-              if (
-                values.password !== "" &&
-                values.password === values.confirmPassword
-              ) {
-                // globalPassword = values.password;
-                setGlobalPassword(values.password);
-                setAndPersistStep(4);
-
-                ReactGA4.event({
-                  category: "Form",
-                  action: "Submitted Password",
-                  label: "Password Creation", // Custom label for tracking
-                });
-              }
-            }}
-          >
-            <Form>
-              <div>
-                <Lottie options={defaultOptions3} height={100} width={100} />
-              </div>
-              {/* 🔑  */}
-              <h2>Create your password</h2>
-              <div>
-                <label htmlFor="password">Password</label>
-                <Field
-                  type="password"
-                  id="password"
-                  name="password"
-                  style={{ width: "95%" }}
-                />
-                <ErrorMessage
-                  name="password"
-                  component="div"
-                  className="error"
-                />
-              </div>
-              <div>
-                <br></br>
-                <label htmlFor="confirmPassword">Re-enter Password</label>
-                <Field
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  style={{ width: "95%" }}
-                />
-                <ErrorMessage
-                  name="confirmPassword"
-                  component="div"
-                  className="error"
-                />
-              </div>
-              <p style={{ color: "gray" }}>
-                Once you create an account, you'll start to receive Drafted
-                emails. You can unsubscribe at any time.
-              </p>
-              <button
-                type="button"
-                onClick={() => {
-                  if (
-                    globalEmail.endsWith("@fiu.edu") ||
-                    globalEmail.endsWith("@usf.edu") ||
-                    globalEmail.endsWith("@miami.edu")
-                  ) {
-                    setAndPersistStep(1);
-                  } else {
-                    setAndPersistStep(2);
-                  }
-                }}
-                style={previousButtonStyles}
-              >
-                Back
-              </button>
-              <button type="submit" style={buttonStyles}>
-                Create Account
-              </button>
-              <Persist name="persistStep3" />
-            </Form>
-          </Formik>
-        );
+        case 3:
+          ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-3" });
+        
+          return (
+            <Formik
+              initialValues={{
+                password: globalPassword,
+                confirmPassword: globalPassword,
+              }}
+              enableReinitialize={true}
+              validationSchema={Yup.object().shape({
+                password: Yup.string()
+                  .required("Password is required")
+                  .min(6, "Password needs to be at least six characters long"),
+                confirmPassword: Yup.string()
+                  .oneOf([Yup.ref("password"), null], "Passwords must match")
+                  .required("Confirm Password is required"),
+              })}
+              onSubmit={(values) => {
+                if (
+                  values.password !== "" &&
+                  values.password === values.confirmPassword
+                ) {
+                  // globalPassword = values.password;
+                  setGlobalPassword(values.password);
+                  setAndPersistStep(4);
+        
+                  ReactGA4.event({
+                    category: "Form",
+                    action: "Submitted Password",
+                    label: "Password Creation", // Custom label for tracking
+                  });
+                }
+              }}
+            >
+              {({ setFieldValue, values, errors, touched }) => (
+                <Form>
+                  <div>
+                    <Lottie options={defaultOptions3} height={100} width={100} />
+                  </div>
+                  {/* 🔑  */}
+                  <h2>Create your password</h2>
+                  <div>
+                    <label htmlFor="password">Password</label>
+                    <Field
+                      type="password"
+                      id="password"
+                      name="password"
+                      style={{ width: "95%" }}
+                    />
+                    <ErrorMessage
+                      name="password"
+                      component="div"
+                      className="error"
+                    />
+                  </div>
+                  <div>
+                    <br></br>
+                    <label htmlFor="confirmPassword">Re-enter Password</label>
+                    <Field
+                      type="password"
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      style={{ width: "95%" }}
+                    />
+                    <ErrorMessage
+                      name="confirmPassword"
+                      component="div"
+                      className="error"
+                    />
+                  </div>
+                  <p style={{ color: "gray" }}>
+                    Once you create an account, you'll start to receive Drafted
+                    emails. You can unsubscribe at any time.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      // Check if the email was recognized in step 1 using matchEmailDomainWithUniversity
+                      const matchedUniversity = matchEmailDomainWithUniversity(
+                        globalEmail
+                      );
+                      if (matchedUniversity) {
+                        setAndPersistStep(1); // If recognized, go to step 1
+                      } else {
+                        setAndPersistStep(2); // If not recognized, go to step 2
+                      }
+                    }}
+                    style={previousButtonStyles}
+                  >
+                    Back
+                  </button>
+                  <button type="submit" style={buttonStyles}>
+                    Create Account
+                  </button>
+                  <Persist name="persistStep3" />
+                </Form>
+              )}
+            </Formik>
+          );        
       case 4:
         ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-4-form" });
 
@@ -1195,7 +1222,9 @@ const MultiStepForm = ({ submitHandler }) => {
                 </div>
                 <div>
                   <br />
-                  <label htmlFor="linkedInProfile">LinkedIn Profile (Optional)</label>
+                  <label htmlFor="linkedInProfile">
+                    LinkedIn Profile (Optional)
+                  </label>
                   <Field
                     type="text"
                     id="linkedInURL"

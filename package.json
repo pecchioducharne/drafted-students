@@ -5,7 +5,7 @@
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
     "aws-sdk": "^2.1401.0",
-    "axios": "^1.4.0",
+    "axios": "^1.6.6",
     "fast-levenshtein": "^3.0.0",
     "firebase": "^10.7.1",
     "formik": "^2.4.2",
