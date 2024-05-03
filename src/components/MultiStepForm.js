@@ -655,6 +655,14 @@ const MultiStepForm = ({ submitHandler }) => {
     // Clear local storage before new onboarding
     localStorage.clear();
 
+    const navigateToCandidateSignin = () => {
+      window.location.href = "https://main--drafted-dashboard.netlify.app/login";
+    };
+
+    const navigateToRecruiterSignup = () => {
+      window.location.href = "https://drafted-beta.netlify.app/";
+    };
+
     switch (step) {
       case 1:
         // GA4 Page Visit Tracking for Step 1
@@ -795,6 +803,19 @@ const MultiStepForm = ({ submitHandler }) => {
                         Let's go pro
                       </button>
                     </div>
+                    <br></br>
+                    <p className="signupLink">
+                      Already have an account?{" "}
+                      <a href="#" className="link" onClick={navigateToCandidateSignin}>
+                        <strong>Sign In</strong>
+                      </a>
+                    </p>
+                    <p className="signupLink">
+                      Looking to hire?{" "}
+                      <a href="#" className="link" onClick={navigateToRecruiterSignup}>
+                        <strong>Click Here</strong>
+                      </a>
+                    </p>
                     <Persist name="persistStep1" />
                   </Form>
                 );
@@ -913,106 +934,105 @@ const MultiStepForm = ({ submitHandler }) => {
             </Formik>
           </>
         );
-        case 3:
-          ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-3" });
-        
-          return (
-            <Formik
-              initialValues={{
-                password: globalPassword,
-                confirmPassword: globalPassword,
-              }}
-              enableReinitialize={true}
-              validationSchema={Yup.object().shape({
-                password: Yup.string()
-                  .required("Password is required")
-                  .min(6, "Password needs to be at least six characters long"),
-                confirmPassword: Yup.string()
-                  .oneOf([Yup.ref("password"), null], "Passwords must match")
-                  .required("Confirm Password is required"),
-              })}
-              onSubmit={(values) => {
-                if (
-                  values.password !== "" &&
-                  values.password === values.confirmPassword
-                ) {
-                  // globalPassword = values.password;
-                  setGlobalPassword(values.password);
-                  setAndPersistStep(4);
-        
-                  ReactGA4.event({
-                    category: "Form",
-                    action: "Submitted Password",
-                    label: "Password Creation", // Custom label for tracking
-                  });
-                }
-              }}
-            >
-              {({ setFieldValue, values, errors, touched }) => (
-                <Form>
-                  <div>
-                    <Lottie options={defaultOptions3} height={100} width={100} />
-                  </div>
-                  {/* 🔑  */}
-                  <h2>Create your password</h2>
-                  <div>
-                    <label htmlFor="password">Password</label>
-                    <Field
-                      type="password"
-                      id="password"
-                      name="password"
-                      style={{ width: "95%" }}
-                    />
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      className="error"
-                    />
-                  </div>
-                  <div>
-                    <br></br>
-                    <label htmlFor="confirmPassword">Re-enter Password</label>
-                    <Field
-                      type="password"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      style={{ width: "95%" }}
-                    />
-                    <ErrorMessage
-                      name="confirmPassword"
-                      component="div"
-                      className="error"
-                    />
-                  </div>
-                  <p style={{ color: "gray" }}>
-                    Once you create an account, you'll start to receive Drafted
-                    emails. You can unsubscribe at any time.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      // Check if the email was recognized in step 1 using matchEmailDomainWithUniversity
-                      const matchedUniversity = matchEmailDomainWithUniversity(
-                        globalEmail
-                      );
-                      if (matchedUniversity) {
-                        setAndPersistStep(1); // If recognized, go to step 1
-                      } else {
-                        setAndPersistStep(2); // If not recognized, go to step 2
-                      }
-                    }}
-                    style={previousButtonStyles}
-                  >
-                    Back
-                  </button>
-                  <button type="submit" style={buttonStyles}>
-                    Create Account
-                  </button>
-                  <Persist name="persistStep3" />
-                </Form>
-              )}
-            </Formik>
-          );        
+      case 3:
+        ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-3" });
+
+        return (
+          <Formik
+            initialValues={{
+              password: globalPassword,
+              confirmPassword: globalPassword,
+            }}
+            enableReinitialize={true}
+            validationSchema={Yup.object().shape({
+              password: Yup.string()
+                .required("Password is required")
+                .min(6, "Password needs to be at least six characters long"),
+              confirmPassword: Yup.string()
+                .oneOf([Yup.ref("password"), null], "Passwords must match")
+                .required("Confirm Password is required"),
+            })}
+            onSubmit={(values) => {
+              if (
+                values.password !== "" &&
+                values.password === values.confirmPassword
+              ) {
+                // globalPassword = values.password;
+                setGlobalPassword(values.password);
+                setAndPersistStep(4);
+
+                ReactGA4.event({
+                  category: "Form",
+                  action: "Submitted Password",
+                  label: "Password Creation", // Custom label for tracking
+                });
+              }
+            }}
+          >
+            {({ setFieldValue, values, errors, touched }) => (
+              <Form>
+                <div>
+                  <Lottie options={defaultOptions3} height={100} width={100} />
+                </div>
+                {/* 🔑  */}
+                <h2>Create your password</h2>
+                <div>
+                  <label htmlFor="password">Password</label>
+                  <Field
+                    type="password"
+                    id="password"
+                    name="password"
+                    style={{ width: "95%" }}
+                  />
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <div>
+                  <br></br>
+                  <label htmlFor="confirmPassword">Re-enter Password</label>
+                  <Field
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    style={{ width: "95%" }}
+                  />
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <p style={{ color: "gray" }}>
+                  Once you create an account, you'll start to receive Drafted
+                  emails. You can unsubscribe at any time.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Check if the email was recognized in step 1 using matchEmailDomainWithUniversity
+                    const matchedUniversity =
+                      matchEmailDomainWithUniversity(globalEmail);
+                    if (matchedUniversity) {
+                      setAndPersistStep(1); // If recognized, go to step 1
+                    } else {
+                      setAndPersistStep(2); // If not recognized, go to step 2
+                    }
+                  }}
+                  style={previousButtonStyles}
+                >
+                  Back
+                </button>
+                <button type="submit" style={buttonStyles}>
+                  Create Account
+                </button>
+                <Persist name="persistStep3" />
+              </Form>
+            )}
+          </Formik>
+        );
       case 4:
         ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-4-form" });
 
