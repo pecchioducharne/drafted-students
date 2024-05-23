@@ -5,10 +5,11 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "./UserContext";
-import { auth, db } from "./firebase";
+import { auth, db, analytics } from "./firebase";
 import ReactGA4 from "react-ga4";
 import Lottie from "react-lottie";
 import { ClipLoader } from "react-spinners";
+import { logEvent } from "firebase/analytics";
 import step1Animation from "./step-1.json";
 import step2Animation from "./step-2.json";
 import step3Animation from "./step-3.json";
@@ -151,6 +152,14 @@ var s3 = new AWS.S3({
 const MultiStepForm = ({ submitHandler }) => {
   const navigate = useNavigate();
   const { setUserInfo } = useContext(UserContext);
+
+  const logAttemptSignup = (email) => {
+    logEvent(analytics, "attempted_student_signup", { email });
+  };
+
+  const logSignupError = (email) => {
+    logEvent(analytics, "student_signup_error", { email });
+  };
 
   // Google Analytics
   ReactGA4.initialize("G-Y1YPK8NXCK"); // Replace with your Measurement ID
@@ -725,6 +734,8 @@ const MultiStepForm = ({ submitHandler }) => {
                     // Add other relevant parameters here
                   });
                 }
+
+                logAttemptSignup(values.email);
               }}
             >
               {(formik) => {
@@ -1370,6 +1381,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   });
                 } catch (error) {
                   // Handle the error appropriately
+                  logSignupError(values.email);
                 } finally {
                   setIsLoading(false); // Set loading to false after submission
                 }
