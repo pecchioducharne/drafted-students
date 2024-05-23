@@ -8,6 +8,7 @@ import { UserContext } from "./UserContext";
 import { auth, db } from "./firebase";
 import ReactGA4 from "react-ga4";
 import Lottie from "react-lottie";
+import { ClipLoader } from "react-spinners";
 import step1Animation from "./step-1.json";
 import step2Animation from "./step-2.json";
 import step3Animation from "./step-3.json";
@@ -656,7 +657,8 @@ const MultiStepForm = ({ submitHandler }) => {
     localStorage.clear();
 
     const navigateToCandidateSignin = () => {
-      window.location.href = "https://main--drafted-dashboard.netlify.app/login";
+      window.location.href =
+        "https://main--drafted-dashboard.netlify.app/login";
     };
 
     const navigateToRecruiterSignup = () => {
@@ -806,13 +808,21 @@ const MultiStepForm = ({ submitHandler }) => {
                     <br></br>
                     <p className="signupLink">
                       Already have an account?{" "}
-                      <a href="#" className="link" onClick={navigateToCandidateSignin}>
+                      <a
+                        href="#"
+                        className="link"
+                        onClick={navigateToCandidateSignin}
+                      >
                         <strong>Sign In</strong>
                       </a>
                     </p>
                     <p className="signupLink">
                       Looking to hire?{" "}
-                      <a href="#" className="link" onClick={navigateToRecruiterSignup}>
+                      <a
+                        href="#"
+                        className="link"
+                        onClick={navigateToRecruiterSignup}
+                      >
                         <strong>Click Here</strong>
                       </a>
                     </p>
@@ -1320,9 +1330,17 @@ const MultiStepForm = ({ submitHandler }) => {
                 >
                   Back
                 </button>
-                <button type="submit" style={buttonStyles}>
-                  Continue
+                <button type="submit" style={buttonStyles} disabled={isLoading}>
+                  {isLoading ? (
+                    <span>
+                      <ClipLoader size={20} color={"#fff"} loading={true} />
+                      {" Completing Signup..."}
+                    </span>
+                  ) : (
+                    "Continue"
+                  )}
                 </button>
+
                 <p>* Required fields</p>
                 <Persist name="persistStep4" />
               </Form>
@@ -1340,14 +1358,21 @@ const MultiStepForm = ({ submitHandler }) => {
             <Formik
               initialValues={{ file: null }}
               onSubmit={() => {
-                setAndPersistStep(6);
+                setIsLoading(true); // Set loading to true when submitting
+                try {
+                  setAndPersistStep(6);
 
-                // GA4 Event Tracking for Form Submission
-                ReactGA4.event({
-                  category: "Form",
-                  action: "Completed Profile, Navigated to Dashboard",
-                  label: "Step 5 Submission", // Custom label for tracking
-                });
+                  // GA4 Event Tracking for Form Submission
+                  ReactGA4.event({
+                    category: "Form",
+                    action: "Completed Profile, Navigated to Dashboard",
+                    label: "Step 5 Submission", // Custom label for tracking
+                  });
+                } catch (error) {
+                  // Handle the error appropriately
+                } finally {
+                  setIsLoading(false); // Set loading to false after submission
+                }
               }}
               onKeyPress={() => handleKeyPress(6)}
             >
@@ -1431,19 +1456,20 @@ const MultiStepForm = ({ submitHandler }) => {
                     Back
                   </button>
                   <button
-                    type="button"
-                    onClick={() => {
-                      // Check if a file has been uploaded
-                      if (!values.file) {
-                        setAndPersistStep(6);
-                      }
-
-                      setShouldUseEffect(false);
-                    }}
+                    type="submit"
                     style={buttonStyles}
+                    disabled={isLoading}
                   >
-                    Continue
+                    {isLoading ? (
+                      <span>
+                        <ClipLoader size={20} color={"#fff"} loading={true} />
+                        {" Completing Signup..."}
+                      </span>
+                    ) : (
+                      "Let's complete your profile"
+                    )}
                   </button>
+
                   {isLoading && (
                     <img
                       src={loadingGif}
@@ -1492,6 +1518,7 @@ const MultiStepForm = ({ submitHandler }) => {
           <Formik
             initialValues={{ video3: null }}
             onSubmit={async (values, { setSubmitting }) => {
+              setIsLoading(true);
               if (values.video2) {
                 try {
                   setIsLoading(true);
@@ -1606,7 +1633,11 @@ const MultiStepForm = ({ submitHandler }) => {
                   Back
                 </button>
                 <button type="submit" style={buttonStyles}>
-                  Submit and Next
+                  {isLoading ? (
+                    <ClipLoader size={20} color={"#fff"} loading={true} />
+                  ) : (
+                    "Submit and Next"
+                  )}
                 </button>
                 {isLoading && (
                   <img
@@ -2170,12 +2201,16 @@ const MultiStepForm = ({ submitHandler }) => {
                         >
                           Back
                         </button>
-                        <button
-                          type="submit"
-                          style={buttonStyles}
-                          // disabled={!isVideo3Recorded}
-                        >
-                          Submit
+                        <button type="submit" style={buttonStyles}>
+                          {isLoading ? (
+                            <ClipLoader
+                              size={20}
+                              color={"#fff"}
+                              loading={true}
+                            />
+                          ) : (
+                            "Continue"
+                          )}
                         </button>
                         {isLoading && (
                           <img
