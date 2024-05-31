@@ -8,6 +8,7 @@ import { UserContext } from "./UserContext";
 import { auth, db, analytics } from "./firebase";
 import ReactGA4 from "react-ga4";
 import Lottie from "react-lottie";
+import Papa from "papaparse";
 import { ClipLoader } from "react-spinners";
 import { logEvent } from "firebase/analytics";
 import step1Animation from "./step-1.json";
@@ -113,6 +114,109 @@ const defaultOptions5 = {
   animationData: step5Animation, // Your animation data (imported from your JSON file)
 };
 
+const commonMajors = [
+  "Accounting",
+  "Aerospace Engineering",
+  "Agriculture",
+  "Anthropology",
+  "Applied Mathematics",
+  "Architecture",
+  "Art History",
+  "Astronomy",
+  "Biochemistry",
+  "Biology",
+  "Biomedical Engineering",
+  "Business Administration",
+  "Chemical Engineering",
+  "Chemistry",
+  "Civil Engineering",
+  "Communications",
+  "Computer Science",
+  "Criminal Justice",
+  "Dance",
+  "Data Science",
+  "Dentistry",
+  "Early Childhood Education",
+  "Economics",
+  "Electrical Engineering",
+  "Elementary Education",
+  "English",
+  "Environmental Science",
+  "Fashion Design",
+  "Film Studies",
+  "Finance",
+  "Fine Arts",
+  "Forestry",
+  "Geography",
+  "Geology",
+  "Graphic Design",
+  "Health Administration",
+  "History",
+  "Hospitality Management",
+  "Human Resources",
+  "Industrial Engineering",
+  "Information Systems",
+  "Interior Design",
+  "International Relations",
+  "Journalism",
+  "Kinesiology",
+  "Landscape Architecture",
+  "Law",
+  "Library Science",
+  "Linguistics",
+  "Management",
+  "Marine Biology",
+  "Marketing",
+  "Materials Science",
+  "Mathematics",
+  "Mechanical Engineering",
+  "Medicine",
+  "Microbiology",
+  "Music",
+  "Neuroscience",
+  "Nursing",
+  "Nutrition",
+  "Occupational Therapy",
+  "Pharmacy",
+  "Philosophy",
+  "Physical Education",
+  "Physics",
+  "Political Science",
+  "Psychology",
+  "Public Administration",
+  "Public Health",
+  "Public Relations",
+  "Real Estate",
+  "Religious Studies",
+  "Social Work",
+  "Sociology",
+  "Software Engineering",
+  "Spanish",
+  "Special Education",
+  "Speech Pathology",
+  "Statistics",
+  "Supply Chain Management",
+  "Sustainable Agriculture",
+  "Theatre",
+  "Urban Planning",
+  "Veterinary Medicine",
+  "Visual Arts",
+  "Web Development",
+  "Wildlife Management",
+  "Women's Studies",
+  "Zoology",
+  "Cybersecurity",
+  "Digital Media",
+  "Environmental Engineering",
+  "Game Design",
+  "Industrial Design",
+  "Information Technology",
+  "International Business",
+  "Media Studies",
+  "Neurosurgery",
+  "Robotics",
+];
+
 const MySelect = ({ field, form }) => {
   return (
     <AsyncSelect
@@ -120,6 +224,91 @@ const MySelect = ({ field, form }) => {
       value={field.value}
       onChange={(option) => form.setFieldValue(field.name, option)}
       loadOptions={findUniversities}
+    />
+  );
+};
+
+const loadMajors = async () => {
+  return new Promise((resolve, reject) => {
+    Papa.parse("/majors.csv", {
+      download: true,
+      header: true,
+      complete: (results) => {
+        console.log("Parsed CSV Data:", results.data); // Log the parsed data for debugging
+        if (results.data.length === 0) {
+          reject(new Error("CSV file is empty or incorrectly formatted"));
+        } else {
+          const majors = results.data
+            .map((major) => {
+              if (!major.Major) {
+                console.error("Major property is missing in row:", major);
+                return null;
+              }
+              const formattedMajor = major.Major.toLowerCase().replace(
+                /\b\w/g,
+                (char) => char.toUpperCase()
+              );
+              return {
+                value: major.Major_code,
+                label: formattedMajor,
+              };
+            })
+            .filter(Boolean); // Filter out any null values
+          resolve(majors);
+        }
+      },
+      error: (error) => {
+        reject(error);
+      },
+    });
+  });
+};
+
+const fetchMajors = (inputValue) => {
+  return new Promise((resolve) => {
+    const filteredMajors = commonMajors.filter((major) =>
+      major.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    resolve(
+      filteredMajors.map((major) => ({
+        value: major,
+        label: major,
+      }))
+    );
+  });
+};
+
+const MajorAutocomplete = ({ field, form, customMajorFieldName }) => {
+  const loadMajors = (inputValue) => {
+    const filteredMajors = commonMajors.filter((major) =>
+      major.toLowerCase().includes(inputValue.toLowerCase())
+    );
+    return Promise.resolve(
+      filteredMajors.map((major) => ({
+        value: major,
+        label: major,
+      }))
+    );
+  };
+
+  return (
+    <AsyncSelect
+      {...field}
+      cacheOptions
+      loadOptions={loadMajors}
+      defaultOptions={commonMajors.map((major) => ({
+        value: major,
+        label: major,
+      }))}
+      placeholder="Select your major"
+      onChange={(selectedOption) => {
+        form.setFieldValue(field.name, selectedOption.value);
+        form.setFieldValue(customMajorFieldName, ""); // Clear custom major
+      }}
+      value={{
+        value: field.value,
+        label: field.value,
+      }}
     />
   );
 };
@@ -220,7 +409,7 @@ const MultiStepForm = ({ submitHandler }) => {
     confirmPassword: "",
     firstName: "",
     lastName: "",
-    major: "",
+    major: null,
     graduationMonth: "",
     graduationYear: "",
     linkedInProfileURL: "",
@@ -1056,13 +1245,13 @@ const MultiStepForm = ({ submitHandler }) => {
         );
       case 4:
         ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-4-form" });
-
         return (
           <Formik
             initialValues={{
               firstName: globalFirstName,
               lastName: globalLastName,
               major: globalMajor,
+              customMajor: "",
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
               linkedInURL: globalLinkedInProfileURL,
@@ -1071,7 +1260,8 @@ const MultiStepForm = ({ submitHandler }) => {
             validationSchema={Yup.object().shape({
               firstName: Yup.string().required("First Name is required"),
               lastName: Yup.string().required("Last Name is required"),
-              major: Yup.string().required("Major is required"),
+              major: Yup.string().nullable(),
+              customMajor: Yup.string().nullable(),
               graduationYear: Yup.number().required(
                 "Graduation Year is required"
               ),
@@ -1080,7 +1270,7 @@ const MultiStepForm = ({ submitHandler }) => {
               // Update state with form values
               setGlobalFirstName(values.firstName);
               setGlobalLastName(values.lastName);
-              setGlobalMajor(values.major);
+              setGlobalMajor(values.major || values.customMajor);
               setGlobalGraduationMonth(values.graduationMonth);
               setGlobalGraduationYear(values.graduationYear);
               setGlobalLinkedInProfileURL(values.linkedInURL);
@@ -1197,14 +1387,35 @@ const MultiStepForm = ({ submitHandler }) => {
                 <div>
                   <label htmlFor="major">Major *</label>
                   <Field
-                    type="text"
-                    id="major"
                     name="major"
-                    placeholder="What's your major?"
-                    style={{ width: "95%" }}
+                    component={MajorAutocomplete}
+                    customMajorFieldName="customMajor"
                   />
                   <ErrorMessage
                     name="major"
+                    component="div"
+                    className="error"
+                  />
+                </div>
+                <br />
+                <div>
+                  <label htmlFor="customMajor">
+                    Custom Major (if not listed)
+                  </label>
+                  <Field
+                    type="text"
+                    id="customMajor"
+                    name="customMajor"
+                    placeholder="Enter your major if not listed"
+                    style={{ width: "95%" }}
+                    onChange={(e) => {
+                      setFieldValue("customMajor", e.target.value);
+                      setFieldValue("major", ""); // Clear dropdown major
+                    }}
+                    value={values.customMajor}
+                  />
+                  <ErrorMessage
+                    name="customMajor"
                     component="div"
                     className="error"
                   />
@@ -1289,50 +1500,6 @@ const MultiStepForm = ({ submitHandler }) => {
                   />
                   <br />
                 </div>
-                {/* <div>
-                  <br />
-                  <label htmlFor="resume">Resume (Optional)</label>
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById("resume").click()}
-                    disabled={selectedResume || values.resume}
-                  >
-                    {values.resume
-                      ? "Resume Uploaded"
-                      : selectedResume
-                      ? "Resume Selected"
-                      : "Upload Resume"}
-                  </button>
-                  <input
-                    type="file"
-                    id="resume"
-                    name="resume"
-                    accept=".pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    style={{ display: "none" }}
-                    onChange={(event) => {
-                      const file = event.currentTarget.files[0];
-                      if (file) {
-                        setFieldValue("resume", file); // Update Formik state
-                      }
-                    }}
-                  />
-                  <ErrorMessage
-                    name="resume"
-                    component="div"
-                    className="error"
-                  />
-                  {resumeUploading && (
-                    <img
-                      src={loadingGif}
-                      alt="Loading..."
-                      style={{
-                        width: "24px",
-                        height: "24px",
-                        marginLeft: "10px",
-                      }}
-                    />
-                  )}
-                </div> */}
                 <br />
                 <button
                   type="button"
@@ -1358,6 +1525,7 @@ const MultiStepForm = ({ submitHandler }) => {
             )}
           </Formik>
         );
+
       case 5:
         ReactGA4.send({
           hitType: "pageview",
