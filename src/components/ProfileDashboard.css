@@ -1,0 +1,299 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+button {
+  background-color: #4CA65A;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #3F8D48;
+}
+
+.profileDashboard {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.sideBar {
+  position: fixed;
+  width: 216px;
+  height: 100vh;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.sideBarList {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sideBarListInner {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sideBarLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+  margin-bottom: 40px;
+  transition: background-color 0.3s ease;
+}
+
+.sideBarLink svg {
+  fill: #bfbfbf;
+}
+
+.sideBarLink.active {
+  background-color: #4CA65A;
+}
+
+.sideBarLink.active svg {
+  fill: white;
+}
+
+.mainContent {
+  margin-left: 216px;
+  width: calc(100% - 216px);
+  padding: 20px 50px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 40px;
+}
+
+.navbarProfile {
+  display: flex;
+  align-items: center;
+}
+
+.navbarProfileInner {
+  display: flex;
+  align-items: center;
+  border: 2px solid #f7f7f7;
+  border-radius: 18px;
+  padding: 5px 20px;
+}
+
+.navbarProfileName {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 10px;
+}
+
+.profile {
+  display: flex;
+  margin-bottom: 60px;
+}
+
+.profileInfo {
+  width: 50%;
+  display: flex;
+}
+
+.profileInfoPicture {
+  width: 96px;
+  height: 96px;
+  border-radius: 25px;
+  background-color: #e5e5e5;
+}
+
+.profileInfoInner {
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.profileInfoName {
+  font-size: 34px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.profileExper {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+}
+
+.profileExperContent {
+  border-left: 4px solid #e5e5e5;
+  padding-left: 20px;
+}
+
+.profileExperTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.profileExperSubtitle {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.profileExperPara {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.video-container {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.video-container video {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.progressBarSection {
+  margin-top: 50px;
+  margin-bottom: 60px;
+}
+
+.progress {
+  display: flex;
+  height: 40px;
+  background-color: #e5e5e5;
+  border-radius: 20px;
+  position: relative;
+}
+
+.progressCompleted {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 40px;
+  background-color: #4CA65A;
+  border-radius: 20px;
+  transition: width 0.3s ease;
+}
+
+.progressStepBtn {
+  width: 24px;
+  height: 24px;
+  background-color: #b4b4b4;
+  border-radius: 50%;
+  margin: 0 5px;
+}
+
+.progressStepBtn.active {
+  background-color: #ffffff;
+  border: 2px solid #4CA65A;
+}
+
+.recently {
+  margin-bottom: 60px;
+}
+
+.recentlyList {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.recentlyListItem {
+  width: 30%;
+  margin-bottom: 20px;
+}
+
+.recentlyListItem h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.recentlyListItemPicture {
+  height: 250px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.recentlyListItemPicture video {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.exampleVideo {
+  margin-top: 20px;
+}
+
+.exampleVideo h5 {
+  font-size: 16px;
+  color: #333;
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
+  text-align: left;
+  font-size: 1rem;
+  overflow-y: auto;
+  max-height: 80%;
+}
+
+.close-btn {
+  background: #4ca65a;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin-top: 20px;
+}

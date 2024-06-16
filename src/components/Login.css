@@ -1,0 +1,77 @@
+.login-container {
+    font-family: 'Poppins', sans-serif;
+    background-color: white;
+    color: #333;
+    border-radius: 10px;
+    padding: 30px;
+    max-width: 400px;
+    margin: 30px auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  .login-container h2 {
+    color: #00ab59;
+    text-align: center; /* Centered title */
+  }
+  
+  .input-field {
+    margin-bottom: 20px;
+    text-align: left; /* Left align for input fields */
+  }
+
+  .signupLink {
+    font-size: large;
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .link {
+    color: #00ab59;
+    text-decoration: none; /* Removes underline by default */
+    transition: text-decoration 0.3s ease;
+  }
+
+  .link:hover {
+    text-decoration: underline; /* Underline on hover */
+  }  
+  
+  .input-field label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .input-field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    background-color: #00BF63;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center; /* Centered button */
+    display: block; /* Make the button a block element */
+    margin: auto; /* Auto margins for horizontal centering */
+  }
+  
+  button:hover {
+    background-color: #009950;
+  }
+  
+  .error-message {
+    color: red;
+    font-size: 14px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  

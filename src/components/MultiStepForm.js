@@ -651,11 +651,12 @@ const MultiStepForm = ({ submitHandler }) => {
   };
 
   const redirectToLogin = () => {
-    const encodedEmail = encodeURIComponent(globalEmail);
-    const encodedPassword = encodeURIComponent(globalPassword);
-    const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
-    // const loginUrl = `http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`;
-    window.location.href = loginUrl;
+    // const encodedEmail = encodeURIComponent(globalEmail);
+    // const encodedPassword = encodeURIComponent(globalPassword);
+    // const loginUrl = `https://main--drafted-dashboard.netlify.app/login?email=${encodedEmail}&password=${encodedPassword}`;
+    // // const loginUrl = `http://localhost:3001/login?email=${encodedEmail}&password=${encodedPassword}`;
+    // window.location.href = loginUrl;
+    navigate("/dashboard");
   };
 
   const onSubmit = (values) => {};
@@ -855,12 +856,14 @@ const MultiStepForm = ({ submitHandler }) => {
     localStorage.clear();
 
     const navigateToCandidateSignin = () => {
-      window.location.href =
-        "https://main--drafted-dashboard.netlify.app/login";
+      // window.location.href =
+      //   "https://main--drafted-dashboard.netlify.app/login";
+      navigate("/login");
     };
 
     const navigateToRecruiterSignup = () => {
-      window.location.href = "https://drafted-beta.netlify.app/";
+      // window.location.href = "https://drafted-beta.netlify.app/";
+      navigate("/");
     };
 
     switch (step) {
