@@ -59,9 +59,9 @@ input[type='email'],
 input[type='password'],
 select {
   width: 100%; /* Ensure full width */
-  padding: 10px; /* Padding for size */
-  font-size: 16px; /* Font size */
-  border-radius: 4px; /* Rounded corners */
+  padding: 15px; /* Increased Padding */
+  font-size: 18px; /* Larger Font size */
+  border-radius: 6px; /* Rounded corners */
   border: 1px solid #ccc; /* Border style */
   background-color: #fff; /* Background color */
   transition: border-color 0.3s ease;
@@ -134,12 +134,11 @@ input[type='file'] {
 
 button[type='submit'],
 button[type='button'] {
-  display: inline-block;
-  padding: 10px 20px;
-  font-size: 16px;
+  padding: 15px 25px; /* Increased padding */
+  font-size: 18px; /* Larger Font size */
   font-weight: 600;
   color: #fff;
-  border-radius: 4px;
+  border-radius: 6px; /* Larger border-radius */
   border: none;
   background-color: #007aff;
   cursor: pointer;
@@ -152,15 +151,17 @@ button[type='button']:hover {
 }
 
 button[type='button'] {
-  margin-right: 10px;
   background-color: #e5e5e5;
   color: #333;
 }
-
 .error {
   color: red;
   font-size: 14px;
   margin-top: 4px;
+}
+
+label {
+  font-size: 18px; /* Larger Font size for labels */
 }
 
 .label-icons-container {
