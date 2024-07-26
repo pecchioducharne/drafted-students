@@ -1167,7 +1167,6 @@ const MultiStepForm = ({ submitHandler }) => {
                 values.password !== "" &&
                 values.password === values.confirmPassword
               ) {
-                // globalPassword = values.password;
                 setGlobalPassword(values.password);
                 setAndPersistStep(4);
 
@@ -1184,7 +1183,6 @@ const MultiStepForm = ({ submitHandler }) => {
                 <div>
                   <Lottie options={defaultOptions3} height={100} width={100} />
                 </div>
-                {/* 🔑  */}
                 <h2>Create your password</h2>
                 <div>
                   <label htmlFor="password">Password</label>
@@ -1201,7 +1199,6 @@ const MultiStepForm = ({ submitHandler }) => {
                   />
                 </div>
                 <div>
-                  <br></br>
                   <label htmlFor="confirmPassword">Re-enter Password</label>
                   <Field
                     type="password"
@@ -1219,30 +1216,47 @@ const MultiStepForm = ({ submitHandler }) => {
                   Once you create an account, you'll start to receive Drafted
                   emails. You can unsubscribe at any time.
                 </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // Check if the email was recognized in step 1 using matchEmailDomainWithUniversity
-                    const matchedUniversity =
-                      matchEmailDomainWithUniversity(globalEmail);
-                    if (matchedUniversity) {
-                      setAndPersistStep(1); // If recognized, go to step 1
-                    } else {
-                      setAndPersistStep(2); // If not recognized, go to step 2
-                    }
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "20px",
                   }}
-                  style={previousButtonStyles}
                 >
-                  Back
-                </button>
-                <button type="submit" style={buttonStyles}>
-                  Create Account
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const matchedUniversity =
+                        matchEmailDomainWithUniversity(globalEmail);
+                      if (matchedUniversity) {
+                        setAndPersistStep(1);
+                      } else {
+                        setAndPersistStep(2);
+                      }
+                    }}
+                    style={previousButtonStyles}
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    style={buttonStyles}
+                    disabled={
+                      !values.password ||
+                      !values.confirmPassword ||
+                      errors.password ||
+                      errors.confirmPassword
+                    }
+                  >
+                    Create Account
+                  </button>
+                </div>
                 <Persist name="persistStep3" />
               </Form>
             )}
           </Formik>
         );
+
       case 4:
         ReactGA4.send({ hitType: "pageview", page: "/onboarding-step-4-form" });
         return (
@@ -1501,24 +1515,35 @@ const MultiStepForm = ({ submitHandler }) => {
                   <br />
                 </div>
                 <br />
-                <button
-                  type="button"
-                  onClick={() => setAndPersistStep(3)}
-                  style={previousButtonStyles}
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    marginTop: "20px",
+                  }}
                 >
-                  Back
-                </button>
-                <button type="submit" style={buttonStyles} disabled={isLoading}>
-                  {isLoading ? (
-                    <span>
-                      <ClipLoader size={20} color={"#fff"} loading={true} />
-                      {" Completing Signup..."}
-                    </span>
-                  ) : (
-                    "Continue"
-                  )}
-                </button>
-
+                  <button
+                    type="button"
+                    onClick={() => setAndPersistStep(3)}
+                    style={previousButtonStyles}
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    style={buttonStyles}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <span>
+                        <ClipLoader size={20} color={"#fff"} loading={true} />
+                        {" Completing Signup..."}
+                      </span>
+                    ) : (
+                      "Continue"
+                    )}
+                  </button>
+                </div>
                 <p>* Required fields</p>
                 <Persist name="persistStep4" />
               </Form>
@@ -1577,28 +1602,7 @@ const MultiStepForm = ({ submitHandler }) => {
                       alignItems: "center",
                       marginBottom: "5px",
                     }}
-                  >
-                    {/* <img
-                      src={logoLula}
-                      alt="Lula"
-                      style={{ maxWidth: "100px", height: "auto" }}
-                    />
-                    <img
-                      src={logoAmazon}
-                      alt="Amazon"
-                      style={{ maxWidth: "40px", height: "auto" }}
-                    />
-                    <img
-                      src={logoGotu}
-                      alt="Gotu"
-                      style={{ maxWidth: "100px", height: "auto" }}
-                    />
-                    <img
-                      src={logoJPMorgan}
-                      alt="JPMorgan"
-                      style={{ maxWidth: "100px", height: "auto" }}
-                    /> */}
-                  </div>
+                  ></div>
                   <div
                     style={{
                       display: "flex",
@@ -1628,28 +1632,35 @@ const MultiStepForm = ({ submitHandler }) => {
                   <br />
 
                   <br></br>
-                  <button
-                    type="button"
-                    onClick={() => setAndPersistStep(4)}
-                    style={previousButtonStyles}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginTop: "20px",
+                    }}
                   >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    style={buttonStyles}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <span>
-                        <ClipLoader size={20} color={"#fff"} loading={true} />
-                        {" Completing Signup..."}
-                      </span>
-                    ) : (
-                      "Let's complete your profile"
-                    )}
-                  </button>
-
+                    <button
+                      type="button"
+                      onClick={() => setAndPersistStep(4)}
+                      style={previousButtonStyles}
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      style={buttonStyles}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <span>
+                          <ClipLoader size={20} color={"#fff"} loading={true} />
+                          {" Completing Signup..."}
+                        </span>
+                      ) : (
+                        "Complete profile"
+                      )}
+                    </button>
+                  </div>
                   {isLoading && (
                     <img
                       src={loadingGif}
