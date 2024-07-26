@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
-
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
@@ -8,9 +7,9 @@ body {
 }
 
 form {
-  max-width: 400px;
+  max-width: 800px; /* Increase max-width for the form container */
   margin: 0 auto;
-  padding: 20px;
+  padding: 40px; /* Increase padding for better spacing */
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -23,21 +22,35 @@ option {
   font-family: 'Roboto', sans-serif;
 }
 
+/* Adjustments for dropdowns to match input fields */
+.select-field,
+.select-field select {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+
 h2 {
-  font-size: 24px;
+  font-size: 28px; /* Increase font size for headings */
   font-weight: 600;
   margin-bottom: 20px;
   font-family: 'Poppins', sans-serif;
 }
 
 h3 {
+  font-size: 24px; /* Increase font size for subheadings */
   font-family: 'Poppins', sans-serif;
 }
 
 p {
-  font-size: 14px;
+  font-size: 20px; /* Increase font size for paragraphs */
   font-weight: 200;
-  line-height: 1.5;
+  line-height: 1.6;
   margin-bottom: 20px;
   font-family: 'Roboto', sans-serif;
 }
@@ -49,6 +62,7 @@ p strong {
 
 label {
   display: block;
+  font-size: 18px; /* Increase font size for labels */
   font-weight: 700;
   margin-bottom: 8px;
   font-family: 'Roboto', sans-serif;
@@ -59,7 +73,7 @@ input[type='email'],
 input[type='password'],
 select {
   width: 100%; /* Ensure full width */
-  padding: 15px; /* Increased Padding */
+  padding: 18px; /* Increased Padding */
   font-size: 18px; /* Larger Font size */
   border-radius: 6px; /* Rounded corners */
   border: 1px solid #ccc; /* Border style */
@@ -80,7 +94,7 @@ select {
 
 .async-select__control {
   width: 100%; /* Match width of input fields */
-  padding: 10px; /* Match padding */
+  padding: 12px; /* Match padding */
   font-size: 16px; /* Match font size */
   border-radius: 4px; /* Match border radius */
   border: 1px solid #ccc; /* Match border style */
@@ -90,7 +104,7 @@ select {
 
 .custom-university-input {
   width: 100%; /* Match width */
-  padding: 10px; /* Match padding */
+  padding: 12px; /* Match padding */
   font-size: 16px; /* Match font size */
   border-radius: 4px; /* Match border radius */
   border: 1px solid #ccc; /* Match border style */
@@ -98,18 +112,8 @@ select {
   /* Add any additional styling to match the AsyncSelect */
 }
 
-.form-container {
-  width: 800px; /* Adjust the width as per your preference */
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  font-weight: 200;
-  font-family: 'Roboto', sans-serif;
-}
-
 .video-container {
-  width: 800px; /* Adjust the width as per your preference */
+  max-width: 800px; /* Adjust the width as per your preference */
   padding: 20px;
   background-color: white;
   border-radius: 8px;
@@ -134,7 +138,7 @@ input[type='file'] {
 
 button[type='submit'],
 button[type='button'] {
-  padding: 15px 25px; /* Increased padding */
+  padding: 18px 28px; /* Increased padding */
   font-size: 18px; /* Larger Font size */
   font-weight: 600;
   color: #fff;
@@ -154,14 +158,11 @@ button[type='button'] {
   background-color: #e5e5e5;
   color: #333;
 }
+
 .error {
   color: red;
-  font-size: 14px;
+  font-size: 16px; /* Increase font size for error messages */
   margin-top: 4px;
-}
-
-label {
-  font-size: 18px; /* Larger Font size for labels */
 }
 
 .label-icons-container {

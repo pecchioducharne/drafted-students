@@ -929,7 +929,7 @@ const MultiStepForm = ({ submitHandler }) => {
             >
               {(formik) => {
                 return (
-                  <Form>
+                  <Form style={{ maxWidth: "850px", margin: "0 auto" }}>
                     <div>
                       <Lottie
                         options={defaultOptions1}
