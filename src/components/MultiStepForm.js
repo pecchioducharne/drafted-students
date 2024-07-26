@@ -1582,7 +1582,7 @@ const MultiStepForm = ({ submitHandler }) => {
               onKeyPress={() => handleKeyPress(6)}
             >
               {({ values, setFieldValue }) => (
-                <Form>
+                <Form style={{ maxWidth: "800px", margin: "0 auto" }}>
                   <div>
                     <Lottie
                       options={defaultOptions5}
@@ -1593,7 +1593,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   <h2>Let's complete your profile</h2>
                   <h3>
                     Create your video resume, get recruited by hundred of
-                    startups & Fortune 500 companies instantly
+                    startups & Fortune 500 companies instantly.
                   </h3>
                   <div
                     style={{
@@ -1614,11 +1614,11 @@ const MultiStepForm = ({ submitHandler }) => {
                     <img
                       src={getDraftedScreenshot}
                       alt="Lula"
-                      style={{ maxWidth: "400px", height: "auto" }}
+                      style={{ maxWidth: "100%", height: "auto" }}
                     />
                   </div>
 
-                  <p>
+                  <h4>
                     In three quick questions, you can create your video resume
                     and grab the attention of employers.<br></br>
                     <br></br>
@@ -1627,10 +1627,8 @@ const MultiStepForm = ({ submitHandler }) => {
                     <br></br>
                     Don't fret about the pressure – you can redo each answer
                     until you feel confident in your responses.
-                  </p>
-
+                  </h4>
                   <br />
-
                   <br></br>
                   <div
                     style={{
