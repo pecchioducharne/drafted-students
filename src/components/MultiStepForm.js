@@ -1199,6 +1199,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   />
                 </div>
                 <div>
+                  <br />
                   <label htmlFor="confirmPassword">Re-enter Password</label>
                   <Field
                     type="password"
@@ -1592,8 +1593,8 @@ const MultiStepForm = ({ submitHandler }) => {
                   </div>
                   <h2>Let's complete your profile</h2>
                   <h3>
-                    Create your video resume, get recruited by hundred of
-                    startups & Fortune 500 companies instantly.
+                    Create your video resume, and get recruited by hundreds of
+                    startups & Fortune 500 companies.
                   </h3>
                   <div
                     style={{
@@ -1618,15 +1619,20 @@ const MultiStepForm = ({ submitHandler }) => {
                     />
                   </div>
 
+                  <h3>
+                    It's simple:<br></br>
+                  </h3>
                   <h4>
-                    In three quick questions, you can create your video resume
-                    and grab the attention of employers.<br></br>
+                    1. Create your video resume in just three quick questions
+                    and wow potential employers!<br></br>
                     <br></br>
-                    Each question gives you up to a minute to show off your
-                    skills and personality.<br></br>
+                    2. You'll have up to a minute for each question to shine and
+                    show off your skills and personality.<br></br>
                     <br></br>
-                    Don't fret about the pressure – you can redo each answer
-                    until you feel confident in your responses.
+                    3. No pressure – you can redo each answer as many times as
+                    you want. Just be yourself!<br></br>
+                    <br></br>
+                    Employers just want to get to know you and hear your story.
                   </h4>
                   <br />
                   <br></br>

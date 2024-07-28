@@ -47,6 +47,11 @@ h3 {
   font-family: 'Poppins', sans-serif;
 }
 
+h4 {
+  font-size: 20px; /* Increase font size for subheadings */
+  font-family: 'Poppins', sans-serif;
+}
+
 p {
   font-size: 20px; /* Increase font size for paragraphs */
   font-weight: 200;
