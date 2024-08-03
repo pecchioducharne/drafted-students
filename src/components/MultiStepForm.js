@@ -16,7 +16,7 @@ import step2Animation from "./step-2.json";
 import step3Animation from "./step-3.json";
 import step4Animation from "./step-4.json";
 import step5Animation from "./step-5.json";
-import emailjs from 'emailjs-com';
+import emailjs from "emailjs-com";
 
 import axios from "axios";
 
@@ -343,7 +343,7 @@ const MultiStepForm = ({ submitHandler }) => {
   // Init navigator
   const navigate = useNavigate();
   // Init email sender
-  emailjs.init('RfdLlpPTsLae8Wd_j');
+  emailjs.init("RfdLlpPTsLae8Wd_j");
   const { setUserInfo } = useContext(UserContext);
 
   const logAttemptSignup = (email) => {
@@ -669,26 +669,35 @@ const MultiStepForm = ({ submitHandler }) => {
   const sendWelcomeEmail = async (globalEmail, globalFirstName) => {
     try {
       // Send email using EmailJS
-      await emailjs.send('drafted_service', 'drafted_welcome_template', {
-        to_email: globalEmail,
+      // await emailjs.send(
+      //   "drafted_service",
+      //   "drafted_welcome_template",
+      //   {
+      //     to_email: globalEmail,
+      //     to_name: globalFirstName,
+      //   },
+      //   "RfdLlpPTsLae8Wd_j"
+      // );
+
+      await emailjs.send("drafted_service", "drafted_welcome_template", {
         to_name: globalFirstName,
-      }, 'RfdLlpPTsLae8Wd_j');
-  
+        to_email: globalEmail,
+      });
+
       // Handle success
-      console.log('Email sent successfully!');
-      console.log('Email: ' + globalEmail);
-      console.log('First name: ' + globalFirstName);
-  
+      console.log("Email sent successfully!");
+      console.log("Email: " + globalEmail);
+      console.log("First name: " + globalFirstName);
+
       // Optionally track email sent event using GA4
       ReactGA4.event({
-        category: 'Email',
-        action: 'Sent Welcome Email',
-        label: 'Welcome Email Sent',
+        category: "Email",
+        action: "Sent Welcome Email",
+        label: "Welcome Email Sent",
       });
-  
     } catch (error) {
-      console.error('Error sending email:', error);
-      alert('Failed to send email. Please try again later.');
+      console.error("Error sending email:", error);
+      alert("Failed to send email. Please try again later.");
     } finally {
       // setIsLoading(false); // Set loading to false after email attempt
     }
@@ -1597,7 +1606,7 @@ const MultiStepForm = ({ submitHandler }) => {
               onSubmit={() => {
                 setIsLoading(true); // Set loading to true when submitting
                 try {
-                  setAndPersistStep(6);
+                  //setAndPersistStep(6);
 
                   // GA4 Event Tracking for Form Submission
                   ReactGA4.event({
