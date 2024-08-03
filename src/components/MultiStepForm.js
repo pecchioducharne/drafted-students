@@ -16,6 +16,7 @@ import step2Animation from "./step-2.json";
 import step3Animation from "./step-3.json";
 import step4Animation from "./step-4.json";
 import step5Animation from "./step-5.json";
+import emailjs from 'emailjs-com';
 
 import axios from "axios";
 
@@ -339,7 +340,10 @@ var s3 = new AWS.S3({
 });
 
 const MultiStepForm = ({ submitHandler }) => {
+  // Init navigator
   const navigate = useNavigate();
+  // Init email sender
+  emailjs.init('RfdLlpPTsLae8Wd_j');
   const { setUserInfo } = useContext(UserContext);
 
   const logAttemptSignup = (email) => {
@@ -661,6 +665,34 @@ const MultiStepForm = ({ submitHandler }) => {
   const onSubmit = (values) => {};
 
   const [isLoading, setIsLoading] = useState(false);
+
+  const sendWelcomeEmail = async (globalEmail, globalFirstName) => {
+    try {
+      // Send email using EmailJS
+      await emailjs.send('drafted_service', 'drafted_welcome_template', {
+        to_email: globalEmail,
+        to_name: globalFirstName,
+      }, 'RfdLlpPTsLae8Wd_j');
+  
+      // Handle success
+      console.log('Email sent successfully!');
+      console.log('Email: ' + globalEmail);
+      console.log('First name: ' + globalFirstName);
+  
+      // Optionally track email sent event using GA4
+      ReactGA4.event({
+        category: 'Email',
+        action: 'Sent Welcome Email',
+        label: 'Welcome Email Sent',
+      });
+  
+    } catch (error) {
+      console.error('Error sending email:', error);
+      alert('Failed to send email. Please try again later.');
+    } finally {
+      // setIsLoading(false); // Set loading to false after email attempt
+    }
+  };
 
   function YouTubeEmbedQuestion2() {
     return (
@@ -1573,9 +1605,11 @@ const MultiStepForm = ({ submitHandler }) => {
                     action: "Completed Profile, Navigated to Dashboard",
                     label: "Step 5 Submission", // Custom label for tracking
                   });
+
+                  sendWelcomeEmail(globalEmail, globalFirstName);
                 } catch (error) {
                   // Handle the error appropriately
-                  logSignupError(values.email);
+                  logSignupError(globalEmail);
                 } finally {
                   setIsLoading(false); // Set loading to false after submission
                 }

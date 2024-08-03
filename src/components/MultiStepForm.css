@@ -1,0 +1,186 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+form {
+  max-width: 800px; /* Increase max-width for the form container */
+  margin: 0 auto;
+  padding: 40px; /* Increase padding for better spacing */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-weight: 200;
+  font-family: 'Roboto', sans-serif;
+}
+
+option {
+  font-weight: 200;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Adjustments for dropdowns to match input fields */
+.select-field,
+.select-field select {
+  width: 100%;
+  padding: 15px;
+  font-size: 18px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+}
+
+
+h2 {
+  font-size: 28px; /* Increase font size for headings */
+  font-weight: 600;
+  margin-bottom: 20px;
+  font-family: 'Poppins', sans-serif;
+}
+
+h3 {
+  font-size: 24px; /* Increase font size for subheadings */
+  font-family: 'Poppins', sans-serif;
+}
+
+h4 {
+  font-size: 20px; /* Increase font size for subheadings */
+  font-family: 'Poppins', sans-serif;
+}
+
+p {
+  font-size: 20px; /* Increase font size for paragraphs */
+  font-weight: 200;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-family: 'Roboto', sans-serif;
+}
+
+p strong {
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+}
+
+label {
+  display: block;
+  font-size: 18px; /* Increase font size for labels */
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-family: 'Roboto', sans-serif;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'],
+select {
+  width: 100%; /* Ensure full width */
+  padding: 18px; /* Increased Padding */
+  font-size: 18px; /* Larger Font size */
+  border-radius: 6px; /* Rounded corners */
+  border: 1px solid #ccc; /* Border style */
+  background-color: #fff; /* Background color */
+  transition: border-color 0.3s ease;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.async-select__control {
+  width: 100%; /* Match width of input fields */
+  padding: 12px; /* Match padding */
+  font-size: 16px; /* Match font size */
+  border-radius: 4px; /* Match border radius */
+  border: 1px solid #ccc; /* Match border style */
+  background-color: #fff; /* Match background color */
+  /* Add any additional styling to match the input fields */
+}
+
+.custom-university-input {
+  width: 100%; /* Match width */
+  padding: 12px; /* Match padding */
+  font-size: 16px; /* Match font size */
+  border-radius: 4px; /* Match border radius */
+  border: 1px solid #ccc; /* Match border style */
+  background-color: #fff; /* Match background color */
+  /* Add any additional styling to match the AsyncSelect */
+}
+
+.video-container {
+  max-width: 800px; /* Adjust the width as per your preference */
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  font-weight: 200;
+  font-family: 'Roboto', sans-serif;
+}
+
+.link {
+  color: #00ab59;
+  text-decoration: none; /* Removes underline by default */
+  transition: text-decoration 0.3s ease;
+}
+
+.link:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+input[type='file'] {
+  display: none;
+}
+
+button[type='submit'],
+button[type='button'] {
+  padding: 18px 28px; /* Increased padding */
+  font-size: 18px; /* Larger Font size */
+  font-weight: 600;
+  color: #fff;
+  border-radius: 8px; /* Larger border-radius */
+  border: none;
+  background-color: #207a56;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type='submit']:hover,
+button[type='button']:hover {
+  background-color: #207a56;
+}
+
+button[type='button'] {
+  background-color: #e5e5e5;
+  color: #333;
+}
+
+.error {
+  color: red;
+  font-size: 16px; /* Increase font size for error messages */
+  margin-top: 4px;
+}
+
+.label-icons-container {
+  display: flex;
+  align-items: center;
+}
+
+.label-icons-container label {
+  margin-left: 10px;
+}
+
+.label-icons-container img {
+  margin-right: 5px;
+  margin-left: 3px;
+  margin-top: 8px;
+}
