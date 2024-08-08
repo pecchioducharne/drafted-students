@@ -648,6 +648,26 @@ const MultiStepForm = ({ submitHandler }) => {
     cursor: "pointer",
   };
 
+  const letsGoProButtonHoverStyle = {
+    backgroundColor: "#1a6544", // Slightly darker green
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+  };
+
+  const uploadStyle = {
+    borderRadius: "8px",
+    backgroundColor: "#e0e0e0", // Nice gray
+    color: "#000000", // Black text
+    padding: "10px 20px",
+    border: "none",
+    cursor: "pointer",
+    transition: "background-color 0.3s, color 0.3s",
+  };
+
+  const uploadHoverStyle = {
+    backgroundColor: "#007bff", // Blue background
+    color: "#ffffff", // White text
+  };
+
   const handleKeyPress = (event, nextStep) => {
     if (event.key === "Enter") {
       setAndPersistStep(nextStep);
@@ -668,17 +688,6 @@ const MultiStepForm = ({ submitHandler }) => {
 
   const sendWelcomeEmail = async (globalEmail, globalFirstName) => {
     try {
-      // Send email using EmailJS
-      // await emailjs.send(
-      //   "drafted_service",
-      //   "drafted_welcome_template",
-      //   {
-      //     to_email: globalEmail,
-      //     to_name: globalFirstName,
-      //   },
-      //   "RfdLlpPTsLae8Wd_j"
-      // );
-
       await emailjs.send("drafted_service", "drafted_welcome_template", {
         to_name: globalFirstName,
         to_email: globalEmail,
@@ -1042,7 +1051,18 @@ const MultiStepForm = ({ submitHandler }) => {
                     <br />
                     <br></br>
                     <div style={{ display: "flex" }}>
-                      <button type="submit" style={letsGoProButtonStyle}>
+                      <button
+                        type="submit"
+                        style={letsGoProButtonStyle}
+                        onMouseOver={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            letsGoProButtonHoverStyle.backgroundColor)
+                        }
+                        onMouseOut={(e) =>
+                          (e.currentTarget.style.backgroundColor =
+                            letsGoProButtonStyle.backgroundColor)
+                        }
+                      >
                         Let's go pro
                       </button>
                     </div>
@@ -1173,7 +1193,18 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                     <button
                       type="submit"
-                      style={buttonStyles}
+                      style={letsGoProButtonStyle}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          letsGoProButtonHoverStyle.backgroundColor;
+                        e.currentTarget.style.boxShadow =
+                          letsGoProButtonHoverStyle.boxShadow;
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          buttonStyles.backgroundColor;
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
                       disabled={!values.university && !values.customUniversity}
                     >
                       Continue
@@ -1282,7 +1313,18 @@ const MultiStepForm = ({ submitHandler }) => {
                   </button>
                   <button
                     type="submit"
-                    style={buttonStyles}
+                    style={letsGoProButtonStyle}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        letsGoProButtonHoverStyle.backgroundColor;
+                      e.currentTarget.style.boxShadow =
+                        letsGoProButtonHoverStyle.boxShadow;
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        letsGoProButtonStyle.backgroundColor;
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
                     disabled={
                       !values.password ||
                       !values.confirmPassword ||
@@ -1372,6 +1414,17 @@ const MultiStepForm = ({ submitHandler }) => {
                   <button
                     type="button"
                     onClick={() => document.getElementById("resume").click()}
+                    style={uploadStyle}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        uploadHoverStyle.backgroundColor;
+                      e.currentTarget.style.color = uploadHoverStyle.color;
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        uploadStyle.backgroundColor;
+                      e.currentTarget.style.color = uploadStyle.color;
+                    }}
                     disabled={resumeUploaded || values.resume}
                   >
                     {resumeUploaded ? "Resume Uploaded" : "Upload Resume"}
@@ -1573,7 +1626,18 @@ const MultiStepForm = ({ submitHandler }) => {
                   </button>
                   <button
                     type="submit"
-                    style={buttonStyles}
+                    style={letsGoProButtonStyle}
+                    onMouseOver={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        letsGoProButtonHoverStyle.backgroundColor;
+                      e.currentTarget.style.boxShadow =
+                        letsGoProButtonHoverStyle.boxShadow;
+                    }}
+                    onMouseOut={(e) => {
+                      e.currentTarget.style.backgroundColor =
+                        letsGoProButtonStyle.backgroundColor;
+                      e.currentTarget.style.boxShadow = "none";
+                    }}
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -1665,18 +1729,19 @@ const MultiStepForm = ({ submitHandler }) => {
                   <h3>
                     It's simple:<br></br>
                   </h3>
-                  <h4>
-                    1. Create your video resume in just three quick questions
-                    and wow potential employers!<br></br>
+                  <p>
+                    <strong>1.</strong> Create your video resume in just three
+                    quick questions and wow potential employers!<br></br>
                     <br></br>
-                    2. You'll have up to a minute for each question to shine and
-                    show off your skills and personality.<br></br>
+                    <strong>2.</strong> You'll have up to a minute for each
+                    question to shine and show off your skills and personality.
                     <br></br>
-                    3. No pressure – you can redo each answer as many times as
-                    you want. Just be yourself!<br></br>
+                    <br></br>
+                    <strong>3.</strong> No pressure – you can redo each answer
+                    as many times as you want. Just be yourself!<br></br>
                     <br></br>
                     Employers just want to get to know you and hear your story.
-                  </h4>
+                  </p>
                   <br />
                   <br></br>
                   <div
@@ -1695,7 +1760,22 @@ const MultiStepForm = ({ submitHandler }) => {
                     </button>
                     <button
                       type="submit"
-                      style={buttonStyles}
+                      style={letsGoProButtonStyle}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          letsGoProButtonHoverStyle.backgroundColor;
+                        e.currentTarget.style.color =
+                          letsGoProButtonHoverStyle.color;
+                        e.currentTarget.style.boxShadow =
+                          letsGoProButtonHoverStyle.boxShadow;
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor =
+                          letsGoProButtonStyle.backgroundColor;
+                        e.currentTarget.style.color =
+                          letsGoProButtonStyle.color;
+                        e.currentTarget.style.boxShadow = "none";
+                      }}
                       disabled={isLoading}
                     >
                       {isLoading ? (
