@@ -910,7 +910,7 @@ const MultiStepForm = ({ submitHandler }) => {
     };
 
     const navigateToRecruiterSignup = () => {
-      window.location.href = "https://drafted-beta.netlify.app/";
+      window.location.href = "https://drafted-beta.netlify.app/signup#";
     };
 
     switch (step) {
