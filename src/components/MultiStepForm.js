@@ -1670,7 +1670,6 @@ const MultiStepForm = ({ submitHandler }) => {
               onSubmit={() => {
                 setIsLoading(true); // Set loading to true when submitting
                 try {
-                  //setAndPersistStep(6);
 
                   // GA4 Event Tracking for Form Submission
                   ReactGA4.event({
@@ -1680,6 +1679,7 @@ const MultiStepForm = ({ submitHandler }) => {
                   });
 
                   sendWelcomeEmail(globalEmail, globalFirstName);
+                  setAndPersistStep(6);
                 } catch (error) {
                   // Handle the error appropriately
                   logSignupError(globalEmail);
