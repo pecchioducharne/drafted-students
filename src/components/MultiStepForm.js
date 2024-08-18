@@ -30,6 +30,7 @@ import AsyncSelect from "react-select/async";
 import VideoRecorder from "react-video-recorder/lib/video-recorder";
 import * as Yup from "yup";
 import linkedInIcon from "./linkedin.svg";
+import gitHubIcon from "./github.svg";
 import logoAmazon from "./logo-amazon.png";
 import logoGotu from "./logo-gotu.png";
 import logoJPMorgan from "./logo-jpmorgan.png";
@@ -382,6 +383,7 @@ const MultiStepForm = ({ submitHandler }) => {
   const [globalGraduationMonth, setGlobalGraduationMonth] = useState("");
   const [globalGraduationYear, setGlobalGraduationYear] = useState("");
   const [globalLinkedInProfileURL, setGlobalLinkedInProfileURL] = useState("");
+  const [globalGitHubProfileURL, setGlobalGitHubProfileURL] = useState("");
   const [globalResume, setGlobalResume] = useState(null);
   const [globalVideo1, setGlobalVideo1] = useState(null);
   const [globalVideo2, setGlobalVideo2] = useState(null);
@@ -525,6 +527,7 @@ const MultiStepForm = ({ submitHandler }) => {
       const user = userCredential.user;
 
       if (user) {
+        console.log("User detected");
       }
 
       // To store resume
@@ -557,9 +560,14 @@ const MultiStepForm = ({ submitHandler }) => {
         resume: resumeURL,
       };
 
-      // Conditionally add linkedInURL if it's not empty
+      // Conditionally add LinkedIn if it's not empty
       if (globalLinkedInProfileURL) {
         formData.linkedInURL = values.linkedInURL;
+      }
+
+      // Conditionally add GitHub URL if it's not empty
+      if (globalGitHubProfileURL) {
+        formData.gitHubURL = values.gitHubURL;
       }
 
       // Upload the form data to Firestore with the user's email as the document ID
@@ -576,6 +584,7 @@ const MultiStepForm = ({ submitHandler }) => {
         video2: "",
         video3: "",
         linkedInURL: values.linkedInURL || "",
+        gitHubURL: values.gitHubURL || "",
         resume: resumeURL,
       });
 
@@ -1353,6 +1362,7 @@ const MultiStepForm = ({ submitHandler }) => {
               graduationMonth: globalGraduationMonth,
               graduationYear: globalGraduationYear,
               linkedInURL: globalLinkedInProfileURL,
+              gitHubURL: globalGitHubProfileURL,
               resume: null, // Initial value set to null for the resume
             }}
             validationSchema={Yup.object().shape({
@@ -1372,6 +1382,7 @@ const MultiStepForm = ({ submitHandler }) => {
               setGlobalGraduationMonth(values.graduationMonth);
               setGlobalGraduationYear(values.graduationYear);
               setGlobalLinkedInProfileURL(values.linkedInURL);
+              setGlobalGitHubProfileURL(values.gitHubURL);
 
               // Update form completion state
               setIsFormCompleted(true);
@@ -1590,12 +1601,32 @@ const MultiStepForm = ({ submitHandler }) => {
                     type="text"
                     id="linkedInURL"
                     name="linkedInURL"
-                    placeholder="You can paste your URL here"
+                    placeholder="Paste your GitHub URL here"
                     style={{ width: "95%" }}
                   />
                   <div className="label-icons-container">
                     <img
                       src={linkedInIcon}
+                      style={{
+                        width: "20px",
+                        display: "inline-block",
+                      }}
+                    />
+                  </div>
+                  <br />
+                  <label htmlFor="gitHubProfile">
+                    GitHub Profile (Optional)
+                  </label>
+                  <Field
+                    type="text"
+                    id="gitHubURL"
+                    name="gitHubURL"
+                    placeholder="Paste your GitHub URL here"
+                    style={{ width: "95%" }}
+                  />
+                  <div className="label-icons-container">
+                    <img
+                      src={gitHubIcon}
                       style={{
                         width: "20px",
                         display: "inline-block",
@@ -1670,7 +1701,6 @@ const MultiStepForm = ({ submitHandler }) => {
               onSubmit={() => {
                 setIsLoading(true); // Set loading to true when submitting
                 try {
-
                   // GA4 Event Tracking for Form Submission
                   ReactGA4.event({
                     category: "Form",
