@@ -189,6 +189,8 @@ const commonMajors = [
   "Public Administration",
   "Public Health",
   "Public Relations",
+  "Product Design",
+  "Product Management",
   "Real Estate",
   "Religious Studies",
   "Social Work",
